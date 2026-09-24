@@ -1,0 +1,450 @@
+[
+  {
+    "name": "Levés géophysiques au sol",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 1
+  },
+  {
+    "name": "Levés topographiques",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 2
+  },
+  {
+    "name": "Levés pour la cartographie géologique",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 3
+  },
+  {
+    "name": "Levés géochimiques",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 4
+  },
+  {
+    "name": "Sondage minier",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 60,
+    "id_serial": 5
+  },
+  {
+    "name": "Forage de contrôle de teneur",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 35,
+    "id_serial": 6
+  },
+  {
+    "name": "Forage de dynamitage",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 30,
+    "id_serial": 7
+  },
+  {
+    "name": "Entretien des pistes",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 8
+  },
+  {
+    "name": "Soudure",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 85,
+    "id_serial": 9
+  },
+  {
+    "name": "Chargement du minerai",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 10
+  },
+  {
+    "name": "Extraction du minerai",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 11
+  },
+  {
+    "name": "Hébergement",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 12
+  },
+  {
+    "name": "Visites médicales",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 13
+  },
+  {
+    "name": "Forage hydraulique",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 14
+  },
+  {
+    "name": "Analyses d'échantillons",
+    "kind": "Travaux",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 30,
+    "id_serial": 15
+  },
+  {
+    "name": "Construction de bâtiment, retenues d'eau, ouvrage d'affranchissement pistes et routes",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 16
+  },
+  {
+    "name": "Evaluation environnementale",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 17
+  },
+  {
+    "name": "Etudes socio-économiques",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 18
+  },
+  {
+    "name": "Maintenance des parcs informatiques",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 19
+  },
+  {
+    "name": "Assistance juridique et comptable au niveau national",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 20
+  },
+  {
+    "name": "Câblages ou extension des réseaux informatiques",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 21
+  },
+  {
+    "name": "Élaboration des politiques de sécurité des systèmes d'information",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 22
+  },
+  {
+    "name": "Élaboration et mise en œuvre des plans de reprise des activités et du plan de continuité d'activités (système d'informations)",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 23
+  },
+  {
+    "name": "Réalisation de cartographie des risques de sécurité des systèmes d'information",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 24
+  },
+  {
+    "name": "Restauration",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 25
+  },
+  {
+    "name": "Gardiennage/sécurité",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 26
+  },
+  {
+    "name": "Frêt",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 60,
+    "id_serial": 27
+  },
+  {
+    "name": "Transit",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 60,
+    "id_serial": 28
+  },
+  {
+    "name": "Logistique (transport, commande locale)",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 70,
+    "id_serial": 29
+  },
+  {
+    "name": "Projection thermique",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 40,
+    "id_serial": 30
+  },
+  {
+    "name": "Assurances / Ré-assurrances",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 31
+  },
+  {
+    "name": "Transport terrestre du minerai",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 32
+  },
+  {
+    "name": "Transport de concentré ou de grenu",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 33
+  },
+  {
+    "name": "Construction de parcs à résidus (travaux de terrassement)",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 34
+  },
+  {
+    "name": "Conception, correction et évolution progiciel et logiciel",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 35
+  },
+  {
+    "name": "Audit, diagnostic du système d'information",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 36
+  },
+  {
+    "name": "Sécurisation du système d'information",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 37
+  },
+  {
+    "name": "Réalisation de schéma Directeur Informatique",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 38
+  },
+  {
+    "name": "Transport terrestre du personnel sur le territoire national",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 39
+  },
+  {
+    "name": "Nettoyage domestique (entretien de bureau)",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 40
+  },
+  {
+    "name": "Mécanique industrielle (usine)",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 41
+  },
+  {
+    "name": "Mécanique d'engins et machines mobiles",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 42
+  },
+  {
+    "name": "Mécanique de précision et d'usinage (moteur, cylindre)",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 20,
+    "id_serial": 43
+  },
+  {
+    "name": "Carburants et lubrifiants",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 30,
+    "id_serial": 44
+  },
+  {
+    "name": "Pièces de rechanges « véhicules légers », « engins lourds », « équipements fixes »",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 20,
+    "id_serial": 45
+  },
+  {
+    "name": "Pneumatique « véhicules légers » et « engins lourds »",
+    "kind": "Fournitures",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 46
+  },
+  {
+    "name": "Matériel de bureau",
+    "kind": "Fournitures",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 47
+  },
+  {
+    "name": "Produits alimentaires",
+    "kind": "Fournitures",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 48
+  },
+  {
+    "name": "Equipements de production d'énergie thermique",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 30,
+    "id_serial": 49
+  },
+  {
+    "name": "Equipements de production d'énergie solaire",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 50
+  },
+  {
+    "name": "Equipement et protection individuelle courants",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 80,
+    "id_serial": 51
+  },
+  {
+    "name": "Cyanure",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 20,
+    "id_serial": 52
+  },
+  {
+    "name": "Borax",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 30,
+    "id_serial": 53
+  },
+  {
+    "name": "Chaux",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 54
+  },
+  {
+    "name": "Substances explosives",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 55
+  },
+  {
+    "name": "Boulets",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 56
+  },
+  {
+    "name": "Autres produits chimiques utilisés dans le traitement du minerai",
+    "kind": "Fournitures",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 57
+  },
+  {
+    "name": "Tuyauterie",
+    "kind": "Travaux",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 58
+  },
+  {
+    "name": "Communication",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 59
+  },
+  {
+    "name": "Confection de tenues",
+    "kind": "Fournitures",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 60
+  },
+  {
+    "name": "Services d'intérim",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 61
+  },
+  {
+    "name": "Formations",
+    "kind": "Services",
+    "plan": "Mixte",
+    "minimum_locals_percentage": 50,
+    "id_serial": 62
+  },
+  {
+    "name": "Etudes de faisabilité, conception",
+    "kind": "Services",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 63
+  },
+  {
+    "name": "Literie / linge de maison",
+    "kind": "Fournitures",
+    "plan": "Exclusif",
+    "minimum_locals_percentage": 100,
+    "id_serial": 64
+  }
+]

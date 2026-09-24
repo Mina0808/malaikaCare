@@ -1,0 +1,14 @@
+version: "3"
+services:
+  inditekk:
+    image: inditekk:dev-1.0.0
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports:
+      - "4000:4000"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+

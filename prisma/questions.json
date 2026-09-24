@@ -1,0 +1,164 @@
+[{
+        "label": "Nombre de contrats de travail CDI attribués à des Sénégalais",
+        "code": "JOBS_CDI_SENEGALAIS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de contrats de travail CDD attribués à des Sénégalais",
+        "code": "JOBS_CDD_SENEGALAIS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de contrats de travail temporaire ou à temps partiels attribués à des Sénégalais",
+        "code": "JOBS_TEMP_PART_SENEGALAIS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de contrats de travail CDI attribués à des étrangers",
+        "code": "JOBS_CDI_ETRANGERS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de contrats de travail CDD attribués à des étrangers",
+        "code": "JOBS_CDD_ETRANGERS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de contrats de travail temporaires ou à temps partiels attribués à des étrangers",
+        "code": "JOBS_TEMP_PART_ETRANGERS",
+        "heading": "JOBS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre de postes occupés par des étrangers depuis le début des activités",
+        "code": "SALARIES_POSTES_ETRANGERS",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Nombre d\"étrangers remplacés par des sénégalais à date",
+        "code": "SALARIES_ETRANGERS_REMPLACES",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Montant total des salaires versés aux employés en FCFA",
+        "code": "SALARIES_TOTAL",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Montant total des salaires versés aux employés étranger en FCFA",
+        "code": "SALARIES_TOTAL_ETRANGERS",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Montant total des salaires versés aux employés sénégalais en FCFA",
+        "code": "SALARIES_TOTAL_SENEGALAIS",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Montant total des salaires versés au Sénégal aux employés étrangers en FCFA",
+        "code": "SALARIES_SENEGAL_ETRANGERS",
+        "heading": "SALARIES",
+        "unit": ""
+    },
+    {
+        "label": "Nombre d'employés sénégalais formés",
+        "code": "TRAININGS_FORMES",
+        "heading": "TRAININGS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre d\"employés sénégalais formés au Sénégal",
+        "code": "TRAININGS_FORMES_SENEGAL",
+        "heading": "TRAININGS",
+        "unit": ""
+    },
+    {
+        "label": "Nombre d\"employés sénégalais formés hors du Sénégal",
+        "code": "TRAININGS_FORMES_HORS_SENEGAL",
+        "heading": "TRAININGS",
+        "unit": ""
+    },
+    {
+        "label": "Durée total des formations offertes aux employés sénégalais en heure",
+        "code": "TRAININGS_DUREE_HEURES",
+        "heading": "TRAININGS",
+        "unit": ""
+    },
+    {
+        "label": "Coût total des formations offertes aux employés sénégalais en FCFA",
+        "code": "TRAININGS_COUT_TOTAL",
+        "heading": "TRAININGS",
+        "unit": ""
+    },
+
+    {
+        "label": "Quel est le nombre total de marchés attribués à vos fournisseurs (tout régime confondu) ?",
+        "code": "SUPPLY_TOTAL_MARCHES",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le nombre total de marchés attribués sous le régime exclusif ?",
+        "code": "SUPPLY_TOTAL_EXCLUSIF",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le montant total en FCFA des marchés attribués sous le régime exclusif ?",
+        "code": "SUPPLY_TOTAL_EXCLUSIF_FCFA",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le montant total en FCFA des marchés sous le régime mixte attribués aux entreprises locales ?",
+        "code": "SUPPLY_MIXTE_LOCAL_FCFA",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le montant total en FCFA des marchés attribués à vos fournisseurs (tous régimes confondus) ?",
+        "code": "SUPPLY_TOTAL_FOURNISSEURS_FCFA",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le nombre total de marchés attribués sous le régime mixte ?",
+        "code": "SUPPLY_TOTAL_MIXTE",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le nombre total de marchés attribués et classés sous le régime non exclusif ?",
+        "code": "SUPPLY_TOTAL_NON_EXCLUSIF",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le montant total en FCFA des marchés sous le régime non exclusif attribués aux entreprises locales ?",
+        "code": "SUPPLY_NON_EXCLUSIF_LOCAL_FCFA",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Quel est le montant total des prestations payées hors du Sénégal en FCFA",
+        "code": "SUPPLY_HORS_SENEGAL_FCFA",
+        "heading": "SUPPLY",
+        "unit": ""
+    },
+    {
+        "label": "Indicateur de contenu local (ICL) %",
+        "code": "SUPPLY_ICL",
+        "heading": "SUPPLY",
+        "unit": ""
+    }
+]

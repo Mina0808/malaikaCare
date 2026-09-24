@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//generator client {
+//  provider      = "prisma-client-js"
+//  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
+//}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+} 
+
+model Documents {
+  id           Int       @id @unique @default(autoincrement())
+  name         String
+  alias        String?
+  type         String
+  targetPage   String?
+  date         DateTime  @default(now())
+  requestId    Int
+  request      Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Request {
+  id               Int       @id @unique @default(autoincrement())
+  name             String
+  type             String
+  status           String
+  text             String       @db.Text
+  date             DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  documents        Documents[]
+  userId           String
+  benefactorId     String?
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  benefactor       OtherContact? @relation(fields: [benefactorId], references: [id], onDelete: Cascade)
+}
+
+model Referentiel{
+  id           Int      @id @default(autoincrement())
+  name        String  
+  category    String
+  subCategory String? //type de produits, mode de livraison, mode d'expedtion
+}
+
+model User {
+  id                  String         @id @default(cuid())
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  firstName           String
+  lastName            String
+  phone               String
+  email               String         @unique
+  country             String?
+  address             String?
+  city                String?
+  isEmergencyContact  Boolean
+  role                String
+  password            String
+  status              String
+  requests            Request[]
+  documents           Documents[]
+  emergencyContacts   OtherContact[] @relation("UserEmergencyContacts")
+  benefactors         OtherContact[] @relation("UserBenefactors")
+}
+
+model OtherContact {
+  id                String         @id @default(cuid())
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  firstName         String
+  lastName          String
+  phone             String
+  email             String
+  type              String
+  requests          Request[]
+  beneficiaryOf     User? @relation("UserBenefactors", fields: [beneficiaryOfId], references: [id])
+  beneficiaryOfId   String?
+  emergencyOf       User? @relation("UserEmergencyContacts", fields: [emergencyOfId], references: [id])
+  emergencyOfId     String?
+}
+
+model ActionLog {
+  id            Int     @id @unique @default(autoincrement()) 
+  entityName    String?
+  entityId      Int 
+  actionDetails String?
+  ipAddress     String?
+  timestamp     DateTime
+}
