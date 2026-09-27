@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Loader from "../../loading";
 import { getToken, getUserFromSession } from "@/lib/session";
-import { sendEmailQuote } from "@/lib/emails/mailer";
+import { sendEmailContact } from "@/lib/emails/mailer";
 import { newRequest } from "@/Services/ServicesFront/users";
 import FileUploader, { getFileType } from "@/components/fileField";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -31,10 +31,6 @@ export default function Form() {
     firstName: "" as string,
     email: "" as string,
     phone: "" as string,
-    clientLastName: "" as string,
-    clientFirstName: "" as string,
-    clientEmail: "" as string,
-    clientPhone: "" as string,
     text: "" as string,
   });
 
@@ -46,10 +42,6 @@ export default function Form() {
         firstName: user.firstName,
         email: user.email,
         phone: user.phone,
-        clientLastName: "",
-        clientFirstName: "",
-        clientEmail: "",
-        clientPhone: "",
         text: "",
       });
     }
@@ -105,7 +97,7 @@ export default function Form() {
     if (result.isConfirmed) {
       Swal.fire('Soumis !', 'Le formulaire a été soumis.', 'success');
       await newRequest(formData, "INFORMATION", user, docs)
-      //sendEmailQuote(formData)
+      sendEmailContact(formData, docs)
       toast.success("La demande a été soumise");
       router.push(`/care`)
     } else {

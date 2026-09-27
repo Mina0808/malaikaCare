@@ -53,7 +53,7 @@ export default function Home() {
                 />
               </div>
               {/* <h1 className="py-4 font-bold text-xl">TITRE DE LA PAGE</h1> */}
-              <div className='grid grid-cols-2 items-stretch'>
+              <div className='grid grid-cols-1 items-stretch'>
                 <div className='flex flex-col p-12 h-full items-center justify-center bg-white mt-3 ml-10 mr-3 rounded-lg shadow-xl'>
                   <div className="flex items-center flex-col">
                     <Image
@@ -89,7 +89,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col p-12 h-full items-center rounded-lg shadow-xl bg-white mt-3 mr-10 ml-3">
+                {/* <div className="flex flex-col p-12 h-full items-center rounded-lg shadow-xl bg-white mt-3 mr-10 ml-3">
                   <Image
                   src={logoCare}
                   alt="logo"
@@ -98,7 +98,6 @@ export default function Home() {
                   height={300}
                   priority
                 />
-                  {/* <h1 className="text-5xl font-bold text-yellow-700">Malaika Consulting</h1> */}
                   <div className="flex flex-col justify-center items-center">
                     <div className={"text-lg mt-3 mb-10 px-6"}>
                       Nous accompagnons les organisations dans leur développement humain et organisationnel, avec des méthodologies éprouvées et une approche terrain.
@@ -125,7 +124,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

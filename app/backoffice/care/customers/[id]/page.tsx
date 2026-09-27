@@ -9,6 +9,7 @@ import { getButtonByUserStatus, translateRequestStatus, translateRequestType } f
 import { Badge } from '@/components/badge';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import { sendEmailUserDesactivated, sendEmailUserReactivated } from '@/lib/emails/mailer';
 
 export default function Page({
     params,
@@ -58,10 +59,13 @@ export default function Page({
         if (result.isConfirmed) {
             Swal.fire('Soumis !', 'Le statut a été mis à jour.', 'success');
             let stat = "ACTIF"
-            if (status === "ACTIF")
+            if (status === "ACTIF"){
                 stat = "INACTIF"
+                sendEmailUserDesactivated(user.lastName, user.firstName, user.email)
+            }
+            else
+                sendEmailUserReactivated(user.lastName, user.firstName, user.email)
             await updateUserStatus(id, stat)
-            //sendEmailQuote(formData)
             toast.success("Le statut a bien été mis à jour");
             router.push('/backoffice/care/customers')
         } else {

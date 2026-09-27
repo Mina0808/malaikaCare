@@ -1,8 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/upload/route": "app/api/upload/route.js",
   "/(user)/page": "app/(user)/page.js",
   "/(user)/care/page": "app/(user)/care/page.js",
   "/(user)/care/quote/page": "app/(user)/care/quote/page.js",
-  "/(user)/care/requests/page": "app/(user)/care/requests/page.js",
-  "/(user)/care/requests/[id]/page": "app/(user)/care/requests/[id]/page.js"
+  "/(user)/care/contact/page": "app/(user)/care/contact/page.js"
 }

@@ -11,6 +11,7 @@ import { getToken, getUserFromSession } from "@/lib/session";
 import FileUploader, { getFileType } from "@/components/fileField";
 import { newRequest, getBenefactors } from "@/Services/ServicesFront/users";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { sendEmailQuote } from "@/lib/emails/mailer";
 
 export default function Form() {
   const [user, setUser] = useState<any>(null)
@@ -128,7 +129,8 @@ export default function Form() {
     if (result.isConfirmed) {
       Swal.fire('Soumis !', 'Le formulaire a été soumis.', 'success');
       await newRequest(formData, "QUOTE", user, docs)
-      //sendEmailQuote(formData)
+      console.log("send email")
+      sendEmailQuote(formData, docs)
       toast.success("La demande a été soumise");
       router.push(`/care`)
     } else {

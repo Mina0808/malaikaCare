@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import FileUploader, { getFileType } from '@/components/fileField';
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { sendEmailQuoteValidated, sendEmailUserDesactivated, sendEmailUserReactivated } from '@/lib/emails/mailer';
 
 export default function Page({
     params,
@@ -57,8 +58,12 @@ export default function Page({
         if (result.isConfirmed) {
             Swal.fire('Soumis !', 'Le statut a été mis à jour.', 'success');
             let stat = "ACTIF"
-            if (status === "ACTIF")
+            if (status === "ACTIF"){
                 stat = "INACTIF"
+                sendEmailUserDesactivated(user.lastName, user.firstName, user.email)
+            }
+            else
+                sendEmailUserReactivated(user.lastName, user.firstName, user.email)
             await updateUserStatus(stat, id)
             //sendEmailQuote(formData)
             toast.success("Le statut a bien été mis à jour");
@@ -95,7 +100,8 @@ export default function Page({
         if (result.isConfirmed) {
             Swal.fire('Soumis !', 'La demande a été mise à jour.', 'success');
             await updateRequestFront(status, type, id, userId)
-            //sendEmailQuote(formData)
+            if (type=="QUOTE")
+                sendEmailQuoteValidated(user.lastName, user.firstName, user.email)
             toast.success("La demande a bien été mise à jour");
             router.push(`/backoffice/care/requests`)
         } else {
