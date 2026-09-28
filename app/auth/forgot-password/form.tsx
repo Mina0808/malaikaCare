@@ -2,6 +2,7 @@
 
 import { useFormState } from "react-dom";
 import { sendResetEmail } from "./actions";
+import { Mail, Lock, ArrowRight } from "lucide-react";
 
 export default function Form() {
   const [state, formAction] = useFormState(sendResetEmail, { _errors: [] });
@@ -10,12 +11,15 @@ export default function Form() {
       <div>
         <label
           htmlFor="email"
-          className="block text-xl font-medium leading-6 text-gray-900"
+          className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
         >
           Entrez votre adresse email et nous vous enverrons un lien pour
           réinitialiser votre mot de passe.
         </label>
-        <div className="mt-2">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <Mail className="w-4 h-4" />
+          </div>
           <input
             id="email"
             name="email"
@@ -23,7 +27,7 @@ export default function Form() {
             autoComplete="email"
             autoFocus
             required
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-xl sm:leading-6"
+            className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm bg-slate-50/50 focus:bg-white transition-all font-medium text-slate-800 placeholder-slate-400"
           />
         </div>
       </div>
@@ -31,7 +35,7 @@ export default function Form() {
       <div>
         <button
           type="submit"
-          className="flex w-full justify-center rounded-md bg-gunmetal px-3 py-1.5 text-xl font-semibold leading-6 text-white shadow-sm hover:bg-gunmetal-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/35 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 flex items-center justify-center gap-2 group mt-2"
         >
           Envoyer le lien de réinitialisation
         </button>

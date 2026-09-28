@@ -1,5 +1,6 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { forwardRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export const PasswordInput = forwardRef<HTMLInputElement, any>((props, ref) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,20 +10,20 @@ export const PasswordInput = forwardRef<HTMLInputElement, any>((props, ref) => {
     <div className="relative">
       <input
         type={showPassword ? "text" : "password"}
-        className="input border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-2xl  shadow-xl rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"
+        className="w-full pl-10 pr-11 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm bg-slate-50/50 focus:bg-white transition-all font-medium text-slate-800 placeholder-slate-400"
         placeholder="Mot de passe"
         {...props}
         ref={ref}
       />
       <button
         type="button"
-        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
         onClick={toggleShowPassword}
       >
         {showPassword ? (
-          <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+          <EyeOff className="w-4 h-4" />
         ) : (
-          <EyeIcon className="h-5 w-5 text-gray-500" />
+          <Eye className="w-4 h-4" />
         )}
       </button>
     </div>

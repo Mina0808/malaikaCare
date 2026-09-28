@@ -1,18 +1,25 @@
-"use client"
+"use client";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@/components/badge";
 import Pagination from "@/components/pagination";
-import { getColorByUserStatus, translateRequest } from "@/Services/ServicesFront/keywords";
+import {
+  getColorByUserStatus,
+  translateRequest,
+} from "@/Services/ServicesFront/keywords";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
-import { getUsersByRequests, listCustomers, listRequests } from "@/Services/ServicesFront/users";
+import {
+  getUsersByRequests,
+  listCustomers,
+  listRequests,
+} from "@/Services/ServicesFront/users";
 import Link from "next/link";
+import { View } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-
 
 export default function Page({
   searchParams,
@@ -20,121 +27,152 @@ export default function Page({
   searchParams: Record<string, any>;
 }) {
   let userC = useRef<any>([]);
-  const [users, setUsers] = useState<any[]>([])
-  const [statut, setStatut] = useState("")
-  const [pages, setPages] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  const [users, setUsers] = useState<any[]>([]);
+  const [statut, setStatut] = useState("");
+  const [pages, setPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  async function fetchData(page=1, filter?:string) {
-    setLoading(true)
-    console.log("fetch data")
+  async function fetchData(page = 1, filter?: string) {
+    setLoading(true);
+    console.log("fetch data");
     const { users, totalPages } = await listCustomers(page, filter);
-    userC.current = users
-    setUsers(users)
-    setPages(totalPages)
-    setLoading(false)
+    userC.current = users;
+    setUsers(users);
+    setPages(totalPages);
+    setLoading(false);
   }
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
   function filterUsers(status: string) {
-    setStatut(status)
+    setStatut(status);
     if (status !== "Tous les clients") {
-      fetchData(1, status)
-    }
-    else
-    fetchData()
+      fetchData(1, status);
+    } else fetchData();
   }
 
-
-  if (loading)
-    return (
-      <Loader />)
+  if (loading) return <Loader />;
 
   return (
-    <div className="container mx-auto mt-3">
-      <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-        onClick={() => router.back()}>
-        <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
-      </button>
-      <div className="flex flex-row justify-between">
+    <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs animate-fade-in">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <select
-            name="status"
-            value={statut}
-            title="Filtrer par statut"
-            onChange={(e) => filterUsers(e.target.value)}
-            className="rounded-md ml-2 xl:ml-0 border-0 min-w-max text-xl text-gray-900 shadow-xl py-2 px-4 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-umber sm:text-sm sm:leading-6"
-          >
-            <option value="Tous les clients">Tous les clients</option>
-            <option value={"ACTIF"}>Actifs</option>
-            <option value={"INACTIF"}>Inactifs</option>
-          </select>
+          <h1 className="text-2xl font-black text-blue-950">
+            Gestion du Répertoire Patients & Clients
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Retrouvez l'historique médical des patients suivis par Malaika Care
+            ainsi que les comptes clients.
+          </p>
         </div>
-        <Link className="rounded-md flex items-center bg-blue-400 text-white text-xl border border-gray-300 ml-2 xl:ml:0 py-2 px-4 rounded shadow-xl hover:bg-blue-500 transition-all`" href="/backoffice/care/customers/add">
-          Ajouter un nouveau client
-        </Link>
+        <button
+          onClick={() => router.back()}
+          className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+        >
+          ← Retour au Tableau de bord
+        </button>
       </div>
-      <div className="bg-white border border-gray-400 shadow-2xl rounded-lg mx-0 mt-4 py-10 px-0 overflow-x-auto">
-        <div className="inline-block min-w-full py-2 px-8">
-          <table className="min-w-full acc ach">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className="whitespace-nowrap py-3 pr-3 text-left text-xl font-semibold text-gray-900 pl-0"
-                >
-                  Prénom Nom
-                </th>
-                <th
-                  scope="col"
-                  className="py-3 pr-3 text-left text-xl font-semibold text-gray-900 pl-0 hidden xl:table-cell"
-                >
-                  Email
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left text-xl font-semibold text-gray-900"
-                >
-                  Téléphone
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left text-xl font-semibold text-gray-900 hidden xl:table-cell"
-                >
-                  Statut
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {userC.current.map((user:any, index:any) => (
-                <tr key={index}>
-                  <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0">
-                    {user.firstName} {user.lastName}
-                  </td>
-                  <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0 hidden xl:table-cell">
-                    {user.email}
-                  </td>
-                  <td className="xl:whitespace-nowrap px-3 py-4 text-xl">
-                    {user.phone}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-xl hidden xl:table-cell">
-                    <Badge text={user.status !== null ? user.status : "Indéfini"} color={getColorByUserStatus(user.status)} size="medium" />
-                  </td>
-                  <td className="whitespace-nowrap py-4 pl-3 pr-0 text-right hidden xl:table-cell">
-                    <span className="inline-flex gap-4">
-                      <Link href={`/backoffice/care/customers/${user.id}`} className="hover:text-blue-700">
-                        <EyeIcon className="w-6 h-6" />
-                      </Link>
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="overflow-x-auto">
+        <div className="flex flex-row justify-between">
+          <div className="flex items-center bg-slate-100 p-1 rounded-2xl border border-slate-200/60 self-start sm:self-auto">
+            <button
+              value="Tous les clients"
+              onClick={(e) =>
+                filterUsers((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "Tous les clients"
+                  ? "bg-white text-blue-950 shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Tous
+            </button>
+            <button
+              value="ACTIF"
+              onClick={(e) =>
+                filterUsers((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "ACTIF"
+                  ? "bg-amber-500 text-blue-950 shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Actifs
+            </button>
+            <button
+              value="INACTIF"
+              onClick={(e) =>
+                filterUsers((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "INACTIF"
+                  ? "bg-blue-950 text-white shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Inactifs
+            </button>
+          </div>
+          <Link
+            className="bg-blue-950 text-white font-bold text-xs px-5 py-2.5 rounded-xl`"
+            href="/backoffice/care/customers/add"
+          >
+            Ajouter un nouveau client
+          </Link>
         </div>
+        <br />
+        <table className="w-full text-left text-xs">
+          <thead>
+            <tr className="border-b border-slate-200 text-slate-400 font-extrabold uppercase text-[10px]">
+              <th scope="col" className="pb-3">
+                Prénom Nom
+              </th>
+              <th scope="col" className="pb-3">
+                Email
+              </th>
+              <th scope="col" className="pb-3">
+                Téléphone
+              </th>
+              <th scope="col" className="pb-3">
+                Statut
+              </th>
+              <th className="pb-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {userC.current.map((user: any, index: any) => (
+              <tr key={index}>
+                <td className="py-3 font-extrabold text-slate-900">
+                  {user.firstName} {user.lastName}
+                </td>
+                <td className="py-3 font-extrabold text-slate-900">
+                  {user.email}
+                </td>
+                <td className="py-3 text-slate-700">{user.phone}</td>
+                <td className="font-bold text-slate-600">
+                  <Badge
+                    text={user.status !== null ? user.status : "Indéfini"}
+                    color={getColorByUserStatus(user.status)}
+                    size="medium"
+                  />
+                </td>
+                <td className="py-3 text-right">
+                  <span className="inline-flex gap-4">
+                    <Link
+                      href={`/backoffice/care/customers/${user.id}`}
+                      className="bg-amber-500 text-blue-950 font-bold px-3 py-1 rounded-lg text-xs"
+                    >
+                      <View className="w-6 h-6" />
+                    </Link>
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <Pagination setPage={fetchData} totalPages={pages} />
     </div>
