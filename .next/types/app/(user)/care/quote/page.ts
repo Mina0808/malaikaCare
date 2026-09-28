@@ -1,4 +1,4 @@
-// File: C:\Projet\projet malaika\app\(user)\care\quote\page.tsx
+// File: /Users/lordflex/malaikaCare/app/(user)/care/quote/page.tsx
 import * as entry from '../../../../../../app/(user)/care/quote/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
