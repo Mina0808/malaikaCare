@@ -27,28 +27,33 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/(user)/care/page": [
+    "/(user)/care/contact/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(user)/care/page.css",
-      "static/chunks/app/(user)/care/page.js"
+      "static/css/app/(user)/care/contact/page.css",
+      "static/chunks/app/(user)/care/contact/page.js"
     ],
     "/(user)/care/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(user)/care/layout.js"
     ],
+    "/(user)/care/requests/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(user)/care/requests/page.js"
+    ],
+    "/(user)/care/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(user)/care/page.css",
+      "static/chunks/app/(user)/care/page.js"
+    ],
     "/(user)/care/quote/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/(user)/care/quote/page.css",
       "static/chunks/app/(user)/care/quote/page.js"
-    ],
-    "/(user)/care/contact/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(user)/care/contact/page.css",
-      "static/chunks/app/(user)/care/contact/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

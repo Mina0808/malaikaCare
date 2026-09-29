@@ -1,118 +1,161 @@
-"use client"
+"use client";
 
-import { faLocationPin, faMailBulk, faPhone } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationPin,
+  faMailBulk,
+  faPhone,
+} from "@fortawesome/free-solid-svg-icons";
 import { CiLinkedin } from "react-icons/ci";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import logo from "@/images/malaika_logo_transparent.png";
+import Image from "next/image";
 import Link from "next/link";
+import {
+  Phone,
+  Clock,
+  Heart,
+  Building2,
+  X,
+  Menu,
+  Mail,
+  MapPin,
+} from "lucide-react";
 
-export function Footer({
-  isOpen,
-}: {
-  isOpen: boolean
-}) {
+export function Footer({ isOpen }: { isOpen: boolean }) {
   return (
-    <footer className={`w-full text-center`}>
-      <div className="flex flex-col">
-        <div className="flex flex-col md:flex-row justify-between">
-
-          <div className="flex flex-col w-full">
-
-            <div className="text-white h-3/4">
-              <div className="grid grid-cols-4 place-content-center bg-blue-400 h-1/4 text-left">
-                <label className="pl-4">Qui sommes-nous ?</label>
-                <label className="pl-4">Nos services</label>
-                <label className="pl-4">Nos agences</label>
-                <label className="pl-4">Nous contacter</label>
+    <>
+      <footer className="bg-blue-950 text-white mt-auto border-t border-blue-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid md:grid-cols-4 gap-10">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-24 h-24 rounded-xl flex items-center justify-center">
+                  <Image
+                    src={logo}
+                    alt="Malaika Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <span className="text-xl font-black tracking-tight text-white">
+                  MALAIKA CS
+                </span>
               </div>
-              <div className="bg-blue-300 h-3/4 grid grid-cols-4 place-content-center py-8">
-                <table className=" bg-blue-300 w-full text-left">
-                
-                    <tr className="">
-                      <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Qui sommes-nous ?</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Comment ça marche ?</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Actualités</td>
-                      </Link>
-                    </tr>
-                
-                </table>
-                <table className=" bg-blue-300 w-full  text-left">
-                  <tbody>
-                  <tr className="">
-                      <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Soins médicaux</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Services à la personne</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium">Coordination des soins</td>
-                      </Link>
-                    </tr>
-                  </tbody>
-                </table>
-                <table className=" bg-blue-300 w-full  text-left">
-                  <tbody>
-                  <tr className="">
-                      <Link href={''}>
-                      <td className="px-4 py-2 font-medium"> <FontAwesomeIcon icon={faLocationPin} className="mr-2"/>Adresse 1</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium"><FontAwesomeIcon icon={faLocationPin} className="mr-2"/>Adresse 2</td>
-                      </Link>
-                    </tr>
-                  </tbody>
-                </table>
-                <table className=" bg-blue-300 w-full  text-left">
-                  <tbody>
-                  <tr className="">
-                      <Link href={''}>
-                      <td className="px-4 py-2 font-medium"> <FontAwesomeIcon icon={faMailBulk} className="mr-2"/>contact@malaika-cs.com</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium"><FontAwesomeIcon icon={faPhone} className="mr-2"/>+221 78 256 70 70</td>
-                      </Link>
-                    </tr>
-                    <tr>
-                    <Link href={''}>
-                      <td className="px-4 py-2 font-medium flex flex-row"> <CiLinkedin className="w-7 h-7 mr-2" /> Lien LinkedIn</td>
-                      </Link>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Malaika Conseils & Services est votre réseau d'excellence pour
+                les soins infirmiers, la garde à domicile et le conseil
+                organisationnel.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+                Malaika Care
+              </h4>
+              <ul className="space-y-2.5 text-xs text-slate-300">
+                <li>
+                  <a
+                    href="#care-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Soins infirmiers à domicile
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#care-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Garde malade & Nursing 7j/7
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#care-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Accompagnement hospitalier
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#care-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Aide aux personnes âgées
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+                Malaika Consulting
+              </h4>
+              <ul className="space-y-2.5 text-xs text-slate-300">
+                <li>
+                  <a
+                    href="#consulting-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Audits performance & qualité
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#consulting-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Accompagnement au changement
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#consulting-section"
+                    className="hover:text-amber-400 transition-colors"
+                  >
+                    Formations professionnelles
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+                Contact & Agence
+              </h4>
+              <ul className="space-y-3 text-xs text-slate-300">
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>+221 78 256 70 70</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>contact@malaika-cs.com</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Siège social : Keur Massar, Sénégal</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-12 mt-12 border-t border-blue-900/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+            <p>© 2026 Malaika Conseils & Services. Tous droits réservés.</p>
+            <div className="flex space-x-6">
+              <a href="#" className="hover:text-white transition-colors">
+                Mentions légales
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Politique de confidentialité
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Crédit d'impôt
+              </a>
             </div>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-between">
-
-        </div>
-
-
-
-        <div className="flex flex-col my-5">
-          <p>
-            <span className="font-sans">&copy;</span> Malaika Care & Conseil
-          </p>
-        </div>
-      </div>
-
-    </footer>
+      </footer>
+    </>
   );
 }

@@ -18,7 +18,11 @@
       "assets": [],
       "env": {
         "__NEXT_BUILD_ID": "development",
+<<<<<<< HEAD
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "atCNY9PCnswiXLpuJhnb9C9XBYTSjHmcwexzqo/FIwo="
+=======
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "edvpuSdkGJb+ig2XxekYRM8Bl+7qTnB7ik3jrFHSay8="
+>>>>>>> 447de0c9de17ae3e2fa1d6a750612ec1817eea9e
       }
     }
   },

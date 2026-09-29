@@ -46,6 +46,7 @@
     "googleapis": "^144.0.0",
     "i18n-iso-countries": "^7.12.0",
     "jose": "^5.4.0",
+    "lucide-react": "^1.48.0",
     "next": "14.2.16",
     "nextjs-toploader": "^1.6.12",
     "node-xlsx": "^0.24.0",

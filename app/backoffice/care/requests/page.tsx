@@ -1,18 +1,27 @@
-"use client"
+"use client";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@/components/badge";
 import Pagination from "@/components/pagination";
-import { getColorByRequestStatus, getColorByUserStatus, translateRequest, translateRequestStatus, translateRequestType } from "@/Services/ServicesFront/keywords";
+import {
+  getColorByRequestStatus,
+  getColorByUserStatus,
+  translateRequest,
+  translateRequestStatus,
+  translateRequestType,
+} from "@/Services/ServicesFront/keywords";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
-import { getBeneficiaryByRequest, getUserByRequest, listRequests } from "@/Services/ServicesFront/users";
+import {
+  getBeneficiaryByRequest,
+  getUserByRequest,
+  listRequests,
+} from "@/Services/ServicesFront/users";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
-
 
 export default function Page({
   searchParams,
@@ -20,147 +29,176 @@ export default function Page({
   searchParams: Record<string, any>;
 }) {
   let requestC = useRef<any>([]);
-  const [statut, setStatut] = useState("")
-  const [requests, setRequests] = useState<any[]>([])
-  const [pages, setPages] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [userRequests, setUserRequests] = useState<Map<number, any>>(new Map())
-  const router = useRouter()
+  const [statut, setStatut] = useState("");
+  const [requests, setRequests] = useState<any[]>([]);
+  const [pages, setPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [userRequests, setUserRequests] = useState<Map<number, any>>(new Map());
+  const router = useRouter();
 
-  async function fetchData(page=1, filter?:string) {
-    setLoading(true)
+  async function fetchData(page = 1, filter?: string) {
+    setLoading(true);
     const { request, totalPages } = await listRequests(page, filter);
-    console.log(request)
-    const requestBeneficiaries = new Map()
+    console.log(request);
+    const requestBeneficiaries = new Map();
     for (let i = 0; i < request.length; i++) {
-      const req = request[i]
+      const req = request[i];
       if (req.benefactorId) {
-        const beneficiary = await getBeneficiaryByRequest(req.benefactorId)
-        requestBeneficiaries.set(req.id, beneficiary)
+        const beneficiary = await getBeneficiaryByRequest(req.benefactorId);
+        requestBeneficiaries.set(req.id, beneficiary);
+      } else {
+        const user = await getUserByRequest(req.userId);
+        requestBeneficiaries.set(req.id, user);
       }
-      else{
-        const user = await getUserByRequest(req.userId)
-        requestBeneficiaries.set(req.id, user)
-      }
-
     }
-    requestC.current = request
-    setRequests(request)
-    setUserRequests(requestBeneficiaries)
+    requestC.current = request;
+    setRequests(request);
+    setUserRequests(requestBeneficiaries);
     //setUsers(users)
-    setPages(totalPages)
-    setLoading(false)
+    setPages(totalPages);
+    setLoading(false);
   }
-  
+
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   function filterRequest(status: string) {
-    setStatut(status)
+    setStatut(status);
     //const [type,stat] = status.split(" ")
     if (status !== "Toutes les requêtes") {
-      fetchData(1, status)
-    }
-    else
-    fetchData()
+      fetchData(1, status);
+    } else fetchData();
   }
 
-
-  if (loading)
-    return (
-      <Loader />)
+  if (loading) return <Loader />;
 
   return (
-    <div className="container mx-auto mt-3">
-      <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-        onClick={() => router.back()}>
-        <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
-      </button>
-      <div className="flex flex-row justify-between">
+    <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs animate-fade-in">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <select
-            name="status"
-            value={statut}
-            title="Filtrer par statut"
-            onChange={(e) => filterRequest(e.target.value)}
-            className="rounded-md ml-2 xl:ml-0 border-0 min-w-max text-xl text-gray-900 shadow-xl py-2 px-4 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-umber sm:text-sm sm:leading-6"
-          >
-            <option value="Toutes les requêtes">Toutes les requêtes</option>
-            <option value={"SUBMITTED"}>Demande soumise</option>
-            <option value={"RECEIVED"}>Demande validée</option>
-            <option value={"FINISHED"}>Demande traitée</option>
-          </select>
+          <h1 className="text-2xl font-black text-blue-950">
+            Gestion Complète des Demandes & Devis
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Consultez, validez et affectez les intervenants pour chaque dossier
+            client.
+          </p>
         </div>
+        <button
+          onClick={() => router.back()}
+          className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+        >
+          ← Retour au Tableau de bord
+        </button>
       </div>
-      <div className="bg-white border border-gray-400 shadow-2xl rounded-lg mx-0 mt-4 py-10 px-0 overflow-x-auto">
-        <div className="inline-block min-w-full py-2 px-8">
-          <table className="min-w-full acc ach">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className="whitespace-nowrap py-3 pr-3 text-left text-xl font-semibold text-gray-900 pl-0"
-                >
-                  Prénom Nom
-                </th>
-                <th
-                  scope="col"
-                  className="py-3 pr-3 text-left text-xl font-semibold text-gray-900 pl-0 hidden xl:table-cell"
-                >
-                  Email
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left text-xl font-semibold text-gray-900"
-                >
-                  Téléphone
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left text-xl font-semibold text-gray-900 hidden xl:table-cell"
-                >
-                  Type de demande
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-left text-xl font-semibold text-gray-900 hidden xl:table-cell"
-                >
-                  Statut
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {requestC.current.map((request:any, index:any) => (
-                <tr key={index}>
-                  <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0">
-                    {userRequests.get(request.id)?.firstName} {userRequests.get(request.id)?.lastName}
-                  </td>
-                  <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0 hidden xl:table-cell">
-                    {userRequests.get(request.id)?.email}
-                  </td>
-                  <td className="xl:whitespace-nowrap px-3 py-4 text-xl">
-                    {userRequests.get(request.id)?.phone}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-xl hidden xl:table-cell">
-                    {translateRequestType(request.type)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-xl hidden xl:table-cell">
-                    <Badge text={request.status !== null ? translateRequestStatus(request.status) : "Indéfini"} color={getColorByRequestStatus(request.status)} size="medium" />
-                  </td>
-                  <td className="whitespace-nowrap py-4 pl-3 pr-0 text-right hidden xl:table-cell">
-                    <span className="inline-flex gap-4">
-                      <Link href={`/backoffice/care/requests/${request.id}`} className="hover:text-blue-700">
-                        <EyeIcon className="w-6 h-6" />
-                      </Link>
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div className="overflow-x-auto">
+        <div className="flex flex-row justify-between">
+          <div className="flex items-center bg-slate-100 p-1 rounded-2xl border border-slate-200/60 self-start sm:self-auto">
+            <button
+              value="Toutes les requêtes"
+              onClick={(e) =>
+                filterRequest((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "Toutes les requêtes"
+                  ? "bg-white text-blue-950 shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Tous
+            </button>
+            <button
+              value="SUBMITTED"
+              onClick={(e) =>
+                filterRequest((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "SUBMITTED"
+                  ? "bg-amber-500 text-blue-950 shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Soumise
+            </button>
+            <button
+              value="RECEIVED"
+              onClick={(e) =>
+                filterRequest((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "RECEIVED"
+                  ? "bg-blue-950 text-white shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Validée
+            </button>
+            <button
+              value="FINISHED"
+              onClick={(e) =>
+                filterRequest((e.currentTarget as HTMLButtonElement).value)
+              }
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                statut === "FINISHED"
+                  ? "bg-blue-950 text-white shadow-xs"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              Traitée
+            </button>
+          </div>
         </div>
+        <br />
+        <table className="w-full text-left text-xs">
+          <thead>
+            <tr className="border-b border-slate-200 text-slate-400 font-extrabold uppercase text-[10px]">
+              <th className="pb-3">Client</th>
+              <th className="pb-3">Email</th>
+              <th className="pb-3">Téléphone</th>
+              <th className="pb-3">Type de demande</th>
+              <th className="pb-3">Statut</th>
+              <th className="pb-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {requestC.current.map((request: any, index: any) => (
+              <tr key={index} className="hover:bg-slate-50">
+                <td className="py-3 font-extrabold text-slate-900">
+                  {userRequests.get(request.id)?.firstName}{" "}
+                  {userRequests.get(request.id)?.lastName}
+                </td>
+                <td className="py-3 font-extrabold text-slate-900">
+                  {userRequests.get(request.id)?.email}
+                </td>
+                <td className="py-3 text-slate-700">
+                  {userRequests.get(request.id)?.phone}
+                </td>
+                <td className="py-3 font-bold text-blue-950">
+                  {translateRequestType(request.type)}
+                </td>
+                <td className="py-3">
+                  <span className="font-bold text-slate-600">
+                    {request.status !== null
+                      ? translateRequestStatus(request.status)
+                      : "Indéfini"}
+                  </span>
+                </td>
+                <td className="py-3 text-right">
+                  <button
+                    onClick={() =>
+                      router.push(`/backoffice/care/requests/${request.id}`)
+                    }
+                    className="bg-amber-500 text-blue-950 font-bold px-3 py-1 rounded-lg text-xs"
+                  >
+                    Détails / Traiter
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <Pagination setPage={fetchData} totalPages={pages} />
     </div>
