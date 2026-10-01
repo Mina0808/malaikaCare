@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/lordflex/malaikaCare/app/layout\":[\"static/media/a28e96a6e58bd279-s.p.woff2\",\"static/media/127167b5c880415e-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
