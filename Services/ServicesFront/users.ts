@@ -1,226 +1,156 @@
 import { addDocuments } from "../ServicesBack/documents";
-import { findBackofficeUsers, findBeneficiaryByRequest, findDocumentsByRequest, findRequestById, updateOtherContact, createEmergencyContact, findUserByMail, emailValid, createRequest, listClients, updateUser, findCustomers, createUser, findEmergencyContact, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, findEmergencyContactById, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbReceivedQuotes, nbSubmittedQuotes, addBenefactor, findBenefactor, findBeneficiariesByUser, findBeneficiaryById, findUserByRequest, findPassword, updatePwd, findBenefactors } from "../ServicesBack/users"
+import { findBackofficeUsers, findDocumentsByRequest, findRequestById, findUserByMail, emailValid, createRequest, listClients, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbSubmittedQuotes, findPassword, updatePwd, updateProfessional, updateClient, createProfessional, createClient, findClientByRequest } from "../ServicesBack/users"
 import bcrypt from "bcryptjs";
 import { uploadAllFiles } from "./documents";
 import { capitalize } from "./keywords";
 
-export async function updateUserFront(id: string, payload: any) {
-  const user = await updateUser(id, {
+export async function updateUserFront(id: string, payload: any, role: string) {
+  if (role == "INDIVIDUAL")
+    return await updateClient(id, {
+      firstName: capitalize(payload.firstName),
+      lastName: capitalize(payload.lastName),
+      phone: payload.phone,
+      contactFirstName:payload.emergencyFirstName,
+      contactLastName:payload.emergencyLastName,
+      contactEmail:payload.emergencyEmail,
+      contactPhone:payload.emergencyPhone,
+      address: payload.address,
+      city: capitalize(payload.city),
+    })
+  return await updateProfessional(id, {
     firstName: capitalize(payload.firstName),
     lastName: capitalize(payload.lastName),
     phone: payload.phone,
-    country: payload.country,
-    address: payload.address,
-    city: capitalize(payload.city),
   })
-  return user
 }
 
-export async function getPassword(id:string){
-  return await findPassword(id)
+export async function getPassword(id: string, role: string) {
+  return await findPassword(id, role)
 }
 
-export async function checkPassword(oldPwd:string, newPwd:string){
+export async function checkPassword(oldPwd: string, newPwd: string) {
   return await bcrypt.compare(newPwd, oldPwd);
 }
 
-export async function updatePassword(id:string, pwd:string){
+export async function updatePassword(id: string, pwd: string, role: string) {
   const password = await bcrypt.hash(pwd, 10)
-  return await updatePwd(id, password)
+  return await updatePwd(id, password, role)
 }
 
-export async function getBenefactors(userId:string){
-  const benefactorMap = new Map()
-  
-  const benefactors = await findBenefactors(userId)
-  benefactors.forEach((benefactor: any) => (
-    benefactorMap.set(benefactor.id,benefactor)
-  ))
-  return benefactorMap
-}
-
-export async function updateBeneficiariesFront(payload: any, userId: string, id?: string){
-  if (id) {
-    const user = await updateOtherContact(id, {
-      firstName: capitalize(payload.firstName),
-      lastName: capitalize(payload.lastName),
-      phone: payload.phone,
-      email: payload.email,
-    })
-    return user
-  }
-  else {
-    const user = await addBenefactor({
-      firstName: capitalize(payload.firstName),
-      lastName: capitalize(payload.lastName),
-      phone: payload.phone,
-      email: payload.email,
-      type: 'BENEFACTOR',
-      beneficiaryOf: { connect: { id: userId } }
-    })
-    // await updateUser(userId, {
-    //   isEmergencyContact:true
-    // })
-    return user
-  }
-}
-
-export async function updateEmergencyContactFront(payload: any, userId: string, id?: string) {
-  if (id) {
-    const user = await updateOtherContact(id, {
-      firstName: capitalize(payload.firstName),
-      lastName: capitalize(payload.lastName),
-      phone: payload.phone,
-      email: payload.email,
-    })
-    return user
-  }
-  else {
-    const user = await createEmergencyContact({
-      firstName: capitalize(payload.firstName),
-      lastName: capitalize(payload.lastName),
-      phone: payload.phone,
-      email: payload.email,
-      type: 'EMERGENCY',
-      emergencyOf: { connect: { id: userId } }
-    })
-    await updateUser(userId, {
-      isEmergencyContact:true
-    })
-    return user
-  }
-
-}
-
-export async function createUserFront(payload: any) {
+export async function createUserFront(payload: any, role: string) {
   const pwd = '123456789'
   const password = await bcrypt.hash(pwd, 10)
-  const user = await createUser({
+  if (role == "INDIVIDUAL")
+    return await createClient({
+      firstName: capitalize(payload.firstName),
+      lastName: capitalize(payload.lastName),
+      phone: payload.phone,
+      email: payload.email,
+      address: payload.address,
+      city: capitalize(payload.city),
+      gender: payload.gender,
+      birthday: payload.birthday,
+      autonomy: payload.autonomy,
+      role,
+      status: "ACTIF",
+      password,
+    })
+  return await createProfessional({
     firstName: capitalize(payload.firstName),
     lastName: capitalize(payload.lastName),
     phone: payload.phone,
     email: payload.email,
-    country: payload.country,
-    address: payload.address,
-    city: capitalize(payload.city),
-    role: "INDIVIDUAL",
+    role,
     status: "ACTIF",
     password,
-    isEmergencyContact: false
   })
-  return user
 }
 
-export async function emailValidFront(email: string) {
-  return await emailValid(email)
+export async function emailValidFront(email: string, role: string) {
+  return await emailValid(email, role)
 }
 
-export async function updateUserStatus(id: string, status: string) {
-  await updateUser(id, { status })
+export async function updateUserStatus(id: string, status: string, role: string) {
+  if (role == "INDIVIDUAL")
+    return await updateClient(id, { status })
+  return await updateProfessional(id, { status })
 }
 
-export async function newRequest(payload: any, type: string, user?: any, docs?:any) {
+export async function newRequest(payload: any, type: string, user?: any, docs?: any) {
   console.log("Payload: ", payload)
   const pwd = '123456789'
   const password = await bcrypt.hash(pwd, 10)
   let requestId = -1
   let userId = ""
-  if (user) { //Si l'utilisateur a déjà un compte
-    if (payload.clientLastName) { //Si l'utilisateur a désigné un bénéficiaire, nouvelle requête avec un bénéficiaire
-      let client = await findBenefactor(user.id, payload.clientFirstName, payload.clientLastName)
-      if (!client) {
-        client = await addBenefactor({
-          firstName: capitalize(payload.clientFirstName),
-          lastName: capitalize(payload.clientLastName),
-          email: payload.clientEmail,
-          phone: payload.clientPhone,
-          type: "BENEFACTOR",
-          beneficiaryOf: { connect: { id: user.id } }
-        })
-      }
-      const request = await createRequest({
+  const newClient = await createClient({
+      firstName: capitalize(payload.clientFirstName),
+      lastName: capitalize(payload.clientLastName),
+      email: payload.clientEmail,
+      phone: payload.clientPhone,
+      gender: payload.gender,
+      birthday: payload.birthday,
+      autonomy: payload.autonomy,
+      status: "INACTIF",
+      role: "INDIVIDUAL",
+    })
+  if (payload.clientLastName) {//Si l'utilisateur n'est pas le bénéficiaire
+    const client = await createClient({
+      firstName: capitalize(payload.clientFirstName),
+      lastName: capitalize(payload.clientLastName),
+      email: payload.clientEmail,
+      phone: payload.clientPhone,
+      gender: payload.gender,
+      birthday: payload.birthday,
+      autonomy: payload.autonomy,
+      status: "INACTIF",
+      role: "INDIVIDUAL",
+    })
+    const request = await createRequest({
         name: "",
         type,
         status: "SUBMITTED",
         text: payload.text,
-        benefactor: { connect: { id: client.id } },
-        user: { connect: { id: user.id } }
+        contactFirstName: capitalize(payload.clientFirstName),
+        contactLastName: capitalize(payload.clientLastName),
+        contactEmail: payload.clientEmail,
+        contactPhone: payload.clientPhone,
+        client: { connect: { id: client.id } }
       })
       requestId = request.id
-    }
-    else { //Si l'utilisateur est le bénéficiaire, juste créer la requête
-      const request = await createRequest({
+      userId = client.id
+  }
+  else {//Si l'utilisateur est le bénéficiaire
+    const client = await createClient({
+      firstName: capitalize(payload.firstName),
+      lastName: capitalize(payload.lastName),
+      email: payload.email,
+      phone: payload.phone,
+      gender: payload.gender,
+      birthday: payload.birthday,
+      autonomy: payload.autonomy,
+      status: "INACTIF",
+      role: "INDIVIDUAL",
+    })
+    const request = await createRequest({
         name: "",
         type,
         status: "SUBMITTED",
         text: payload.text,
-        user: { connect: { id: user.id } }
+        contactFirstName: capitalize(payload.firstName),
+        contactLastName: capitalize(payload.lastName),
+        contactEmail: payload.email,
+        contactPhone: payload.phone,
+        client: { connect: { id: client.id } }
       })
       requestId = request.id
-    }
-    userId = user.id
+      userId = client.id
   }
-  else { //Si l'utilisateur n'a pas encore de compte ou n'est pas connecté
-    let newUser = await findUserByMail(payload.email)
-    if (!newUser){
-      newUser = await createUser({
-        firstName: capitalize(payload.firstName),
-        lastName: capitalize(payload.lastName),
-        phone: payload.phone,
-        email: payload.email,
-        //isEmergencyContact:false,
-        role: "INDIVIDUAL",
-        status: "INACTIF",
-        password,
-        isEmergencyContact: false
-      })
-    }
-    if (payload.clientLastName) {//Si l'utilisateur n'est pas le bénéficiaire
-        let client = await findBenefactor(user.id, payload.clientFirstName, payload.clientLastName)
-        if (!client) {
-          client = await addBenefactor({
-            firstName: capitalize(payload.clientFirstName),
-            lastName: capitalize(payload.clientLastName),
-            email: payload.clientEmail,
-            phone: payload.clientPhone,
-            type: "BENEFACTOR",
-            beneficiaryOf: { connect: { id: newUser.id } }
-          })
-        }
-        const request = await createRequest({
-          name: "",
-          type,
-          status: "SUBMITTED",
-          text: payload.text,
-          benefactor: { connect: { id: client.id } },
-          user: { connect: { id: newUser.id } }
-        })
-        requestId = request.id
-      }
-      else {//Si l'utilisateur est le bénéficiaire
-        const request = await createRequest({
-          name: "",
-          type,
-          status: "SUBMITTED",
-          text: payload.text,
-          user: { connect: { id: newUser.id } }
-        })
-        requestId = request.id
-      }
-      userId = newUser.id
-  }
-    const upload = await uploadAllFiles(docs)
-    const dbAddedDocs = docs.map((item:{name:string, type:string, file:File})=>{return {name:item.name, type:item.type}})
-    await addDocuments(dbAddedDocs, userId, requestId,type.toLowerCase())
+  const upload = await uploadAllFiles(docs)
+  const dbAddedDocs = docs.map((item: { name: string, type: string, file: File }) => { return { name: item.name, type: item.type } })
+  await addDocuments(dbAddedDocs, userId, requestId, type.toLowerCase())
 }
 
-export async function updateRequestFront(status: string, type: string, id: number, userId: string) {
-  if (status === "SUBMITTED") {
-    await updateUserStatus(userId, "ACTIF")
-    await updateRequest(id, {
-      status: "RECEIVED"
-    })
-  }
+export async function updateRequestFront(status: string, id: number) {
   if (status === "RECEIVED") {
     await updateRequest(id, {
       status: "FINISHED"
@@ -228,32 +158,12 @@ export async function updateRequestFront(status: string, type: string, id: numbe
   }
 }
 
-export async function getUserById(id: string) {
-  const user = await findUserById(id)
+export async function getUserById(id: string, role:string) {
+  const user = await findUserById(id, role)
   return user;
 }
 
-export async function getBeneficiariesByUser(id:string){
-  const beneficiaries = await findBeneficiariesByUser(id)
-  return beneficiaries
-}
-
-export async function getBeneficiaryById(id:string){
-  const beneficiaries = await findBeneficiaryById(id)
-  return beneficiaries
-}
-
-export async function getEmergencyContact(id: string) {
-  const user = await findEmergencyContact(id)
-  return user;
-}
-
-export async function getEmergencyContactById(id: string) {
-  const user = await findEmergencyContactById(id)
-  return user;
-}
-
-export async function getRequestById(id:number){
+export async function getRequestById(id: number) {
   return await findRequestById(id)
 }
 
@@ -261,20 +171,16 @@ export async function getUsersByRequests(requests: any) {
   return await findUsersByRequests(requests)
 }
 
-export async function getRequestsByUser(user: any, page: number = 1, filter?:string) {
+export async function getRequestsByUser(user: any, page: number = 1, filter?: string) {
   const { requests, totalPages } = await findRequestsByUser(user, page, filter)
   return { requests, totalPages }
 }
 
-export async function getBeneficiaryByRequest(beneficiaryId:string){
-  return await findBeneficiaryByRequest(beneficiaryId)
+export async function getUserByRequest(userId: string) {
+  return await findClientByRequest(userId)
 }
 
-export async function getUserByRequest(userId:string){
-  return await findUserByRequest(userId)
-}
-
-export async function getDocumentsByRequest(id:number){
+export async function getDocumentsByRequest(id: number) {
   return await findDocumentsByRequest(id)
 }
 
@@ -283,12 +189,12 @@ export async function listBackofficeUsers(page: number = 1) {
   return { users, totalPages }
 }
 
-export async function listCustomers(page: number = 1, filter?:string) {
-  const users = await findCustomers(page, filter)
+export async function getClients(page: number = 1, filter?: string) {
+  const users = await listClients(page, filter)
   return users
 }
 
-export async function listRequests(page: number = 1, filter?:string) {
+export async function listRequests(page: number = 1, filter?: string) {
   const requests = await findRequests(page, filter)
   return requests
 }
@@ -302,21 +208,17 @@ export async function getStatsFront() {
   const client = await nbClient()
   const quote = await nbQuotes()
   const submittedQuote = await nbSubmittedQuotes()
-  const receivedQuote = await nbReceivedQuotes()
   const finishedQuote = await nbFinishedQuotes()
   const infos = await nbInfos()
   const submittedInfos = await nbSubmittedQuotes()
-  const receivedInfos = await nbReceivedQuotes()
   const finishedInfos = await nbFinishedInfos()
   const statMap = new Map<string, number>()
   statMap.set("client", client)
   statMap.set("quote", quote)
   statMap.set("submittedQuote", submittedQuote)
-  statMap.set("receivedQuote", receivedQuote)
   statMap.set("finishedQuote", finishedQuote)
   statMap.set("infos", infos)
-  statMap.set("submittedInfos", submittedQuote)
-  statMap.set("receivedInfos", receivedQuote)
+  statMap.set("submittedInfos", submittedInfos)
   statMap.set("finishedInfos", finishedInfos)
   return statMap
 }

@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Loader from "../../../loading";
-import { getUserById, updateRequestFront, updateUserStatus, getBeneficiaryByRequest, getRequestById, getDocumentsByRequest } from "@/Services/ServicesFront/users";
+import { getUserById, updateRequestFront, updateUserStatus, getRequestById, getDocumentsByRequest } from "@/Services/ServicesFront/users";
 import { faCircleChevronLeft, faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getButtonByRequestStatus, getButtonByUserStatus, translateRequestStatus, translateRequestType } from '@/Services/ServicesFront/keywords';
@@ -20,7 +20,6 @@ export default function Page({
 }) {
 
     const [user, setUser] = useState<any>(null)
-    const [beneficiary, setBeneficiary] = useState<any>(null)
     const [request, setRequest] = useState<any>(null)
     const [documents, setDocuments] = useState<any[]>([])
     const router = useRouter()
@@ -30,11 +29,7 @@ export default function Page({
         const req = await getRequestById(id)
         setRequest(req)
         if (req) {
-            const user = await getUserById(req?.userId)
-            if (req.benefactorId) {
-                const beneficiary = await getBeneficiaryByRequest(req?.benefactorId)
-                setBeneficiary(beneficiary)
-            }
+            const user = await getUserById(req?.clientId, "INDIVIDUAL")
             setUser(user)
         }
         const documents = await getDocumentsByRequest(id)
@@ -64,7 +59,7 @@ export default function Page({
             }
             else
                 sendEmailUserReactivated(user.lastName, user.firstName, user.email)
-            await updateUserStatus(stat, id)
+            await updateUserStatus(stat, id, "INDIVIDUAL")
             //sendEmailQuote(formData)
             toast.success("Le statut a bien été mis à jour");
             router.push(`/`)
@@ -99,7 +94,7 @@ export default function Page({
 
         if (result.isConfirmed) {
             Swal.fire('Soumis !', 'La demande a été mise à jour.', 'success');
-            await updateRequestFront(status, type, id, userId)
+            await updateRequestFront(status, id)
             if (type=="QUOTE")
                 sendEmailQuoteValidated(user.lastName, user.firstName, user.email)
             toast.success("La demande a bien été mise à jour");
@@ -183,17 +178,6 @@ export default function Page({
                                 <label className="border-5 px-3 py-1 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">A renseigner</label>
                             </div>
                         }
-                        {user?.country ?
-                            <div className="w-full mb-3">
-                                <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Pays</label>
-                                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user.country}</label>
-                            </div>
-                            :
-                            <div className="w-full mb-3">
-                                <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Pays</label>
-                                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">A renseigner</label>
-                            </div>
-                        }
                         {user?.city ?
                             <div className="w-full mb-3">
                                 <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Ville</label>
@@ -207,28 +191,6 @@ export default function Page({
                         }
                     </div>
                 </section>
-                {beneficiary && (
-                    <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">
-                        <div className="mb-4">
-                            <h3 className="text-2xl font-bold mb-2">Bénéficiaire</h3>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2">
-                                <div className="w-full mb-3">
-                                    <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Prénom et nom</label>
-                                    <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.firstName} {beneficiary?.lastName}</label>
-                                </div>
-                                <div className="w-full mb-3">
-                                    <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Email</label>
-                                    <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.email}</label>
-                                </div>
-                                <div className="w-full mb-3">
-                                    <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Numéro de téléphone</label>
-                                    <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.phone}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                )}
 
                 <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">
                     <div className="mb-4">

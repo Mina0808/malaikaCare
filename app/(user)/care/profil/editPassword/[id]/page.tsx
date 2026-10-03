@@ -33,10 +33,10 @@ export default function Page({
     })
 
     async function fetchData() {
-        const user = await getUserFromSession(getToken())
+        const user = await getUserFromSession(await getToken())
         if (user) {
-            const oldPwd = await getPassword(user.id)
-            setOldPassword(oldPwd?.password)
+            const oldPwd = await getPassword(user.id, "INDIVIDUAL")
+            if (oldPwd?.password) setOldPassword(oldPwd?.password)
             setUser(user)
             setLoading(false)
         }
@@ -80,7 +80,7 @@ export default function Page({
 
     async function handleSubmit() {
         if (await validateForm())
-        {await updatePassword(user?.id, formData.password)
+        {await updatePassword(user?.id, formData.password, "INDIVIDUAL")
         router.push(`/care/profil`)}
     }
 

@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  faCircleChevronLeft,
-  faPaperPlane,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -42,7 +36,7 @@ export default function Form() {
   });
 
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getUserFromSession(await getToken());
     if (user != null) {
       setFormData({
         lastName: user.lastName,

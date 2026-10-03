@@ -1,10 +1,10 @@
 "use client"
 // import { listReferentials, listReferentialsWithQuery, listCitiesReferentials, deleteReferential, editReferential, addReferential, listReferentialsDeliveryWithQuery, listReferentialsDelivery, mapReferentials } from "../ServicesBack/referentials";
-import { listReferentials } from "../ServicesBack/referentials";
+// import { listReferentials } from "../ServicesBack/referentials";
 
-export async function getlistReferentials(type : string)  {
-    return await listReferentials (type)
- }
+// export async function getlistReferentials(type : string)  {
+//     return await listReferentials (type)
+//  }
 // export async function getMapReferentials(type : string)  {
 //     return await mapReferentials(type)
 //  }

@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getToken, getUserFromSession } from "@/lib/session";
+import { getClientFromSession, getToken} from "@/lib/session";
 import { updateUserFront } from "@/Services/ServicesFront/users";
 import { useRouter } from "next/navigation";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "@/app/(user)/loading";
-import { getlistReferentials } from "@/Services/ServicesFront/referentials";
 
 
 
@@ -19,36 +18,24 @@ export default function Page({
     const [user, setUser] = useState<any>(null)
     const [loading, setLoading] = useState(true)
 
-    const [countries, setCountries] = useState<{
-        id: number;
-        name: string;
-        category: string;
-        subCategory: string | null;
-    }[]>([])
-
     const [formData, setFormData] = useState({
         firstName: "" as string,
         lastName: "" as string,
         phone: "" as string,
         address: "" as string,
-        country: "" as string,
         city: "" as string,
     })
     const router = useRouter()
 
     async function fetchData() {
-        const user = await getUserFromSession(getToken())
+        const user = await getClientFromSession(await getToken())
         setUser(user)
-        const countries = await getlistReferentials("COUNTRY")
-        setCountries(countries)
-
 
         setFormData({
             firstName: user?.firstName || "",
             lastName: user?.lastName || "",
             phone: user?.phone || "",
             address: user?.address || "",
-            country: user?.country || "",
             city: user?.city || "",
         });
         setLoading(false)
@@ -69,7 +56,7 @@ export default function Page({
     async function handleSubmit() {
         console.log("form", formData)
         console.log("user", user)
-        await updateUserFront(user?.id, formData)
+        await updateUserFront(user?.id, formData, "INDIVIDUAL")
         router.push(`/care/profil`)
     }
 
@@ -182,33 +169,6 @@ export default function Page({
                                     handleChange(e);
                                 }}
                             />
-                        </div>
-                    </div>
-                    <div className="py-2">
-                        <label
-                            htmlFor="country"
-                            form="country"
-                            className="block text-xl font-medium leading-6 text-gray-900"
-                        >
-                            Pays
-                        </label>
-                        <div className="pt-2">
-                            <select
-                                id="country"
-                                name="country"
-                                className="input"
-                                value={formData.country}
-                                onChange={e => {
-                                    handleChange(e);
-                                }}
-                            >
-                                <option value="">Sélectionnez un pays</option>
-                                {countries.map((country, index) => (
-                                    <option key={index} value={country.name} className="text-xl">
-                                        {country.name}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
                     </div>
                     <div className="py-2">

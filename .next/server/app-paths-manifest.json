@@ -1,17 +1,5 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-<<<<<<< HEAD
-  "/api/upload/route": "app/api/upload/route.js",
   "/(user)/page": "app/(user)/page.js",
-  "/(user)/care/page": "app/(user)/care/page.js",
-  "/(user)/care/quote/page": "app/(user)/care/quote/page.js",
-  "/(user)/care/contact/page": "app/(user)/care/contact/page.js"
-=======
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/(user)/page": "app/(user)/page.js",
-  "/(user)/care/contact/page": "app/(user)/care/contact/page.js",
-  "/(user)/care/requests/page": "app/(user)/care/requests/page.js",
   "/(user)/care/page": "app/(user)/care/page.js",
   "/(user)/care/quote/page": "app/(user)/care/quote/page.js"
->>>>>>> 447de0c9de17ae3e2fa1d6a750612ec1817eea9e
 }

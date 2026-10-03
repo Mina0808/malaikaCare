@@ -2,20 +2,12 @@
 export const dynamic = "force-dynamic";
 
 import { getToken, getUserFromSession } from "@/lib/session";
-import { translateRole } from "@/Services/ServicesFront/keywords";
 import {
-  getEmergencyContact,
   getStatsFront,
 } from "@/Services/ServicesFront/users";
-import {
-  faCircleChevronLeft,
-  faFloppyDisk,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../loading";
-import Link from "next/link";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -75,19 +67,19 @@ export default function Profil() {
   });
 
   // Show Toast helper
-  const showToast = (msg) => {
+  const showToast = (msg:any) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 4000);
   };
 
-  const handleProfileSave = (e) => {
+  const handleProfileSave = (e:any) => {
     e.preventDefault();
     showToast("Modifications du profil enregistrées avec succès !");
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e:any) => {
     e.preventDefault();
     if (user.newPassword !== user.confirmPassword) {
       showToast("Erreur : Les mots de passe ne correspondent pas.");
@@ -151,7 +143,7 @@ export default function Profil() {
   ];
 
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getUserFromSession(await getToken());
     setUser(user);
 
     //Informations clients

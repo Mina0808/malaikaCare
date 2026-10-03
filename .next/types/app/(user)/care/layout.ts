@@ -1,4 +1,4 @@
-// File: /Users/lordflex/malaikaCare/app/(user)/care/layout.tsx
+// File: C:\Projet\projet malaika\app\(user)\care\layout.tsx
 import * as entry from '../../../../../app/(user)/care/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

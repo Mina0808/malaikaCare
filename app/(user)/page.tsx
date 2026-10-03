@@ -6,7 +6,7 @@ import Image from "next/image";
 import logoCare from "@/images/logo_malaika_care.png";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUserFromSession, getToken } from "@/lib/session";
+import { getUserFromSession, getToken, getClientFromSession } from "@/lib/session";
 import {
   HeartHandshake,
   Building2,
@@ -50,7 +50,7 @@ export default function Home() {
     fetchData();
   }, []);
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getClientFromSession(await getToken());
     setUser(user);
     setLoading(false);
   }

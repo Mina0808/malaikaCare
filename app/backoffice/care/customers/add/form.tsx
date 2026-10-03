@@ -7,22 +7,12 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Loader from "@/app/backoffice/loading";
-import { getToken, getUserFromSession } from "@/lib/session";
-import { sendEmailQuote } from "@/lib/emails/mailer";
 import { emailValidFront, createUserFront } from "@/Services/ServicesFront/users";
-import { getlistReferentials } from "@/Services/ServicesFront/referentials";
-import { createUser } from "@/Services/ServicesBack/users";
 
 export default function Form() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [validEmail, setValidEmail] = useState(true)
-  const [countries, setCountries] = useState<{
-    id: number;
-    name: string;
-    category: string;
-    subCategory: string | null;
-  }[]>([])
   const [errors, setErrors] = useState({
     lastName: "" as string,
     firstName: "" as string,
@@ -42,8 +32,6 @@ export default function Form() {
   });
 
   async function fetchData() {
-    const countries = await getlistReferentials("COUNTRY")
-    setCountries(countries)
     setLoading(false)
   }
 
@@ -57,7 +45,7 @@ export default function Form() {
 
   };
   const handleSubmit = async () => {
-    const emailValid = await emailValidFront(formData.email)
+    const emailValid = await emailValidFront(formData.email, "INDIVIDUAL")
     setValidEmail(emailValid)
     if (emailValid) {
       const result = await Swal.fire({
@@ -74,7 +62,7 @@ export default function Form() {
 
       if (result.isConfirmed) {
         Swal.fire('Soumis !', 'Le formulaire a été soumis.', 'success');
-        await createUserFront(formData)
+        await createUserFront(formData, "INDIVIDUAL")
         //sendEmailQuote(formData)
         toast.success("La demande a été soumise");
         router.push(`/backoffice/care/customers`)
@@ -205,27 +193,6 @@ export default function Form() {
                 Adresse
               </label>
               <input name="address" id="address" type="text" defaultValue={formData.address} onChange={handleChange} className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg  shadow-xl rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14" />
-            </div>
-          </div>
-          <div className="w-full px-4 mt-3">
-            <div className="w-full mb-3">
-              <label className="block uppercase text-blueGray-600 text-sm xl:text-md font-bold mb-2" htmlFor="numberArticle">
-                Pays
-              </label>
-              <select
-                id="country"
-                className="input border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-2xl  shadow-xl rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"
-                onChange={e => {
-                  handleChange(e);
-                }}
-              >
-                <option value="">Sélectionnez un pays</option>
-                {countries.map((country, id) => (
-                  <option key={id} value={country.name} className="text-2xl">
-                    {country.name}
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
         </div>

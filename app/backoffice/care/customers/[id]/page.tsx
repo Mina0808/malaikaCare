@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Loader from "../../../loading";
-import { getEmergencyContact, getUserById, getRequestsByUser, updateRequestFront, updateUserStatus, getBeneficiaryByRequest } from "@/Services/ServicesFront/users";
+import { getRequestsByUser, getUserById, updateUserStatus } from "@/Services/ServicesFront/users";
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getButtonByUserStatus, translateRequestStatus, translateRequestType } from '@/Services/ServicesFront/keywords';
@@ -18,28 +18,15 @@ export default function Page({
 }) {
 
     const [user, setUser] = useState<any>(null)
-    const [emergency, setEmergency] = useState<any>(null)
     const [requests, setRequests] = useState<any[]>([])
-    const [beneficiaries, setBeneficiaries] = useState<Map<number, any>>(new Map())
     const router = useRouter()
     const [loading, setLoading] = useState(true)
 
     async function fetchData(id: string) {
-        const user = await getUserById(id)
-        const emergency = await getEmergencyContact(id)
-        const {requests, totalPages} = await getRequestsByUser(user)
-        const requestBeneficiaries = new Map()
-    for (let i = 0; i < requests.length; i++) {
-      const req = requests[i]
-      if (req.benefactorId) {
-        const beneficiary = await getBeneficiaryByRequest(req.benefactorId)
-        requestBeneficiaries.set(req.id, beneficiary)
-      }
-    }
-    setBeneficiaries(requestBeneficiaries)
+        const user = await getUserById(id, "PROFESSIONAL")
+        const { requests, totalPages } = await getRequestsByUser(user)
         setRequests(requests)
         setUser(user)
-        setEmergency(emergency)
         setLoading(false)
     }
 
@@ -59,13 +46,13 @@ export default function Page({
         if (result.isConfirmed) {
             Swal.fire('Soumis !', 'Le statut a été mis à jour.', 'success');
             let stat = "ACTIF"
-            if (status === "ACTIF"){
+            if (status === "ACTIF") {
                 stat = "INACTIF"
                 sendEmailUserDesactivated(user.lastName, user.firstName, user.email)
             }
             else
                 sendEmailUserReactivated(user.lastName, user.firstName, user.email)
-            await updateUserStatus(id, stat)
+            await updateUserStatus(id, stat, "PROFESSIONAL")
             toast.success("Le statut a bien été mis à jour");
             router.push('/backoffice/care/customers')
         } else {
@@ -94,7 +81,7 @@ export default function Page({
                     <div className="mb-4">
                         <h3 className="text-2xl font-bold mb-2">Informations concernant l'utilisateur</h3>
                         <div className="w-full mb-3 flex flex-row">
-                            <label className={`border-5 px-3 placeholder-blueGray-300 text-blueGray-600 ${user?.status==="ACTIF"?"bg-green-300":"bg-red-300"} flex justify-center items-center rounded rounded-lg focus:outline-none focus:ring ease-linear transition-all duration-150 h-14 py-2 px-4`}>{user?.status}</label>
+                            <label className={`border-5 px-3 placeholder-blueGray-300 text-blueGray-600 ${user?.status === "ACTIF" ? "bg-green-300" : "bg-red-300"} flex justify-center items-center rounded rounded-lg focus:outline-none focus:ring ease-linear transition-all duration-150 h-14 py-2 px-4`}>{user?.status}</label>
                             <button type="button" onClick={() => { newStatus(user?.status, user?.id) }} className='rounded-md flex items-center bg-blue-400 text-white border border-gray-300 ml-2 xl:ml:0 py-2 px-4 rounded shadow-xl hover:bg-blue-500 transition-all'>
                                 {getButtonByUserStatus(user?.status)}
                             </button>
@@ -152,9 +139,24 @@ export default function Page({
                 <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">
                     <div className="mb-4">
                         <h3 className="text-2xl font-bold mb-2">Contact d'urgence</h3>
-                        {emergency ?
-                            <div className="w-full mb-3 flex flex-row">
-                                <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.status}</label>
+                        {user.contactLastName ?
+                            <div className="flex flex-col lg:flex-row gap-6">
+                                <div className="flex flex-col w-full space-y-4">
+                                <div className="w-full mb-3 flex flex-row">
+                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactFirstName}</label>
+                                </div>
+                                <div className="w-full mb-3 flex flex-row">
+                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactEmail}</label>
+                                </div>
+                                </div>
+                                <div className="flex flex-col w-full space-y-4">
+                                <div className="w-full mb-3 flex flex-row">
+                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactLastName}</label>
+                                </div>
+                                <div className="w-full mb-3 flex flex-row">
+                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactPhone}</label>
+                                </div>
+                                </div>
                             </div>
                             :
                             <div className="w-full mb-3 flex flex-row">
@@ -168,27 +170,27 @@ export default function Page({
                         <h3 className="text-2xl font-bold mb-2">Les demandes</h3>
                         {requests.map((request, index) => (
                             <div key={index} className="">
-                                {requests?.indexOf(request)>0 &&(
-                                    <hr className='my-3'/>
+                                {requests?.indexOf(request) > 0 && (
+                                    <hr className='my-3' />
                                 )}
                                 <div className='flex flex-col mb-3'>
                                     <h1 className="text-lg font-bold mb-2">
-                                        Demande n°{requests?.indexOf(request)+1}
+                                        Demande n°{requests?.indexOf(request) + 1}
                                     </h1>
                                     <div className='grid grid-cols-1 md:grid-cols-2'>
-                                <div className='flex flex-col mb-3'>
-                                    <h1 className="text-lg font-bold mb-2">Type de requête</h1>
-                                    <div className='text-lg'>
-                                        {translateRequestType(request.type)}
+                                        <div className='flex flex-col mb-3'>
+                                            <h1 className="text-lg font-bold mb-2">Type de requête</h1>
+                                            <div className='text-lg'>
+                                                {translateRequestType(request.type)}
+                                            </div>
+                                        </div>
+                                        <div className='flex flex-col mb-3'>
+                                            <h1 className="text-lg font-bold mb-2">État de la requête</h1>
+                                            <div className='text-lg'>
+                                                <Badge text={translateRequestStatus(request.status)} color='blue' size="medium" />
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='flex flex-col mb-3'>
-                                    <h1 className="text-lg font-bold mb-2">État de la requête</h1>
-                                    <div className='text-lg'>
-                                        <Badge text={translateRequestStatus(request.status)} color='blue' size="medium" />
-                                    </div>
-                                </div>
-                            </div>
                                 </div>
                                 <div className='mb-3'>
                                     <div className='flex flex-col'>
@@ -196,44 +198,6 @@ export default function Page({
                                         <div className='text-lg'>{request.text}</div>
                                     </div>
                                 </div>
-                                {request.benefactorId && (
-                                    <div className='mb-3'>
-                                        <div className='flex flex-col'>
-                                            <label className='text-lg font-bold mb-2'>Bénéficiaire de la demande </label>
-                                            <div>
-                                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                                    <div className="w-full mb-3">
-                                                        <label className="block uppercase text-blueGray-600 text-md mb-2">Prénom et nom</label>
-                                                        <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiaries.get(request.id).firstName} {beneficiaries.get(request.id).lastName}</label>
-                                                    </div>
-                                                    {beneficiaries.get(request.id).email?
-                                                    <div className="w-full mb-3">
-                                                        <label className="block uppercase text-blueGray-600 text-md mb-2">Email</label>
-                                                        <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiaries.get(request.id).email}</label>
-                                                    </div>
-                                                    :
-                                                    <div className="w-full mb-3">
-                                                        <label className="block uppercase text-blueGray-600 text-md mb-2">Email</label>
-                                                        <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">Non renseigné</label>
-                                                    </div>
-                                                }
-                                                    {beneficiaries.get(request.id).phone?
-                                                    <div className="w-full mb-3">
-                                                        <label className="block uppercase text-blueGray-600 text-md mb-2">Numéro de téléphone</label>
-                                                        <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiaries.get(request.id).phone}</label>
-                                                    </div>
-                                                    :
-                                                    <div className="w-full mb-3">
-                                                        <label className="block uppercase text-blueGray-600 text-md mb-2">Numéro de téléphone</label>
-                                                        <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">Non renseigné</label>
-                                                    </div>
-                                                }
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
                                 {/* <div className='mb-3'>
                                     <div className='flex flex-col'>
                                         <label className='text-lg font-bold mb-2'>Documents complémentaires </label>
@@ -241,7 +205,7 @@ export default function Page({
                                     </div>
                                 </div> */}
                             </div>
-                            
+
                         ))}
                     </div>
                 </section>

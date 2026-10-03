@@ -1,34 +1,5 @@
 import Header from "@/components/navbar";
-import React, { useState } from "react";
-import {
-  HeartHandshake,
-  Building2,
-  CheckCircle2,
-  Clock,
-  ShieldCheck,
-  Star,
-  ChevronRight,
-  Phone,
-  Mail,
-  MapPin,
-  Stethoscope,
-  Home as HomeIcon,
-  Users,
-  BarChart3,
-  GraduationCap,
-  Sparkles,
-  Menu,
-  X,
-  ArrowRight,
-  UserCheck,
-  Calendar,
-  Activity,
-  Heart,
-  ChevronDown,
-  Check,
-  FileText,
-  Award,
-} from "lucide-react";
+import React from "react";
 
 export default function Care({ children }: { children: React.ReactNode }) {
   return (

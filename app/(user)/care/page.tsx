@@ -1,12 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import Loader from "../loading";
 import Image from "next/image";
-import logo from "@/images/logo_malaika_care.png";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { getDocumentsByPageFront } from "@/Services/ServicesFront/documents";
 import { useRouter } from "next/navigation";
 import {
   Heart,
@@ -46,6 +44,7 @@ import {
   ShoppingBag,
   HelpCircle,
 } from "lucide-react";
+import { getDocumentsByPageFront } from "@/Services/ServicesFront/documents";
 
 const SLIDES = [
   {
@@ -218,7 +217,7 @@ export default function Home() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id:string) => {
     setMobileMenu(false);
     const element = document.getElementById(id);
     if (element) {
@@ -226,7 +225,7 @@ export default function Home() {
     }
   };
 
-  const handleOpenQuote = (serviceName) => {
+  const handleOpenQuote = (serviceName:SetStateAction<string>) => {
     if (serviceName) setSelectedService(serviceName);
     setFormSubmitted(false);
     setQuoteModalOpen(true);
