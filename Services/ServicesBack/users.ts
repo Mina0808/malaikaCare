@@ -3,27 +3,51 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-export async function findUserBy(filter: Prisma.UserWhereUniqueInput) {
-  return prisma.user.findUniqueOrThrow({
+export async function findProfessionalBy(filter: Prisma.ProfessionalWhereUniqueInput) {
+  return prisma.professional.findUniqueOrThrow({
     where: filter,
   });
 }
 
-export async function findPassword(id:string){
-  return prisma.user.findUniqueOrThrow({
+export async function findClientBy(filter: Prisma.ClientWhereUniqueInput) {
+  return prisma.client.findUniqueOrThrow({
+    where: filter,
+  });
+}
+
+export async function findPassword(id:string, role:string){
+  if (role=="INDIVIDUAL")
+  return prisma.client.findUniqueOrThrow({
+    where:{id}
+  })
+  return prisma.professional.findUniqueOrThrow({
     where:{id}
   })
 }
 
-export async function updatePwd(id:string, password:string){
-  return prisma.user.update({
+export async function updatePwd(id:string, password:string, role:string){
+  if (role=="INDIVIDUAL")
+  return prisma.client.update({
+    where:{id},
+    data:{password}
+  })
+  return prisma.professional.update({
     where:{id},
     data:{password}
   })
 }
 
-export async function emailValid(email:string){
-  const mail = await prisma.user.findUnique({
+export async function emailValid(email:string, role:string){
+  if (role=="INDIVIDUAL"){
+    const mail = await prisma.client.findUnique({
+    where: {email}
+  })
+  if (mail)
+    return false
+  else
+    return true
+  }
+  const mail = await prisma.professional.findUnique({
     where: {email}
   })
   if (mail)
@@ -32,64 +56,24 @@ export async function emailValid(email:string){
     return true
 }
 
-export async function findUserById(id: string) {
-  const user = await findUserBy({ id });
+export async function findUserById(id: string, role:string) {
+  if (role=="INDIVIDUAL"){
+    const user = await findClientBy({ id });
+  return user;
+  }
+  const user = await findProfessionalBy({ id });
   return user;
 };
 
-export async function findUserByMail(email: string) {
-  return prisma.user.findUnique({
-    where: {email},
-  });
+export async function findUserByMail(email: string, role:string) {
+  if (role=="INDIVIDUAL"){
+    const user = await findClientBy({ email });
+  return user;
+  }
+  const user = await findProfessionalBy({ email });
+  return user;
 };
 
-export async function findBeneficiariesByUser(id:string){
-  const beneficiaries = await prisma.otherContact.findMany({
-    where: {beneficiaryOfId:id}
-  })
-  return beneficiaries
-}
-
-export async function findEmergencyContact(id: string) {
-  const emergency = await prisma.otherContact.findFirst({
-    where: { emergencyOfId: id }
-  })
-  return emergency;
-};
-
-export async function findEmergencyContactById(id: string) {
-  const emergency = await prisma.otherContact.findFirst({
-    where: { id }
-  })
-  return emergency;
-};
-
-export async function findBeneficiaryById(id: string) {
-  const emergency = await prisma.otherContact.findFirst({
-    where: { id }
-  })
-  return emergency;
-};
-
-export async function findBenefactor(userId: string, firstName:string, lastName:string) {
-  const benefactor = await prisma.otherContact.findFirst({
-    where: { beneficiaryOfId: userId, firstName, lastName }
-  })
-  return benefactor;
-};
-export async function findBenefactors(userId: string) {
-  const benefactor = await prisma.otherContact.findMany({
-    where: { beneficiaryOfId: userId }
-  })
-  return benefactor;
-};
-
-export async function findBenefactorById(id: string) {
-  const benefactor = await prisma.otherContact.findFirst({
-    where: { id }
-  })
-  return benefactor;
-};
 
 export async function findRequestById(id:number){
   const request = await prisma.request.findUnique({
@@ -101,7 +85,7 @@ export async function findRequestById(id:number){
 export async function findUsersByRequests(requests: any) {
   const userRequest = new Map<string, any>()
   requests.forEach(async (request: any) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.client.findUnique({
       where: { id: request.userId }
     })
     userRequest.set(request.id, user)
@@ -109,16 +93,16 @@ export async function findUsersByRequests(requests: any) {
   return userRequest
 }
 
-export async function findRequestsByUser(user: any, page: number = 1, filter?:string) {
+export async function findRequestsByUser(client: any, page: number = 1, filter?:string) {
   return prisma.$transaction(async (prisma) => {
     const requests = await prisma.request.findMany({
-      where: { userId: user.id, status:filter },
+      where: { clientId: client.id, status:filter },
       skip: (page - 1) * 10,
       take: 10,
     });
 
-    const totalCount = await prisma.user.count({
-      where: { NOT: { role: { in: ["INDIVIDUAL"] } } },
+    const totalCount = await prisma.request.count({
+      where: { clientId: client.id, status:filter },
     });
     const totalPages = Math.ceil(totalCount / 10);
 
@@ -129,16 +113,9 @@ export async function findRequestsByUser(user: any, page: number = 1, filter?:st
   })
 }
 
-export async function findBeneficiaryByRequest(beneficiaryId:string){
-  const beneficiary = await prisma.otherContact.findUnique({
-    where:{id:beneficiaryId}
-  })
-  return beneficiary
-}
-
-export async function findUserByRequest(userId:string){
-  const user = await prisma.user.findUnique({
-    where:{id:userId}
+export async function findClientByRequest(clientId:string){
+  const user = await prisma.client.findUnique({
+    where:{id:clientId}
   })
   return user
 }
@@ -150,118 +127,55 @@ export async function findDocumentsByRequest(id:number){
   return documents
 }
 
-export async function listClients() {
-  const clients = await prisma.user.findMany({
-    where: {
-      role: { in: ["INDIVIDUAL"] },
-      status: "ACTIF"
-    },
+export async function listClients(page: number = 1, filter?:string) {
+  return prisma.$transaction(async (prisma) => {
+  const clients = await prisma.client.findMany({
+      orderBy: { createdAt: "asc" },
+      where: { status:filter },
+      skip: (page - 1) * 10,
+      take: 10,
+    });
+  
+    const totalCount = await prisma.client.count({
+      where: { status:filter },
+    });
+    const totalPages = Math.ceil(totalCount / 10);
+
+    return {
+      clients,
+      totalPages,
+    };
   })
-  return clients
 }
 
-// export async function findUsers (query?: string) {
-//   if (query){
-//     const [firstNamePart, lastNamePart] = query.split(' ');
-//     if (firstNamePart && lastNamePart) {
-//       const users = await prisma.user.findMany({
-//         where: {
-//           AND: [
-//             {
-//               firstName: {
-//                 contains: firstNamePart,
-//                 mode: 'insensitive', // Insensible à la casse
-//               },
-//             },
-//             {
-//               lastName: {
-//                 contains: lastNamePart,
-//                 mode: 'insensitive',
-//               },
-//             },
-//           ],
-//         },
-//       });
-//       return users;
-//     }
-//     else{
-//       const users = await prisma.user.findMany({
-//         where: {
-//           OR: [
-//             {
-//               firstName: {
-//                 contains: query,
-//                 mode: 'insensitive', // Insensible à la casse
-//               },
-//             },
-//             {
-//               lastName: {
-//                 contains: query,
-//                 mode: 'insensitive',
-//               },
-//             },
-//           ],
-//         },
-//       });
-//       return users;
-//     }
-//   }
-//   else{
-//     const users = await prisma.user.findMany()
+export async function updateClient(id: string, data: Prisma.ClientUpdateInput) {
+  return await prisma.client.update({ where: { id }, data });
+}
 
-//       return users;
-//   }
-// };
-
-export async function updateUser(id: string, data: Prisma.UserUpdateInput) {
-  return await prisma.user.update({ where: { id }, data });
+export async function updateProfessional(id: string, data: Prisma.ProfessionalUpdateInput) {
+  return await prisma.professional.update({ where: { id }, data });
 }
 
 export async function updateRequest(id: number, data: Prisma.RequestUpdateInput) {
   return await prisma.request.update({ where: { id }, data });
 }
 
-export async function updateOtherContact(id: string, data: Prisma.OtherContactUpdateInput){
-  return await prisma.otherContact.update({ where: { id }, data });
+export async function createClient(data: Prisma.ClientCreateInput) {
+  return await prisma.client.create({ data });
 }
 
-export async function createUser(data: Prisma.UserCreateInput) {
-  return await prisma.user.create({ data });
+export async function createProfessional(data: Prisma.ProfessionalCreateInput) {
+  return await prisma.professional.create({ data });
 }
 
 export async function createRequest(data: Prisma.RequestCreateInput) {
   return await prisma.request.create({ data });
 }
 
-export async function createOtherContact(data: Prisma.OtherContactCreateInput){
-  return await prisma.otherContact.create({ data });
-}
-
-export async function addBenefactor(data: Prisma.OtherContactCreateInput){
-  return await createOtherContact({
-    ...data,
-    type:"BENEFACTOR"
-  })
-}
-
-export async function createEmergencyContact(data: Prisma.OtherContactCreateInput){
-  return await createOtherContact({
-    ...data,
-    type:"EMERGENCY"
-  })
-}
-
-// export async function createClient(data: Prisma.OtherContactCreateInput) {
-//   return await prisma.otherContact.create({ data });
-// }
-
 export async function nbClient() {
   return prisma.$transaction(async (prisma) => {
 
-    const totalCount = await prisma.user.count({
-      where: { role: "INDIVIDUAL"},
-    });
-
+    const totalCount = await prisma.client.count();
     return totalCount
   });
 }
@@ -280,17 +194,6 @@ export async function nbFinishedQuotes() {
 
     const totalCount = await prisma.request.count({
       where: { type: "QUOTE", status: "FINISHED" },
-    });
-
-    return totalCount
-  });
-}
-
-export async function nbReceivedQuotes() {
-  return prisma.$transaction(async (prisma) => {
-
-    const totalCount = await prisma.request.count({
-      where: { type: "QUOTE", status: "RECEIVED" },
     });
 
     return totalCount
@@ -353,37 +256,13 @@ export async function nbSubmittedInfos() {
 
 export async function findBackofficeUsers(page: number = 1) {
   return prisma.$transaction(async (prisma) => {
-    const users = await prisma.user.findMany({
+    const users = await prisma.professional.findMany({
       orderBy: { createdAt: "asc" },
-      where: { NOT: { role: { in: ["INDIVIDUAL"] } } },
       skip: (page - 1) * 10,
       take: 10,
     });
 
-    const totalCount = await prisma.user.count({
-      where: { NOT: { role: { in: ["INDIVIDUAL"] } } },
-    });
-    const totalPages = Math.ceil(totalCount / 10);
-
-    return {
-      users,
-      totalPages,
-    };
-  });
-}
-
-export async function findCustomers(page: number = 1, filter?:string) {
-  return prisma.$transaction(async (prisma) => {
-    const users = await prisma.user.findMany({
-      orderBy: { createdAt: "asc" },
-      where: { role: { in: ["INDIVIDUAL"] }, status:filter },
-      skip: (page - 1) * 10,
-      take: 10,
-    });
-
-    const totalCount = await prisma.user.count({
-      where: { role: { in: ["INDIVIDUAL"] } },
-    });
+    const totalCount = await prisma.professional.count();
     const totalPages = Math.ceil(totalCount / 10);
 
     return {
@@ -402,7 +281,9 @@ export async function findRequests(page: number = 1, filter?:string) {
       take: 10,
     });
 
-    const totalCount = await prisma.user.count({});
+    const totalCount = await prisma.request.count({
+      where:{status:filter},
+    });
     const totalPages = Math.ceil(totalCount / 10);
 
     return {

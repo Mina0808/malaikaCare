@@ -15,7 +15,6 @@ import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
 import {
-  getBeneficiaryByRequest,
   getUserByRequest,
   listRequests,
 } from "@/Services/ServicesFront/users";
@@ -40,20 +39,8 @@ export default function Page({
     setLoading(true);
     const { request, totalPages } = await listRequests(page, filter);
     console.log(request);
-    const requestBeneficiaries = new Map();
-    for (let i = 0; i < request.length; i++) {
-      const req = request[i];
-      if (req.benefactorId) {
-        const beneficiary = await getBeneficiaryByRequest(req.benefactorId);
-        requestBeneficiaries.set(req.id, beneficiary);
-      } else {
-        const user = await getUserByRequest(req.userId);
-        requestBeneficiaries.set(req.id, user);
-      }
-    }
     requestC.current = request;
     setRequests(request);
-    setUserRequests(requestBeneficiaries);
     //setUsers(users)
     setPages(totalPages);
     setLoading(false);
@@ -121,19 +108,6 @@ export default function Page({
               }`}
             >
               Soumise
-            </button>
-            <button
-              value="RECEIVED"
-              onClick={(e) =>
-                filterRequest((e.currentTarget as HTMLButtonElement).value)
-              }
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                statut === "RECEIVED"
-                  ? "bg-blue-950 text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Validée
             </button>
             <button
               value="FINISHED"

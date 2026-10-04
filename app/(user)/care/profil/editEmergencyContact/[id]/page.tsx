@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getEmergencyContactById, getUserById, updateEmergencyContactFront } from "@/Services/ServicesFront/users";
 import { useRouter } from "next/navigation";
 import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "@/app/(user)/loading";
-import { getlistReferentials } from "@/Services/ServicesFront/referentials";
+import { getUserById, updateUserFront } from "@/Services/ServicesFront/users";
 
 
 
@@ -16,7 +15,7 @@ export default function Page({
     params?: { id: string };
 }) {
     const userId = params?.id
-    const [emergency, setEmergency] = useState<any>(null)
+    const [user, setUser] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [errors, setErrors] = useState({
         lastName: "" as string,
@@ -25,35 +24,27 @@ export default function Page({
         phone: "" as string,
     })
     const [validForm, setValidForm] = useState(false)
-    const [countries, setCountries] = useState<{
-        id: number;
-        name: string;
-        category: string;
-        subCategory: string | null;
-    }[]>([])
 
     const [formData, setFormData] = useState({
-        firstName: "" as string,
-        lastName: "" as string,
-        email: "" as string,
-        phone: "" as string,
+        emergencyFirstName: "" as string,
+        emergencyLastName: "" as string,
+        emergencyEmail: "" as string,
+        emergencyPhone: "" as string,
     })
     const router = useRouter()
 
     async function fetchData(id?: string) {
         if (id) {
-            const emergency = await getEmergencyContactById(id)
-            setEmergency(emergency)
+            const user = await getUserById(id, "INDIVIDUAL")
+            setUser(user)
         }
-        const countries = await getlistReferentials("COUNTRY")
-        setCountries(countries)
 
 
         setFormData({
-            firstName: emergency?.firstName || "",
-            lastName: emergency?.lastName || "",
-            phone: emergency?.phone || "",
-            email: emergency?.email || "",
+            emergencyFirstName: user?.userFirstName || "",
+            emergencyLastName: user?.userLastName || "",
+            emergencyPhone: user?.userPhone || "",
+            emergencyEmail: user?.userEmail || "",
         });
         setLoading(false)
     }
@@ -77,7 +68,7 @@ export default function Page({
         if (userId) {
             console.log("form", formData)
             console.log("id", userId)
-            await updateEmergencyContactFront(formData, userId, emergency?.id)
+            await updateUserFront(userId, formData, "INDIVIDUAL")
             router.push(`/care/profil`)
         }
     }
@@ -86,25 +77,25 @@ export default function Page({
         let errors = { firstName: "", lastName: "", mail: "", phone: "", text: "" };
         let valid = true
 
-        if (!formData.firstName) {
+        if (!formData.emergencyFirstName) {
             valid = false
         }
 
-        if (!formData.lastName) {
+        if (!formData.emergencyLastName) {
             valid = false
         }
 
-        if (!formData.phone && !formData.email) {
+        if (!formData.emergencyPhone && !formData.emergencyEmail) {
             errors.mail = "Merci de rentrer une adresse mail ou un numéro de téléphone"
             valid = false
         }
         else {
-            if (formData.phone && !/\+\d{1,3}\s?\d{8,14}/.test(formData.phone)) {
+            if (formData.emergencyPhone && !/\+\d{1,3}\s?\d{8,14}/.test(formData.emergencyPhone)) {
                 errors.phone = "Merci de rentrer un numéro valide avec l'indicatif du pays"
                 valid = false
             }
 
-            if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+            if (formData.emergencyEmail && !/\S+@\S+\.\S+/.test(formData.emergencyEmail)) {
                 errors.mail = "L'adresse mail n'est pas valide";
                 valid = false
             }
@@ -144,7 +135,7 @@ export default function Page({
                                 name="lastName"
                                 type="text"
                                 className="input"
-                                defaultValue={formData.lastName}
+                                defaultValue={formData.emergencyLastName}
                                 onChange={e => {
                                     handleChange(e);
                                 }}
@@ -168,7 +159,7 @@ export default function Page({
                                 type="text"
                                 className="input"
                                 required
-                                defaultValue={formData.firstName}
+                                defaultValue={formData.emergencyFirstName}
                                 onChange={e => {
                                     handleChange(e);
                                 }}
@@ -191,7 +182,7 @@ export default function Page({
                                 type="email"
                                 autoComplete="email"
                                 className="input"
-                                defaultValue={formData.email}
+                                defaultValue={formData.emergencyEmail}
                                 onChange={e => {
                                     handleChange(e);
                                 }}
@@ -214,7 +205,7 @@ export default function Page({
                                 type="phone"
                                 autoComplete="phone"
                                 className="input"
-                                defaultValue={formData.phone}
+                                defaultValue={formData.emergencyPhone}
                                 onChange={e => {
                                     handleChange(e);
                                 }}

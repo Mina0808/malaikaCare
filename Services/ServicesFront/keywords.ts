@@ -80,8 +80,6 @@ export const getColorByRequestStatus = (status:string)=>{
 
 export const getButtonByRequestStatus = (status:string)=>{
   if (status==="SUBMITTED")
-      return "Valider la demande"
-    if (status==="RECEIVED")
       return "Fermer la demande"
 }
 

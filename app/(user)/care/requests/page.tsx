@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
-import { getRequestsByUser, getBeneficiaryByRequest } from "@/Services/ServicesFront/users";
+import { getRequestsByUser } from "@/Services/ServicesFront/users";
 import Link from "next/link";
 import { getUserFromSession, getToken } from "@/lib/session";
 
@@ -23,7 +23,6 @@ export default function Page({
   let requestC = useRef<any>([]);
   const [statut, setStatut] = useState("")
   const [requests, setRequests] = useState<any[]>([])
-  const [beneficiaries, setBeneficiaries] = useState<Map<number, any>>(new Map())
   const [pages, setPages] = useState(0)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
@@ -31,21 +30,11 @@ export default function Page({
 
   async function fetchData(page=1, filter?:string) {
     setLoading(true)
-    const user = await getUserFromSession(getToken())
+    const user = await getUserFromSession(await getToken())
     const {requests, totalPages} = await getRequestsByUser(user, page, filter);
-    const requestBeneficiaries = new Map()
-    for (let i = 0; i < requests.length; i++) {
-      const req = requests[i]
-      if (req.benefactorId) {
-        const beneficiary = await getBeneficiaryByRequest(req.benefactorId)
-        requestBeneficiaries.set(req.id, beneficiary)
-      }
-
-    }
     requestC.current = requests
     setRequests(requests)
     setPages(totalPages)
-    setBeneficiaries(requestBeneficiaries)
     setUser(user)
     setLoading(false)
   }
@@ -131,13 +120,13 @@ export default function Page({
               {requestC.current.map((request: any, index: any) => (
                 <tr key={index}>
                   <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0">
-                    {request.benefactorId ? beneficiaries.get(request.id).firstName : user.firstName} {request.benefactorId ? beneficiaries.get(request.id).lastName : user.lastName}
+                    {request.contactFirstName} {request.contactLastName} Si le type de la requête est devis récup les infos du client sinon récupérer contactFirstName
                   </td>
                   <td className="whitespace-nowrap py-4 pr-3 text-xl font-medium text-gray-900 pl-0 hidden xl:table-cell">
-                    {request.benefactorId ? beneficiaries.get(request.id).email : user.email}
+                    {request.contactEmail}
                   </td>
                   <td className="xl:whitespace-nowrap px-3 py-4 text-xl">
-                    {request.benefactorId ? beneficiaries.get(request.id).phone : user.phone}
+                    {request.contactPhone}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-xl hidden xl:table-cell">
                     {translateRequestType(request.type)}

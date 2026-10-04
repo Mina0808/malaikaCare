@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { getDocumentsByPageFront, updateSlides } from "@/Services/ServicesFront/documents";

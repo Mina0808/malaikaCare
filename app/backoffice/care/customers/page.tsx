@@ -13,7 +13,7 @@ import Loader from "../../loading";
 import { useRouter } from "next/navigation";
 import {
   getUsersByRequests,
-  listCustomers,
+  getClients,
   listRequests,
 } from "@/Services/ServicesFront/users";
 import Link from "next/link";
@@ -36,9 +36,9 @@ export default function Page({
   async function fetchData(page = 1, filter?: string) {
     setLoading(true);
     console.log("fetch data");
-    const { users, totalPages } = await listCustomers(page, filter);
+    const { clients, totalPages } = await getClients(page, filter);
     userC.current = users;
-    setUsers(users);
+    setUsers(clients);
     setPages(totalPages);
     setLoading(false);
   }

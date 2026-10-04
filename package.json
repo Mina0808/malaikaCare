@@ -67,6 +67,7 @@
     "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
     "react-whatsapp": "^0.3.0",
+    "resend": "^6.30.0",
     "sharp": "^0.33.4",
     "sweetalert2": "^11.6.13",
     "swiper": "^11.2.10",

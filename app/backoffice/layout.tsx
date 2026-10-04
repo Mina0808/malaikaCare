@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, []);
   async function fetchData() {
     console.log("layout");
-    const user = await requireUser(getToken());
+    const user = await requireUser(await getToken());
     setUser(user);
     setLoading(false);
   }

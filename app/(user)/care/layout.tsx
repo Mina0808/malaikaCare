@@ -2,8 +2,7 @@
 import NextTopLoader from "nextjs-toploader";
 import React, { useEffect, useState } from "react";
 import { Footer } from "@/components/footer";
-import NavBar from "./navbarHorritzontal";
-import { getToken, getUserFromSession } from "@/lib/session";
+import { getToken, getClientFromSession } from "@/lib/session";
 import Loader from "../loading";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -16,7 +15,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     fetchData();
   }, []);
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getClientFromSession(await getToken());
     setUser(user);
     setLoading(false);
   }

@@ -3,11 +3,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
-import logo from "@/images/logo malaika.jpg";
 import logoCare from "@/images/logo_malaika_care.png";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUserFromSession, getToken } from "@/lib/session";
+import { getUserFromSession, getToken, getClientFromSession } from "@/lib/session";
 import {
   HeartHandshake,
   Building2,
@@ -51,7 +50,7 @@ export default function Home() {
     fetchData();
   }, []);
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getClientFromSession(await getToken());
     setUser(user);
     setLoading(false);
   }
@@ -68,14 +67,14 @@ export default function Home() {
   }
 
   // Smooth scroll helper
-  const scrollToSection = (id) => {
+  const scrollToSection = (id:string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  const toggleFaq = (index) => {
+  const toggleFaq = (index:any) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
   return (

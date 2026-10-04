@@ -1,31 +1,21 @@
 "use client"
 export const dynamic = "force-dynamic";
 
-import { getToken, getUserFromSession } from "@/lib/session";
-import { faCircleChevronLeft, faCirclePlus, faFloppyDisk, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { getToken, getClientFromSession } from "@/lib/session";
+import { faCircleChevronLeft, faFloppyDisk, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../loading";
 import Link from "next/link";
-import { getBeneficiariesByUser, getEmergencyContact } from "@/Services/ServicesFront/users";
-import TooltipComponent from "@/components/tooltip";
 
 export default function Profil() {
   const [user, setUser] = useState<any>(null)
-  const [beneficiaries, setBeneficiaries] = useState<any[]>([])
-  const [emergencyContact, setEmergencyContact] = useState<any>(null)
   const router = useRouter()
   const [loading, setLoading] = useState(true)
 
   async function fetchData() {
-    const user = await getUserFromSession(getToken())
-    if (user) {
-      const beneficiary = await getBeneficiariesByUser(user.id)
-      setBeneficiaries(beneficiary)
-      const emergencyContact = await getEmergencyContact(user?.id)
-      setEmergencyContact(emergencyContact)
-    }
+    const user = await getClientFromSession(await getToken())
     setUser(user)
     setLoading(false)
   }
@@ -74,7 +64,7 @@ export default function Profil() {
             {user?.country && (
               <div className="w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Pays</label>
-                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user.country}</label>
+                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">Sénégal</label>
               </div>
             )}
             {user?.city && (
@@ -114,15 +104,15 @@ export default function Profil() {
         <section className="flex flex-col mt-5">
           <div className="flex flex-row">
             <h3 className="text-xl font-bold mb-4">Contact d'urgence</h3>
-            {!emergencyContact && (
+            {!user.contactLastName && (
               <FontAwesomeIcon icon={faWarning} color="red" className=" px-3 w-6 h-6" />
             )}
           </div>
           <div className="grid grid-cols-2">
-            {emergencyContact?.firstName && emergencyContact?.lastName ?
+            {user.contactFirstName && user.contactLastName ?
               <div className="w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Prénom et nom</label>
-                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{emergencyContact?.firstName} {emergencyContact?.lastName}</label>
+                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user.contactFirstName} {user.contactLastName}</label>
               </div>
               :
               <div className="w-full mb-3">
@@ -130,10 +120,10 @@ export default function Profil() {
                 <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-red-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"> A renseigner</label>
               </div>
             }
-            {emergencyContact?.email ?
+            {user.contactEmail ?
               <div className="w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Email</label>
-                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{emergencyContact?.email}</label>
+                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user.contactEmail}</label>
               </div>
               :
               <div className="w-full mb-3">
@@ -141,10 +131,10 @@ export default function Profil() {
                 <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-red-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"> A renseigner</label>
               </div>
             }
-            {emergencyContact?.phone ?
+            {user.contactPhone ?
               <div className="w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Numéro de téléphone</label>
-                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{emergencyContact?.phone}</label>
+                <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user.contactPhone}</label>
               </div>
               :
               <div className="w-full mb-3">
@@ -167,66 +157,6 @@ export default function Profil() {
             </Link>
           </div>
         </section>
-        <hr className="mt-5" />
-          <section className="flex flex-col mt-5">
-            <div className="flex flex-row">
-              <h3 className="text-xl font-bold mb-4 mr-3">Mes bénéficiaires</h3>
-              <TooltipComponent msg="Ajouter un bénéficiaire">
-              <Link
-                className="border-2 border-yellow-600 rounded-2xl h-7 w-7 text-white bg-yellow-700"
-                href={`/care/profil/editBeneficiaries`}
-                type="button"
-              >
-              <FontAwesomeIcon icon={faCirclePlus} className="w-6 h-6" />
-              </Link>
-              </TooltipComponent>
-            </div>
-            {beneficiaries.map((beneficiary, index) => (
-              <div key={index} className="flex flex-col">
-                <div className="grid grid-cols-2">
-                  <div className="w-full mb-3">
-                    <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Prénom et nom</label>
-                    <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.firstName} {beneficiary?.lastName}</label>
-                  </div>
-                  {beneficiary?.email ?
-                    <div className="w-full mb-3">
-                      <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Email</label>
-                      <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.email}</label>
-                    </div>
-                    :
-                    <div className="w-full mb-3">
-                      <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Email</label>
-                      <label className="border-5 px-3 py-3 placeholder-blueGray-300 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"> A renseigner</label>
-                    </div>
-                  }
-                  {beneficiary?.phone ?
-                    <div className="w-full mb-3">
-                      <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Numéro de téléphone</label>
-                      <label className="border-5 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{beneficiary?.phone}</label>
-                    </div>
-                    :
-                    <div className="w-full mb-3">
-                      <label className="block uppercase text-blueGray-600 text-md font-bold mb-2">Numéro de téléphone</label>
-                      <label className="border-5 px-3 py-3 placeholder-blueGray-300 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14"> A renseigner</label>
-                    </div>
-                  }
-                </div>
-                <div className="flex justify-start mb-3">
-                  <Link
-                    className="flex items-center bg-white text-gray-800 border border-gray-300 py-2 px-4 rounded shadow-lg hover:bg-gray-300 transition-all"
-                    href={`/care/profil/editBeneficiaries/${beneficiary?.id}`}
-                    type="button"
-                  >
-                    <FontAwesomeIcon icon={faFloppyDisk} className="mr-2" />
-                    <span className="hidden sm:inline-block xl:inline-block">
-                      Modifier le bénéficiaire
-                    </span>
-
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </section>
       </div>
     </div>
   );

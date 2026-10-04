@@ -102,13 +102,7 @@ export default function NavBar({
                 <div className="flex justify-center px-10">
 
                   <li>
-                    <Dropdown tooltipMsg={"Informations sur l'entreprise"} state={dropdownState} setState={setDropdownState} menuName={"Malaika Care & Conseil"} itemList={[{ name: "Qui sommes nous?", href: "" }, { name: "Nos agences", href: "" }, { name: "Blogs et articles", href: "" }]}></Dropdown>
-                  </li>
-                  <li>
                     <Dropdown tooltipMsg={"Les différents services proposés"} state={dropdownState} setState={setDropdownState} menuName={"Nos services"} itemList={[{ name: "Soins médicaux", href: "" }, { name: "Services à la personne", href: "" }, { name: "Coordination des soins", href: "" }]}></Dropdown>
-                  </li>
-                  <li>
-                    <Dropdown tooltipMsg={"Informations utiles"} state={dropdownState} setState={setDropdownState} menuName={"Informations utiles"} itemList={[{ name: "Comment ça marche?", href: "" }, { name: "Tarifs", href: "" }, { name: "Nous contacter", href: "/care/contact" }]}></Dropdown>
                   </li>
                   {user && (
                     <li className="">
@@ -119,6 +113,13 @@ export default function NavBar({
                       </TooltipComponent>
                     </li>
                   )}
+                  <li className="">
+                    <TooltipComponent msg="Nous contacter">
+                      <Link href={"/care/contact"} onClick={() => { handleChange("") }} className={`flex hover:border-b hover:border-5 hover:border-yellow-600 items-center p-5 text-gray-700`}>
+                        <span className={``}>Nous contacter</span>
+                      </Link>
+                    </TooltipComponent>
+                  </li>
                   <li className="">
                     <TooltipComponent msg="Faire une demande de devis">
                       <Link href={"/care/quote"} onClick={() => { handleChange("") }} className={`flex hover:border-b hover:border-5 hover:border-yellow-600 items-center p-5 text-gray-700`}>
