@@ -5,11 +5,16 @@
       "static/chunks/main-app.js",
       "static/chunks/app/global-error.js"
     ],
-    "/(user)/page": [
+    "/(user)/care/quote/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(user)/page.css",
-      "static/chunks/app/(user)/page.js"
+      "static/css/app/(user)/care/quote/page.css",
+      "static/chunks/app/(user)/care/quote/page.js"
+    ],
+    "/(user)/care/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(user)/care/layout.js"
     ],
     "/(user)/layout": [
       "static/chunks/webpack.js",
@@ -27,22 +32,98 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/auth/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/login/page.js"
+    ],
+    "/auth/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/layout.js"
+    ],
+    "/auth/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/loading.js"
+    ],
+    "/backoffice/care/requests/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/care/requests/page.js"
+    ],
+    "/backoffice/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/layout.js"
+    ],
+    "/backoffice/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/loading.js"
+    ],
+    "/(user)/care/requests/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(user)/care/requests/page.js"
+    ],
+    "/(user)/care/profil/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(user)/care/profil/page.js"
+    ],
     "/(user)/care/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/(user)/care/page.css",
       "static/chunks/app/(user)/care/page.js"
     ],
-    "/(user)/care/layout": [
+    "/backoffice/care/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(user)/care/layout.js"
+      "static/css/app/backoffice/care/page.css",
+      "static/chunks/app/backoffice/care/page.js"
     ],
-    "/(user)/care/quote/page": [
+    "/backoffice/care/customers/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(user)/care/quote/page.css",
-      "static/chunks/app/(user)/care/quote/page.js"
+      "static/chunks/app/backoffice/care/customers/page.js"
+    ],
+    "/backoffice/care/profil/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/care/profil/page.js"
+    ],
+    "/auth/client/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/client/login/page.js"
+    ],
+    "/auth/backoffice/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/auth/backoffice/login/page.js"
+    ],
+    "/backoffice/care/users/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/care/users/page.js"
+    ],
+    "/backoffice/care/customers/add/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/care/customers/add/page.js"
+    ],
+    "/backoffice/care/users/add/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/backoffice/care/users/add/page.js"
+    ],
+    "/(user)/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(user)/page.css",
+      "static/chunks/app/(user)/page.js"
     ]
   }
 }

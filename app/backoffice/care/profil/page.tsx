@@ -1,9 +1,11 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { getToken, getUserFromSession } from "@/lib/session";
+import { getProfessionalFromSession, getToken, getUserFromSession } from "@/lib/session";
 import {
   getStatsFront,
+  updatePassword,
+  updateUserFront,
 } from "@/Services/ServicesFront/users";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -74,21 +76,23 @@ export default function Profil() {
     }, 4000);
   };
 
-  const handleProfileSave = (e:any) => {
+  const handleProfileSave = async (e:any) => {
     e.preventDefault();
+    await updateUserFront(user.id, user, "PROFESSIONAL")
     showToast("Modifications du profil enregistrées avec succès !");
   };
 
-  const handlePasswordChange = (e:any) => {
+  const handlePasswordChange = async (e:any) => {
     e.preventDefault();
-    if (user.newPassword !== user.confirmPassword) {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
       showToast("Erreur : Les mots de passe ne correspondent pas.");
       return;
     }
-    if (user.newPassword.length < 8) {
+    if (passwordData.newPassword.length < 8) {
       showToast("Le mot de passe doit contenir au moins 8 caractères.");
       return;
     }
+    await updatePassword(user.id, passwordData.newPassword, "PROFESSIONAL")
     setPasswordData({
       currentPassword: "",
       newPassword: "",
@@ -143,7 +147,7 @@ export default function Profil() {
   ];
 
   async function fetchData() {
-    const user = await getUserFromSession(await getToken());
+    const user = await getProfessionalFromSession(await getToken());
     setUser(user);
 
     //Informations clients
@@ -208,7 +212,7 @@ export default function Profil() {
             <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-xs text-slate-300 pt-1">
               <span className="flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                {user?.city}, {user?.country}
+                {user?.city}, Sénégal
               </span>
               <span className="flex items-center gap-1">
                 <Mail className="w-3.5 h-3.5 text-amber-400" />

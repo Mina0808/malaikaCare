@@ -20,7 +20,10 @@ import {
   Menu,
   User,
   TriangleAlert,
+  LogOut,
 } from "lucide-react";
+import Link from "next/link";
+import { clearSession } from "@/lib/session";
 
 export default function Navbar({
   user,
@@ -40,18 +43,28 @@ export default function Navbar({
   const [quoteType, setQuoteType] = useState("care");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
-
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const toggleDropdown = (menuName:any) => {
+    setActiveDropdown((prev) => (prev === menuName ? null : menuName));
+  };
   const pathname = usePathname();
   const isCare = pathname.startsWith("/care");
   const isConsulting = pathname.startsWith("/consulting");
 
   // Smooth scroll helper
-  const scrollToSection = (id) => {
+  const scrollToSection = (id: any) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await clearSession();
+    router.push('/care');
+    setUser(null)
   };
 
   const openQuoteModal = (type = "care") => {
@@ -60,7 +73,7 @@ export default function Navbar({
     setQuoteModalOpen(true);
   };
 
-  const toggleFaq = (index) => {
+  const toggleFaq = (index: any) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
   return (
@@ -136,6 +149,12 @@ export default function Navbar({
                   >
                     FAQ
                   </button>
+                  <Link
+                    href="/care/requests"
+                    className="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-blue-950 hover:bg-amber-400 transition-all shadow-md"
+                  >
+                    Liste des demandes
+                  </Link>
                 </>
               ) : isConsulting ? (
                 <>
@@ -186,34 +205,63 @@ export default function Navbar({
             <div className="hidden lg:flex items-center gap-4">
               {isCare ? (
                 user ? (
-                  <button
-                    onClick={() =>
-                      router.push(
-                        `user?.role !== "INDIVIDUAL" ? "/backoffice/care/profil" : "/care/profil"`,
-                      )
-                    }
-                    className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                  >
-                    <span>
-                      {user?.firstName} {user?.lastName}
-                    </span>
-                    {user?.isEmergencyContact ? null : (
-                      <>
-                        <TriangleAlert className="w-5 h-5 fill-red/20" />
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-row gap-3 sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                    <button
+                      onClick={() =>
+                        router.push(
+                          `${user?.role !== "INDIVIDUAL" ? "/backoffice/care/profil" : "/care/profil"}`,
+                        )
+                      }
+                      className="w-full flex flex-row gap-2 p-1.5"
+                    >
+                      <span>
+                        {user?.firstName} {user?.lastName}
+                      </span>
+                      {user?.contactLastName ? null : (
+                        <>
+                          <TriangleAlert className="w-5 h-5 fill-red/20" />
+                        </>
+                      )}
+                       
+                    </button>
+                   <button
+                      onClick={handleLogout}
+                      className="p-1.5 rounded-xl hover:bg-red-500/20 transition-colors"
+                      title="Déconnexion"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
                 ) : (
-                  <button
-                    onClick={() =>
-                      router.push(
-                        `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`,
-                      )
-                    }
-                    className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                  >
-                    <span>Accéder à mon espace</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={() => toggleDropdown("auth2")}
+                      // onClick={() =>
+                      //   router.push(
+                      //     `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`,
+                      //   )
+                      // }
+                      className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                      <span>Accéder à mon espace</span>
+                    </button>
+                    {activeDropdown === "auth2" && (
+                      <div className="absolute right-0 top-20 w-56 bg-white rounded-lg shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
+                        <Link
+                          href={`/auth/client/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+                          className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                        >
+                          Je suis client
+                        </Link>
+                        <Link
+                          href={`/auth/backoffice/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+                          className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                        >
+                          Je suis un intervenant
+                        </Link>
+                      </div>
+                    )}
+                  </>
                 )
               ) : isConsulting ? (
                 <button

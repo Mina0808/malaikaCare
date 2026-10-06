@@ -1,5 +1,7 @@
 {
-  "/(user)/page": "app/(user)/page.js",
-  "/(user)/care/page": "app/(user)/care/page.js",
-  "/(user)/care/quote/page": "app/(user)/care/quote/page.js"
+  "/backoffice/care/page": "app/backoffice/care/page.js",
+  "/auth/backoffice/login/page": "app/auth/backoffice/login/page.js",
+  "/backoffice/care/users/page": "app/backoffice/care/users/page.js",
+  "/backoffice/care/users/add/page": "app/backoffice/care/users/add/page.js",
+  "/(user)/page": "app/(user)/page.js"
 }

@@ -1,5 +1,5 @@
 import { addDocuments } from "../ServicesBack/documents";
-import { findBackofficeUsers, findDocumentsByRequest, findRequestById, findUserByMail, emailValid, createRequest, listClients, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbSubmittedQuotes, findPassword, updatePwd, updateProfessional, updateClient, createProfessional, createClient, findClientByRequest } from "../ServicesBack/users"
+import { findBackofficeUsers, findDocumentsByRequest, findRequestById, findUserByMail, emailValid, createRequest, listClients, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbSubmittedQuotes, findPassword, updatePwd, updateProfessional, updateClient, createProfessional, createClient, findClientByRequest, listClientsByProfessionals, findProfessionals } from "../ServicesBack/users"
 import bcrypt from "bcryptjs";
 import { uploadAllFiles } from "./documents";
 import { capitalize } from "./keywords";
@@ -10,10 +10,10 @@ export async function updateUserFront(id: string, payload: any, role: string) {
       firstName: capitalize(payload.firstName),
       lastName: capitalize(payload.lastName),
       phone: payload.phone,
-      contactFirstName:payload.emergencyFirstName,
-      contactLastName:payload.emergencyLastName,
-      contactEmail:payload.emergencyEmail,
-      contactPhone:payload.emergencyPhone,
+      contactFirstName: payload.contactFirstName,
+      contactLastName: payload.contactLastName,
+      contactEmail: payload.contactEmail,
+      contactPhone: payload.contactPhone,
       address: payload.address,
       city: capitalize(payload.city),
     })
@@ -83,16 +83,16 @@ export async function newRequest(payload: any, type: string, user?: any, docs?: 
   let requestId = -1
   let userId = ""
   const newClient = await createClient({
-      firstName: capitalize(payload.clientFirstName),
-      lastName: capitalize(payload.clientLastName),
-      email: payload.clientEmail,
-      phone: payload.clientPhone,
-      gender: payload.gender,
-      birthday: payload.birthday,
-      autonomy: payload.autonomy,
-      status: "INACTIF",
-      role: "INDIVIDUAL",
-    })
+    firstName: capitalize(payload.clientFirstName),
+    lastName: capitalize(payload.clientLastName),
+    email: payload.clientEmail,
+    phone: payload.clientPhone,
+    gender: payload.gender,
+    birthday: payload.birthday,
+    autonomy: payload.autonomy,
+    status: "INACTIF",
+    role: "INDIVIDUAL",
+  })
   if (payload.clientLastName) {//Si l'utilisateur n'est pas le bénéficiaire
     const client = await createClient({
       firstName: capitalize(payload.clientFirstName),
@@ -106,18 +106,18 @@ export async function newRequest(payload: any, type: string, user?: any, docs?: 
       role: "INDIVIDUAL",
     })
     const request = await createRequest({
-        name: "",
-        type,
-        status: "SUBMITTED",
-        text: payload.text,
-        contactFirstName: capitalize(payload.clientFirstName),
-        contactLastName: capitalize(payload.clientLastName),
-        contactEmail: payload.clientEmail,
-        contactPhone: payload.clientPhone,
-        client: { connect: { id: client.id } }
-      })
-      requestId = request.id
-      userId = client.id
+      name: "",
+      type,
+      status: "SUBMITTED",
+      text: payload.text,
+      contactFirstName: capitalize(payload.clientFirstName),
+      contactLastName: capitalize(payload.clientLastName),
+      contactEmail: payload.clientEmail,
+      contactPhone: payload.clientPhone,
+      client: { connect: { id: client.id } }
+    })
+    requestId = request.id
+    userId = client.id
   }
   else {//Si l'utilisateur est le bénéficiaire
     const client = await createClient({
@@ -132,33 +132,38 @@ export async function newRequest(payload: any, type: string, user?: any, docs?: 
       role: "INDIVIDUAL",
     })
     const request = await createRequest({
-        name: "",
-        type,
-        status: "SUBMITTED",
-        text: payload.text,
-        contactFirstName: capitalize(payload.firstName),
-        contactLastName: capitalize(payload.lastName),
-        contactEmail: payload.email,
-        contactPhone: payload.phone,
-        client: { connect: { id: client.id } }
-      })
-      requestId = request.id
-      userId = client.id
+      name: "",
+      type,
+      status: "SUBMITTED",
+      text: payload.text,
+      contactFirstName: capitalize(payload.firstName),
+      contactLastName: capitalize(payload.lastName),
+      contactEmail: payload.email,
+      contactPhone: payload.phone,
+      client: { connect: { id: client.id } }
+    })
+    requestId = request.id
+    userId = client.id
   }
   const upload = await uploadAllFiles(docs)
   const dbAddedDocs = docs.map((item: { name: string, type: string, file: File }) => { return { name: item.name, type: item.type } })
   await addDocuments(dbAddedDocs, userId, requestId, type.toLowerCase())
 }
 
-export async function updateRequestFront(status: string, id: number) {
+export async function updateRequestFront(status: string, id: number, clientId?: string) {
   if (status === "RECEIVED") {
+    if (clientId) {
+      await updateClient(clientId, {
+        status: "ACTIF"
+      })
+    }
     await updateRequest(id, {
       status: "FINISHED"
     })
   }
 }
 
-export async function getUserById(id: string, role:string) {
+export async function getUserById(id: string, role: string) {
   const user = await findUserById(id, role)
   return user;
 }
@@ -189,8 +194,18 @@ export async function listBackofficeUsers(page: number = 1) {
   return { users, totalPages }
 }
 
+export async function getProfessionals(page: number = 1, filter?: string) {
+  const { professionals, totalPages } = await findProfessionals(page, filter)
+  return { professionals, totalPages }
+}
+
 export async function getClients(page: number = 1, filter?: string) {
   const users = await listClients(page, filter)
+  return users
+}
+
+export async function getClientsByProfessionals(id: string, page: number = 1, filter?: string) {
+  const users = await listClientsByProfessionals(id, page, filter)
   return users
 }
 

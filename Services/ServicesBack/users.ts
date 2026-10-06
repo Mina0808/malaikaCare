@@ -148,6 +148,27 @@ export async function listClients(page: number = 1, filter?:string) {
   })
 }
 
+export async function listClientsByProfessionals(id:string, page: number = 1, filter?:string) {
+  return prisma.$transaction(async (prisma) => {
+  const clients = await prisma.client.findMany({
+      orderBy: { createdAt: "asc" },
+      where: { status:filter, professionalId: id},
+      skip: (page - 1) * 10,
+      take: 10,
+    });
+  
+    const totalCount = await prisma.client.count({
+      where: { status:filter },
+    });
+    const totalPages = Math.ceil(totalCount / 10);
+
+    return {
+      clients,
+      totalPages,
+    };
+  })
+}
+
 export async function updateClient(id: string, data: Prisma.ClientUpdateInput) {
   return await prisma.client.update({ where: { id }, data });
 }
@@ -270,6 +291,45 @@ export async function findBackofficeUsers(page: number = 1) {
       totalPages,
     };
   });
+}
+
+export async function findProfessionals(page: number = 1, filter?:string) {
+  if (filter){
+    return prisma.$transaction(async (prisma) => {
+    const professionals = await prisma.professional.findMany({
+      where:{NOT :{role:filter}},
+      orderBy: { createdAt: "asc" },
+      skip: (page - 1) * 10,
+      take: 10,
+    });
+
+    const totalCount = await prisma.professional.count();
+    const totalPages = Math.ceil(totalCount / 10);
+
+    return {
+      professionals,
+      totalPages,
+    };
+  });
+  }
+  else{
+    return prisma.$transaction(async (prisma) => {
+    const professionals = await prisma.professional.findMany({
+      where:{NOT :{role:"ADMIN"}},
+      orderBy: { createdAt: "asc" },
+      skip: (page - 1) * 10,
+      take: 10,
+    });
+
+    const totalCount = await prisma.professional.count();
+    const totalPages = Math.ceil(totalCount / 10);
+
+    return {
+      professionals,
+      totalPages,
+    };
+  });
+  }
 }
 
 export async function findRequests(page: number = 1, filter?:string) {

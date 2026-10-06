@@ -1,23 +1,20 @@
 "use client";
-import { EyeIcon } from "@heroicons/react/24/solid";
+
 import { Badge } from "@/components/badge";
 import Pagination from "@/components/pagination";
 import {
   getColorByUserStatus,
-  translateRequest,
 } from "@/Services/ServicesFront/keywords";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
 import {
-  getUsersByRequests,
   getClients,
-  listRequests,
+  getClientsByProfessionals,
 } from "@/Services/ServicesFront/users";
 import Link from "next/link";
 import { View } from "lucide-react";
+import { getProfessionalFromSession, getToken } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +23,8 @@ export default function Page({
 }: {
   searchParams: Record<string, any>;
 }) {
-  let userC = useRef<any>([]);
-  const [users, setUsers] = useState<any[]>([]);
+  let clientC = useRef<any>([]);
+  const [user, setUser] = useState<any>();
   const [statut, setStatut] = useState("");
   const [pages, setPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -35,12 +32,22 @@ export default function Page({
 
   async function fetchData(page = 1, filter?: string) {
     setLoading(true);
+    const user = await getProfessionalFromSession(await getToken())
     console.log("fetch data");
-    const { clients, totalPages } = await getClients(page, filter);
-    userC.current = users;
-    setUsers(clients);
-    setPages(totalPages);
-    setLoading(false);
+    if (user) {
+      if(user.role=="ADMIN"){
+        const { clients, totalPages } = await getClients(page, filter);
+        clientC.current = clients;
+      setPages(totalPages);
+      }
+      else{
+        const { clients, totalPages } = await getClientsByProfessionals(user?.id, page, filter);
+        clientC.current = clients;
+      setPages(totalPages);
+      }
+      setUser(user)
+      setLoading(false);
+    }
   }
   useEffect(() => {
     fetchData();
@@ -81,11 +88,10 @@ export default function Page({
               onClick={(e) =>
                 filterUsers((e.currentTarget as HTMLButtonElement).value)
               }
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                statut === "Tous les clients"
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${statut === "Tous les clients"
                   ? "bg-white text-blue-950 shadow-xs"
                   : "text-slate-500 hover:text-slate-800"
-              }`}
+                }`}
             >
               Tous
             </button>
@@ -94,11 +100,10 @@ export default function Page({
               onClick={(e) =>
                 filterUsers((e.currentTarget as HTMLButtonElement).value)
               }
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                statut === "ACTIF"
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${statut === "ACTIF"
                   ? "bg-amber-500 text-blue-950 shadow-xs"
                   : "text-slate-500 hover:text-slate-800"
-              }`}
+                }`}
             >
               Actifs
             </button>
@@ -107,21 +112,23 @@ export default function Page({
               onClick={(e) =>
                 filterUsers((e.currentTarget as HTMLButtonElement).value)
               }
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                statut === "INACTIF"
+              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${statut === "INACTIF"
                   ? "bg-blue-950 text-white shadow-xs"
                   : "text-slate-500 hover:text-slate-800"
-              }`}
+                }`}
             >
               Inactifs
             </button>
           </div>
-          <Link
-            className="bg-blue-950 text-white font-bold text-xs px-5 py-2.5 rounded-xl`"
-            href="/backoffice/care/customers/add"
-          >
-            Ajouter un nouveau client
-          </Link>
+          {user.role == "ADMIN" && (
+            <Link
+              className="bg-blue-950 text-white font-bold text-xs px-5 py-2.5 rounded-xl`"
+              href="/backoffice/care/customers/add"
+            >
+              Ajouter un nouveau client
+            </Link>
+          )}
+
         </div>
         <br />
         <table className="w-full text-left text-xs">
@@ -143,26 +150,26 @@ export default function Page({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {userC.current.map((user: any, index: any) => (
+            {clientC.current.map((client: any, index: any) => (
               <tr key={index}>
                 <td className="py-3 font-extrabold text-slate-900">
-                  {user.firstName} {user.lastName}
+                  {client.firstName} {client.lastName}
                 </td>
                 <td className="py-3 font-extrabold text-slate-900">
-                  {user.email}
+                  {client.email}
                 </td>
-                <td className="py-3 text-slate-700">{user.phone}</td>
+                <td className="py-3 text-slate-700">{client.phone}</td>
                 <td className="font-bold text-slate-600">
                   <Badge
-                    text={user.status !== null ? user.status : "Indéfini"}
-                    color={getColorByUserStatus(user.status)}
+                    text={client.status !== null ? client.status : "Indéfini"}
+                    color={getColorByUserStatus(client.status)}
                     size="medium"
                   />
                 </td>
                 <td className="py-3 text-right">
                   <span className="inline-flex gap-4">
                     <Link
-                      href={`/backoffice/care/customers/${user.id}`}
+                      href={`/backoffice/care/customers/${client.id}`}
                       className="bg-amber-500 text-blue-950 font-bold px-3 py-1 rounded-lg text-xs"
                     >
                       <View className="w-6 h-6" />
