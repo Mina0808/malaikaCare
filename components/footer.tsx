@@ -24,7 +24,7 @@ import {
 export function Footer({ isOpen }: { isOpen: boolean }) {
   return (
     <>
-      <footer className="bg-blue-950 text-white mt-auto border-t border-blue-900">
+      <footer className="bg-slate-800 text-white mt-auto border-t border-sky-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid md:grid-cols-4 gap-10">
             <div className="space-y-4">
@@ -48,14 +48,14 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
             </div>
 
             <div>
-              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+              <h4 className="font-extrabold text-cyan-500 text-sm uppercase tracking-wider mb-4">
                 Malaika Care
               </h4>
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <a
                     href="#care-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Soins infirmiers à domicile
                   </a>
@@ -63,7 +63,7 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 <li>
                   <a
                     href="#care-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Garde malade & Nursing 7j/7
                   </a>
@@ -71,7 +71,7 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 <li>
                   <a
                     href="#care-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Accompagnement hospitalier
                   </a>
@@ -79,7 +79,7 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 <li>
                   <a
                     href="#care-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Aide aux personnes âgées
                   </a>
@@ -88,14 +88,14 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
             </div>
 
             <div>
-              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+              <h4 className="font-extrabold text-cyan-500 text-sm uppercase tracking-wider mb-4">
                 Malaika Consulting
               </h4>
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <a
                     href="#consulting-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Audits performance & qualité
                   </a>
@@ -103,7 +103,7 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 <li>
                   <a
                     href="#consulting-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Accompagnement au changement
                   </a>
@@ -111,7 +111,7 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 <li>
                   <a
                     href="#consulting-section"
-                    className="hover:text-amber-400 transition-colors"
+                    className="hover:text-cyan-400 transition-colors"
                   >
                     Formations professionnelles
                   </a>
@@ -120,20 +120,20 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
             </div>
 
             <div>
-              <h4 className="font-extrabold text-amber-400 text-sm uppercase tracking-wider mb-4">
+              <h4 className="font-extrabold text-cyan-500 text-sm uppercase tracking-wider mb-4">
                 Contact & Agence
               </h4>
               <ul className="space-y-3 text-xs text-slate-300">
                 <li className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Phone className="w-4 h-4 text-cyan-500 shrink-0" />
                   <span>+221 78 256 70 70</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Mail className="w-4 h-4 text-cyan-500 shrink-0" />
                   <span>contact@malaika-cs.com</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                  <MapPin className="w-4 h-4 text-cyan-500 shrink-0" />
                   <span>Siège social : Keur Massar, Sénégal</span>
                 </li>
               </ul>

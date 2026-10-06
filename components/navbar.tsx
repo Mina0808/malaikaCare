@@ -66,23 +66,23 @@ export default function Navbar({
   return (
     <>
       {/* TOP ANNOUNCEMENT BAR */}
-      <div className="bg-blue-950 text-slate-200 text-xs sm:text-sm py-2 px-4 border-b border-blue-900">
+      <div className="bg-cyan-600 text-slate-200 text-xs sm:text-sm py-2 px-4 border-b border-cyan-600">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-6">
             <span className="flex items-center gap-2">
-              <Phone className="w-3.5 h-3.5 text-amber-400" />
+              <Phone className="w-3.5 h-3.5 text-rose-500" />
               <span>
                 Contact direct :{" "}
                 <strong className="text-white">+221 78 256 70 70</strong>
               </span>
             </span>
             <span className="hidden md:flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              <Clock className="w-3.5 h-3.5 text-rose-500" />
               <span>Interventions 7j/7 - Support 24h/24</span>
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full text-xs font-medium border border-amber-500/30">
+            <span className="bg-rose-500/20 text-white px-2.5 py-0.5 rounded-full text-xs font-medium border border-rose-500/30">
               Votre bien être, notre priorité
             </span>
           </div>
@@ -108,7 +108,7 @@ export default function Navbar({
                 <span className="text-2xl font-black tracking-tight text-blue-950 block leading-none">
                   MALAIKA
                 </span>
-                <span className="text-[11px] font-bold tracking-widest text-amber-600 uppercase block mt-1">
+                <span className="text-[11px] font-bold tracking-widest text-rose-500 uppercase block mt-1">
                   Conseils & Services
                 </span>
               </div>
@@ -120,19 +120,19 @@ export default function Navbar({
                 <>
                   <button
                     onClick={() => scrollToSection("services")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     Nos services
                   </button>
                   <button
                     onClick={() => scrollToSection("zones")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     Informations utiles
                   </button>
                   <button
                     onClick={() => scrollToSection("faq")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     FAQ
                   </button>
@@ -141,19 +141,19 @@ export default function Navbar({
                 <>
                   <button
                     onClick={() => scrollToSection("portals")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     Nos Pôles
                   </button>
                   <button
                     onClick={() => scrollToSection("how-it-works")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     Comment ça marche
                   </button>
                   <button
                     onClick={() => scrollToSection("faq")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     FAQ
                   </button>
@@ -161,20 +161,26 @@ export default function Navbar({
               ) : (
                 <>
                   <button
-                    onClick={() => scrollToSection("portals")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    onClick={() => scrollToSection("hero")}
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
-                    Nos Pôles
+                    À Propos
+                  </button>
+                  <button
+                    onClick={() => scrollToSection("services")}
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
+                  >
+                    Services
                   </button>
                   <button
                     onClick={() => scrollToSection("how-it-works")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     Comment ça marche
                   </button>
                   <button
                     onClick={() => scrollToSection("faq")}
-                    className="hover:text-amber-600 transition-colors py-2 text-sm"
+                    className="hover:text-rose-500 transition-colors py-2 text-sm"
                   >
                     FAQ
                   </button>
@@ -192,7 +198,7 @@ export default function Navbar({
                         `user?.role !== "INDIVIDUAL" ? "/backoffice/care/profil" : "/care/profil"`,
                       )
                     }
-                    className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-rose-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span>
                       {user?.firstName} {user?.lastName}
@@ -210,7 +216,7 @@ export default function Navbar({
                         `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`,
                       )
                     }
-                    className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                    className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-cyan-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span>Accéder à mon espace</span>
                   </button>
@@ -218,14 +224,14 @@ export default function Navbar({
               ) : isConsulting ? (
                 <button
                   onClick={() => openQuoteModal("care")}
-                  className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-cyan-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Nous contacter
                 </button>
               ) : (
                 <button
                   onClick={() => router.push("/care/quote")}
-                  className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-cyan-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Obtenir un devis gratuit
                 </button>
@@ -255,26 +261,26 @@ export default function Navbar({
               <>
                 <button
                   onClick={() => scrollToSection("services")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-rose-700"
                 >
                   Nos Services
                 </button>
                 <button
                   onClick={() => scrollToSection("zones")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-rose-700"
                 >
                   Informations utiles
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-rose-700"
                 >
                   Questions fréquentes
                 </button>
                 <div className="pt-2">
                   <button
                     onClick={() => openQuoteModal("care")}
-                    className="w-full bg-amber-500 text-white font-bold py-3 rounded-xl text-center shadow-md"
+                    className="w-full bg-cyan-600 text-white font-bold py-3 rounded-xl text-center shadow-md"
                   >
                     Accéder à mon espace
                   </button>
@@ -284,26 +290,26 @@ export default function Navbar({
               <>
                 <button
                   onClick={() => scrollToSection("portals")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
                   Nos Pôles
                 </button>
                 <button
                   onClick={() => scrollToSection("how-it-works")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
                   Comment ça marche
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
                   Questions fréquentes
                 </button>
                 <div className="pt-2">
                   <button
                     onClick={() => openQuoteModal("care")}
-                    className="w-full bg-amber-500 text-white font-bold py-3 rounded-xl text-center shadow-md"
+                    className="w-full bg-cyan-600 text-white font-bold py-3 rounded-xl text-center shadow-md"
                   >
                     Demander un devis
                   </button>
@@ -312,27 +318,33 @@ export default function Navbar({
             ) : (
               <>
                 <button
-                  onClick={() => scrollToSection("portals")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  onClick={() => scrollToSection("hero")}
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
-                  Nos Pôles
+                  À Propos
+                </button>
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
+                >
+                  Services
                 </button>
                 <button
                   onClick={() => scrollToSection("how-it-works")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
                   Comment ça marche
                 </button>
                 <button
                   onClick={() => scrollToSection("faq")}
-                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
                 >
                   Questions fréquentes
                 </button>
                 <div className="pt-2">
                   <button
                     onClick={() => openQuoteModal("care")}
-                    className="w-full bg-amber-500 text-white font-bold py-3 rounded-xl text-center shadow-md"
+                    className="w-full bg-cyan-600 text-white font-bold py-3 rounded-xl text-center shadow-md"
                   >
                     Demander un devis
                   </button>

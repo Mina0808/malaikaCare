@@ -4,9 +4,16 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
 import logoCare from "@/images/logo_malaika_care.png";
+import MalaikaCare from "@/images/malaika_care_brochure.jpeg";
+import PackSerenite from "@/images/pack_serenite.jpeg";
+import HeroBack from "@/images/background.jpg";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getUserFromSession, getToken, getClientFromSession } from "@/lib/session";
+import { useEffect, useState, SetStateAction } from "react";
+import {
+  getUserFromSession,
+  getToken,
+  getClientFromSession,
+} from "@/lib/session";
 import {
   HeartHandshake,
   Building2,
@@ -35,7 +42,123 @@ import {
   Check,
   FileText,
   Award,
+  Car,
+  ShoppingBag,
+  Baby,
+  BookOpen,
+  ChevronLeft,
 } from "lucide-react";
+
+const SLIDES = [
+  {
+    id: 1,
+    title: "Soins infirmiers & Garde malade 24h/7j au Sénégal",
+    subtitle:
+      "Des infirmiers diplômés d'État à votre chevet à Dakar et régions pour un accompagnement bienveillant.",
+    tag: "Pôle Soins Médicaux",
+    bgColor: "from-teal-900 via-cyan-900 to-slate-900",
+    accentColor: "cyan",
+    icon: Stethoscope,
+    badge: "Intervention Rapide à Dakar",
+    image: MalaikaCare,
+  },
+  {
+    id: 2,
+    title: "Service à la personne & Chauffeur privé",
+    subtitle:
+      "Ménage, livraison de repas, chauffeur avec véhicule et accompagnement sur-mesure au quotidien.",
+    tag: "Pôle Logistique & Confort",
+    bgColor: "from-rose-950 via-slate-900 to-rose-900",
+    accentColor: "rose",
+    icon: HomeIcon,
+    badge: "Véhicules Récents & Sécurisés",
+    image: PackSerenite,
+  },
+];
+
+const SERVICES_CATEGORIES = [
+  {
+    id: "medical",
+    title: "Formule Malaika Care",
+    subtitle:
+      "Un accompagnement humain et adapté à vos besoins ou à ceux d'un proche, de la première demande jusqu'au suivi.",
+    badge: "Soignants Qualifiés IDE",
+    icon: Stethoscope,
+    theme: {
+      bg: "bg-cyan-50/80",
+      border: "border-cyan-200",
+      accent: "bg-cyan-600 hover:bg-cyan-700",
+      textAccent: "text-cyan-700",
+      cardBg: "bg-white",
+      hoverBorder: "hover:border-cyan-400",
+      pill: "bg-cyan-100 text-cyan-800 border-cyan-300",
+    },
+  },
+  {
+    id: "logistics",
+    title: "Soins à domicile",
+    subtitle:
+      "Une orientation vers les solutions et professionnels adaptés à vos besoins de soins et d'accompagnement à domicile.",
+    badge: "Personnel de Confiance",
+    theme: {
+      bg: "bg-rose-50/80",
+      border: "border-rose-200",
+      accent: "bg-rose-600 hover:bg-rose-700",
+      textAccent: "text-rose-700",
+      cardBg: "bg-white",
+      hoverBorder: "hover:border-rose-400",
+      pill: "bg-rose-100 text-rose-800 border-rose-300",
+    },
+  },
+  {
+    id: "family",
+    title: "Orientation médicale",
+    subtitle:
+      "Nous vous aidons à identifier la solution adaptée et à organiser votre parcours avec plus de simplicité.",
+    badge: "Malaika Conseils",
+    theme: {
+      bg: "bg-slate-50/80",
+      border: "border-slate-200",
+      accent: "bg-slate-600 hover:bg-slate-700",
+      textAccent: "text-slate-700",
+      cardBg: "bg-white",
+      hoverBorder: "hover:border-slate-400",
+      pill: "bg-slate-100 text-slate-800 border-slate-300",
+    },
+  },
+  {
+    id: "help",
+    title: "Préconsultation",
+    subtitle:
+      "Une première étape pour recueillir votre besoin et faciliter la préparation de votre prise en charge.",
+    badge: "Malaika Conseils",
+    theme: {
+      bg: "bg-slate-50/80",
+      border: "border-slate-200",
+      accent: "bg-slate-600 hover:bg-slate-700",
+      textAccent: "text-slate-700",
+      cardBg: "bg-white",
+      hoverBorder: "hover:border-slate-400",
+      pill: "bg-slate-100 text-slate-800 border-slate-300",
+    },
+  },
+  {
+    id: "choice",
+    title: "Prise de rendez-vous",
+    subtitle:
+      "Nous vous accompagnons dans l'organisation de vos rendez-vous afin de vous faire gagner du temps",
+    badge: "Malaika Conseils",
+    theme: {
+      bg: "bg-slate-50/80",
+      border: "border-slate-200",
+      accent: "bg-slate-600 hover:bg-slate-700",
+      textAccent: "text-slate-700",
+      cardBg: "bg-white",
+      hoverBorder: "hover:border-slate-400",
+      pill: "bg-slate-100 text-slate-800 border-slate-300",
+    },
+  },
+];
 
 export const dynamic = "force-dynamic";
 
@@ -46,9 +169,30 @@ export default function Home() {
   const [activeFaq, setActiveFaq] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [slides, setSlides] = useState([] as any[]);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState("Soins infirmiers");
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   useEffect(() => {
     fetchData();
+    if (!isAutoPlay) return;
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % SLIDES.length);
+    }, 6000);
+    return () => clearInterval(interval);
   }, []);
+
+  const handleOpenQuote = (serviceName: SetStateAction<string>) => {
+    if (serviceName) setSelectedService(serviceName);
+    setFormSubmitted(false);
+    setQuoteModalOpen(true);
+  };
+
   async function fetchData() {
     const user = await getClientFromSession(await getToken());
     setUser(user);
@@ -67,362 +211,337 @@ export default function Home() {
   }
 
   // Smooth scroll helper
-  const scrollToSection = (id:string) => {
+  const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  const toggleFaq = (index:any) => {
+  const toggleFaq = (index: any) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
   return (
     <>
       <section
         id="hero"
-        className="relative bg-gradient-to-b from-amber-50/60 via-white to-slate-50 pt-12 pb-20 overflow-hidden"
+        className="relative bg-sky-300 text-white pt-16 pb-24 overflow-hidden min-h-[90vh] flex flex-col justify-center items-center"
       >
-        {/* Background Decorative Element */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-amber-200/30 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-blue-200/20 blur-3xl pointer-events-none"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content Column */}
-            <div className="lg:col-span-7 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-amber-100/80 border border-amber-300 text-amber-900 px-4 py-2 rounded-full text-xs sm:text-sm font-bold mb-6 shadow-xs">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>Réseau d'excellence en soins & accompagnement</span>
-              </div>
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-1000"
+          style={{
+            backgroundImage: `url(${HeroBack.src})`,
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-slate-950/50 to-slate-950/70" />
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-blue-700 tracking-tight leading-[1.15] mb-6">
-                Prendre soin de vous <br className="hidden sm:inline" />
-                <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 bg-clip-text text-transparent">
-                  & booster votre performance.
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <h1 className="text-4xl text-slate-800 sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] mb-6 drop-shadow-md">
+              Un accompagnement global pour votre{" "}
+              <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-cyan-500 via-cyan-700 to-cyan-800 bg-clip-text text-transparent">
+                santé et votre bien-être
+              </span>
+            </h1>
+
+            <p className="text-slate-200 text-base sm:text-lg font-medium leading-relaxed mb-8 drop-shadow">
+              <strong className="text-white font-bold">Malaika Care </strong>
+              vous accompagne avec une approche humaine et personnalisée :
+              assistance, soins à domicile, orientation et organisation de vos
+              rendez-vous.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 border-t border-slate-700/60 pt-6 text-slate-200">
+              <div className="flex items-center gap-2.5 bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700/50">
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/40">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <span className="text-xs font-bold leading-tight">
+                  Une équipe à l'écoute
                 </span>
-              </h1>
-
-              <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed mb-8 max-w-2xl mx-auto lg:mx-0">
-                <strong>Malaika Conseils & Services</strong> allie le soin
-                médical personnalisé à domicile et le conseil stratégique aux
-                entreprises. Une approche humaine, réactive et hautement
-                qualifiée.
-              </p>
-
-              {/* Call to Actions */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
-                <button
-                  onClick={() => router.push("/care/quote")}
-                  className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/35 transition-all flex items-center justify-center gap-3 group"
-                >
-                  <span>Demander une estimation</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button
-                  onClick={() => scrollToSection("portals")}
-                  className="w-full sm:w-auto bg-white hover:bg-slate-100 text-blue-950 border-2 border-slate-200 font-bold text-base px-8 py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-                >
-                  Découvrir nos 2 pôles
-                </button>
               </div>
 
-              {/* Key Quick Advantages */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-slate-200/80 pt-6 text-slate-700 text-left">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-semibold">
-                    Equipe professionnelle & qualifiée
-                  </span>
+              <div className="flex items-center gap-2.5 bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700/50">
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/40">
+                  <Clock className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-semibold">
-                    Réponse sous 24h
-                  </span>
+                <span className="text-xs font-bold leading-tight">
+                  Parcours simple et rapide
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2.5 bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700/50">
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/40">
+                  <ShieldCheck className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
-                  <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 shrink-0">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-semibold">
-                    Agrément & Conformité
-                  </span>
-                </div>
+                <span className="text-xs font-bold leading-tight">
+                  Des informations vérifiées
+                </span>
               </div>
             </div>
+          </div>
 
-            {/* Right Interactive Visual Card */}
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Visual Frame */}
-                <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden border border-blue-800">
-                  <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-amber-500/10 rounded-full blur-2xl"></div>
+          <div className="w-full max-w-3xl mx-auto">
+            <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl relative overflow-hidden ring-1 ring-white/15">
+              <div className="flex items-center justify-between mb-5">
+                <span className="bg-cyan-500/20 text-cyan-300 text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-cyan-500/40 flex items-center gap-1.5 backdrop-blur-md">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  MALAIKA CARE
+                </span>
+              </div>
 
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="text-xs font-extrabold tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                      Nos Engagements
-                    </span>
-                    <div className="flex items-center gap-1 text-amber-400">
-                      <Star className="w-4 h-4 fill-amber-400" />
-                      <Star className="w-4 h-4 fill-amber-400" />
-                      <Star className="w-4 h-4 fill-amber-400" />
-                      <Star className="w-4 h-4 fill-amber-400" />
-                      <Star className="w-4 h-4 fill-amber-400" />
+              <h3 className="text-xl font-extrabold text-white text-center sm:text-left mb-5">
+                Soins médicaux et aides à domicile pour toute la famille,
+                partout au Sénégal
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+                <div className="bg-slate-950/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-cyan-500/50 transition-colors">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-cyan-500 text-slate-950 rounded-xl font-bold shrink-0">
+                      <Stethoscope className="w-4 h-4" />
                     </div>
-                  </div>
-
-                  <h3 className="text-2xl font-bold mb-4 leading-snug">
-                    Un seul partenaire pour vos besoins de santé et de conseil.
-                  </h3>
-
-                  <div className="space-y-4 mb-8">
-                    <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl flex items-start gap-4 border border-white/10 hover:bg-white/15 transition-all">
-                      <div className="p-2.5 bg-amber-500 rounded-xl text-white shrink-0">
-                        <Heart className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm text-amber-300">
-                          Malaika Care
-                        </h4>
-                        <p className="text-xs text-slate-200 mt-0.5">
-                          Soins infirmiers, aide aux personnes vulnérables &
-                          garde malade à domicile 7j/7.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl flex items-start gap-4 border border-white/10 hover:bg-white/15 transition-all">
-                      <div className="p-2.5 bg-blue-600 rounded-xl text-white shrink-0">
-                        <Building2 className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm text-blue-300">
-                          Malaika Consulting
-                        </h4>
-                        <p className="text-xs text-slate-200 mt-0.5">
-                          Audits de performance, accompagnement au changement &
-                          formations RH.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Reassurance Badge Floating */}
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 font-medium">
-                    <span className="flex items-center gap-1.5">
-                      <UserCheck className="w-4 h-4 text-emerald-400" /> +1 200
-                      familles & pros suivis
-                    </span>
-                    <span className="text-amber-400 font-bold">
-                      En savoir plus →
+                    <span className="font-extrabold text-white text-sm">
+                      Suivi Médical
                     </span>
                   </div>
+                  <span className="text-slate-300 text-xs">
+                    Injections, garde malade, visites médicales
+                  </span>
                 </div>
+
+                <div className="bg-slate-950/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-cyan-500/50 transition-colors">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-rose-500 text-slate-950 rounded-xl font-bold shrink-0">
+                      <HomeIcon className="w-4 h-4" />
+                    </div>
+                    <span className="font-extrabold text-white text-sm">
+                      Logistique & Entretien
+                    </span>
+                  </div>
+                  <span className="text-slate-300 text-xs">
+                    Ménage, repas, chauffeur avec véhicule
+                  </span>
+                </div>
+
+                <div className="bg-slate-950/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-cyan-500/50 transition-colors">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 bg-slate-500 text-white rounded-xl font-bold shrink-0">
+                      <Baby className="w-4 h-4" />
+                    </div>
+                    <span className="font-extrabold text-white text-sm">
+                      Famille & Événements
+                    </span>
+                  </div>
+                  <span className="text-slate-300 text-xs">
+                    Garde d'enfants (baptêmes), soutien scolaire
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-cyan-950/40 backdrop-blur-md border border-cyan-500/40 rounded-2xl p-4 text-center">
+                <p className="text-xs text-cyan-600 font-semibold mb-3">
+                  📍 Interventions régulières sur{" "}
+                  <strong className="text-white">
+                    Dakar (Almadies, Plateau, Mermoz, Maristes...) & Petite Côte
+                  </strong>
+                  .
+                </p>
+                <button
+                  onClick={() => router.push("/care/quote")}
+                  className="w-full bg-cyan-500 hover:bg-cyan-400 active:scale-[0.98] text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 group cursor-pointer"
+                >
+                  <span>Demander un devis rapide</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* SECTION: POLE */}
+      {/* CAROUSEL */}
       <section
-        id="portals"
-        className="py-20 bg-slate-100/70 border-y border-slate-200"
+        id="carousel"
+        className="py-16 bg-sky-50 border-b border-sky-100"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+              <span className="text-xs font-black uppercase tracking-widest text-cyan-400 bg-cyan-400/15 px-3 py-1 rounded-full inline-block mb-3 border border-cyan-400/30">
+                Nos Domaines d'Intervention
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-blue-950 tracking-tight">
+                Malaïka Care en images
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-3 mt-4 md:mt-0">
+              <button
+                onClick={() => setIsAutoPlay(!isAutoPlay)}
+                className={`text-xs font-bold px-3.5 py-2.5 rounded-xl border transition-colors cursor-pointer ${
+                  isAutoPlay
+                    ? "bg-[#18A6B8]/20 text-[#18A6B8] border-[#18A6B8]/40"
+                    : "bg-slate-900 text-slate-400 border-slate-700"
+                }`}
+              >
+                {isAutoPlay ? "⏸ Pause Défilé" : "▶ Défilé Auto"}
+              </button>
+              <button
+                onClick={() =>
+                  setActiveSlide((prev) =>
+                    prev === 0 ? SLIDES.length - 1 : prev - 1,
+                  )
+                }
+                className="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-700 text-white transition-colors cursor-pointer"
+                aria-label="Slide précédente"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() =>
+                  setActiveSlide((prev) => (prev + 1) % SLIDES.length)
+                }
+                className="p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl border border-slate-700 text-white transition-colors cursor-pointer"
+                aria-label="Slide suivante"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-900 min-h-[420px] sm:min-h-[480px] flex items-center border border-white/10">
+            {SLIDES.map((slide, index) => {
+              const isActive = index === activeSlide;
+              return (
+                <div
+                  key={slide.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out flex items-center ${
+                    isActive
+                      ? "opacity-100 z-10 pointer-events-auto"
+                      : "opacity-0 z-0 pointer-events-none"
+                  }`}
+                >
+                  <Image
+                    src={slide.image}
+                    alt={slide.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-r ${slide.bgColor} opacity-90 backdrop-blur-xs`}
+                  ></div>
+
+                  <div className="relative z-20 max-w-3xl px-8 sm:px-14 text-white">
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-amber-300 border border-white/20 mb-4">
+                      <Sparkles className="w-4 h-4 text-[#18A6B8]" />
+                      <span>{slide.tag}</span>
+                      <span className="mx-1">•</span>
+                      <span className="text-white">{slide.badge}</span>
+                    </div>
+
+                    <h3 className="text-2xl sm:text-4xl font-black mb-3 leading-tight text-white drop-shadow">
+                      {slide.title}
+                    </h3>
+
+                    <p className="text-slate-200 text-sm sm:text-base leading-relaxed mb-6 max-w-xl">
+                      {slide.subtitle}
+                    </p>
+
+                    <button
+                      onClick={() => handleOpenQuoteForService(slide.title)}
+                      className="bg-[#18A6B8] hover:bg-[#1593A3] text-[#0F2D5B] font-black text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer uppercase tracking-wider"
+                    >
+                      <span>Solliciter ce service</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            <div className="absolute bottom-6 right-8 z-30 flex items-center gap-2 bg-slate-950/70 backdrop-blur-md px-3 py-2 rounded-full border border-white/10">
+              {SLIDES.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveSlide(idx)}
+                  className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                    idx === activeSlide
+                      ? "w-8 bg-[#18A6B8]"
+                      : "w-2.5 bg-white/40 hover:bg-white/70"
+                  }`}
+                  aria-label={`Slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* SERVICES */}
+      <section id="services" className="py-20 bg-white border-t border-sky-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-extrabold text-amber-600 uppercase tracking-widest bg-amber-100 px-3.5 py-1.5 rounded-full inline-block mb-3">
-              Deux grands domaines d'intervention
+            <span className="text-xs font-extrabold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-cyan-500/30">
+              Nos Services
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-blue-950 tracking-tight">
-              Choisissez le pôle adapté à vos besoins
+            <h2 className="text-3xl sm:text-5xl font-black text-blue-950 tracking-tight">
+              Ce que nous faisons pour vous
             </h2>
-            <p className="text-slate-600 text-base sm:text-lg mt-3">
-              Que vous cherchiez des soins de santé à domicile ou un
-              accompagnement professionnel pour votre entreprise, Malaika
-              déploie ses experts.
+            <p className="text-slate-400 text-base sm:text-lg mt-4">
+              Des solutions pensées pour simplifier votre parcours et vous
+              apporter un accompagnement adapté à chaque situation.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-stretch">
-            {/* PORTAL 1: MALAIKA CARE */}
-            <div
-              id="care-section"
-              className="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-amber-200/80 hover:border-amber-400 transition-all flex flex-col justify-between relative group"
-            >
-              <div className="absolute top-6 right-6 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1 rounded-full">
-                Pôle Santé & Domicile
-              </div>
-
-              <div>
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center mb-6 shadow-md shadow-amber-500/20">
-                  <Image src={logoCare} alt="Logo Malaika Care" />
-                </div>
-
-                <h3 className="text-3xl font-black text-blue-950 mb-3 group-hover:text-amber-600 transition-colors">
-                  Malaika Care
-                </h3>
-
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  Le pôle de soins et de services à domicile. Nos équipes
-                  qualifiées interviennent directement chez vous pour préserver
-                  la santé, le confort et l'autonomie de vos proches 7j/7.
-                </p>
-
-                <div className="space-y-6 mb-8">
-                  {/* Category 1 */}
-                  <div>
-                    <h4 className="text-sm font-extrabold text-blue-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-                      <Stethoscope className="w-4 h-4 text-amber-600" />
-                      Soins médicaux à domicile
-                    </h4>
-                    <ul className="grid sm:grid-cols-2 gap-2 text-sm text-slate-700 font-medium">
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Soins infirmiers sur ordonnance
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Garde malade & nursing
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Accompagnement hospitalier
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Visites de médecins à domicile
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Category 2 */}
-                  <div>
-                    <h4 className="text-sm font-extrabold text-blue-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-                      <HomeIcon className="w-4 h-4 text-amber-600" />
-                      Services à la personne & confort
-                    </h4>
-                    <ul className="grid sm:grid-cols-2 gap-2 text-sm text-slate-700 font-medium">
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Entretien & hygiène du logement
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Bien-être & promenade seniors
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Aide aux repas & courses
-                      </li>
-                      <li className="flex items-center gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />{" "}
-                        Assistance administrative familiale
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
-                <button
-                  type="button"
-                  onClick={getCare}
-                  disabled={loading}
-                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-md text-center transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Accéder à Care</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            {/* PORTAL 2: MALAIKA CONSULTING */}
-            <div
-              id="consulting-section"
-              className="bg-white rounded-3xl p-8 sm:p-10 shadow-lg border-2 border-blue-200 hover:border-blue-500 transition-all flex flex-col justify-between relative group"
-            >
-              <div className="absolute top-6 right-6 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold px-3 py-1 rounded-full">
-                Pôle Entreprises & ORG
-              </div>
-
-              <div>
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-600 to-teal-800 text-white flex items-center justify-center mb-6 shadow-md shadow-blue-950/20">
-                  <Image src={logoCare} alt="Logo Malaika Consulting" />
-                </div>
-
-                <h3 className="text-3xl font-black text-blue-950 mb-3 group-hover:text-blue-700 transition-colors">
-                  Malaika Consulting
-                </h3>
-
-                <p className="text-slate-600 leading-relaxed mb-6">
-                  Le cabinet de conseil spécialisé dans le développement humain
-                  et organisationnel. Nous accompagnons les entreprises,
-                  institutions et ONG vers l'excellence opérationnelle.
-                </p>
-
-                <div className="space-y-4 mb-8">
-                  {/* Service 1 */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors">
-                    <h4 className="text-base font-extrabold text-blue-950 flex items-center gap-2 mb-1">
-                      <BarChart3 className="w-5 h-5 text-blue-600 shrink-0" />
-                      Audits de Performance & Qualité
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-600">
-                      Diagnostic approfondi de vos processus internes,
-                      optimisation des flux de travail et feuille de route
-                      pragmatique.
+          {/* Categories Row (3 columns on lg screen) */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 items-stretch">
+            {SERVICES_CATEGORIES.map((category) => (
+              <div
+                key={category.id}
+                className={`${category.theme.bg} rounded-3xl p-6 border ${category.theme.border} shadow-lg backdrop-blur-md flex flex-col justify-between hover:border-slate-600 transition-all`}
+              >
+                <div>
+                  {/* Category Header */}
+                  <div className="mb-6 pb-5 border-b border-slate-700/60">
+                    <span
+                      className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border ${category.theme.pill} inline-block mb-2`}
+                    >
+                      <Heart className="w-5 h-5" />
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-black text-blue-950">
+                      {category.title}
+                    </h3>
+                    <p className="text-slate-400 text-xs sm:text-sm mt-1">
+                      {category.subtitle}
                     </p>
                   </div>
 
-                  {/* Service 2 */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors">
-                    <h4 className="text-base font-extrabold text-blue-950 flex items-center gap-2 mb-1">
-                      <Users className="w-5 h-5 text-blue-600 shrink-0" />
-                      Accompagnement au Changement
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-600">
-                      Pilotage des transformations organisationnelles et
-                      managériales tout en renforçant l'engagement de vos
-                      équipes.
-                    </p>
-                  </div>
-
-                  {/* Service 3 */}
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors">
-                    <h4 className="text-base font-extrabold text-blue-950 flex items-center gap-2 mb-1">
-                      <GraduationCap className="w-5 h-5 text-blue-600 shrink-0" />
-                      Formations Professionnelles Sur-Mesure
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-600">
-                      Programmes de montée en compétences en management,
-                      sécurité au travail et qualité de service.
-                    </p>
+                  {/* List of items */}
+                  <div className="space-y-3">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenQuote(item.name)}
+                      className={`px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-all ${category.theme.btnHover}`}
+                    >
+                      <span>En savoir plus</span>
+                      <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
-                <button
-                  type="button"
-                  onClick={getConsulting}
-                  disabled={loading}
-                  className="flex-1 bg-blue-950 hover:bg-blue-900 text-white font-bold py-3.5 px-6 rounded-xl shadow-md text-center transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Contacter le pôle Consulting</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
       {/* SECTION: HOW IT WORKS */}
-      <section id="how-it-works" className="py-20 bg-white">
+      <section
+        id="how-it-works"
+        className="py-20 bg-red-50 border-t border-red-100"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-extrabold text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-amber-200">
+            <span className="text-xs font-extrabold text-cyan-600 uppercase tracking-widest bg-cyan-50 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-cyan-200">
               Un accompagnement simple & structuré
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-blue-950 tracking-tight">
@@ -438,7 +557,7 @@ export default function Home() {
             {/* Step 1 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-amber-500 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-cyan-600 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
                   1
                 </div>
                 <h3 className="font-extrabold text-lg text-blue-950 mb-2">
@@ -454,7 +573,7 @@ export default function Home() {
             {/* Step 2 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-rose-500 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
                   2
                 </div>
                 <h3 className="font-extrabold text-lg text-blue-950 mb-2">
@@ -470,15 +589,15 @@ export default function Home() {
             {/* Step 3 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-amber-500 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-cyan-600 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
                   3
                 </div>
                 <h3 className="font-extrabold text-lg text-blue-950 mb-2">
                   Intervention Sur-Mesure
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Mise en place rapide d'un professionnel qualifié (infirmier,
-                  auxiliaire, consultant).
+                  Nous étudions votre situation et vous proposons une solution
+                  adaptée.
                 </p>
               </div>
             </div>
@@ -486,22 +605,22 @@ export default function Home() {
             {/* Step 4 */}
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-900 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-rose-500 text-white font-black text-lg flex items-center justify-center mb-4 shadow-md">
                   4
                 </div>
                 <h3 className="font-extrabold text-lg text-blue-950 mb-2">
                   Suivi & Ajustements
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Bilan de satisfaction régulier pour adapter continuellement
-                  les prestations.
+                  Nous organisons la suite du parcours avec vous, en toute
+                  simplicité.
                 </p>
               </div>
             </div>
           </div>
 
           {/* CTA Banner */}
-          <div className="mt-12 bg-gradient-to-r from-blue-950 via-blue-900 to-amber-900 rounded-3xl p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="mt-12 bg-gradient-to-r from-cyan-800 via-cyan-700 to-cyan-600 rounded-3xl p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div>
               <h3 className="text-2xl font-bold mb-1">
                 Besoin d'un accompagnement en urgence ?
@@ -512,7 +631,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => router.push("/care/contact")}
-              className="bg-amber-500 hover:bg-amber-400 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-lg transition-colors whitespace-nowrap"
+              className="bg-rose-500 hover:bg-rose-400 text-white font-extrabold px-6 py-3.5 rounded-xl shadow-lg transition-colors whitespace-nowrap"
             >
               Contactez-nous immédiatement
             </button>
@@ -520,103 +639,114 @@ export default function Home() {
         </div>
       </section>
       {/* SECTION: VALEURS */}
-      <section className="py-16 bg-slate-50 border-y border-slate-200">
+      <section className="py-16 bg-white border-y border-red-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-amber-100 text-amber-800 rounded-2xl shrink-0">
+              <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
-                  Professionnels qualifiés
+                  Humaine
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Intervenants diplômés d'État, rigoureusement sélectionnés pour
-                  leur savoir-faire et savoir-être.
+                  Une relation de proximité, à l'écoute de vos besoins.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-amber-100 text-amber-800 rounded-2xl shrink-0">
+              <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
                 <Award className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
-                  Démarche Qualité Garantie
+                  Fiable
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Conformité aux normes sanitaires et méthodologies de conseil
-                  certifiées.
+                  Des informations claires et un accompagnement sérieux.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-amber-100 text-amber-800 rounded-2xl shrink-0">
+              <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
                 <FileText className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
-                  Zéro tracas administratif
+                  Premium
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Malaika prend en charge l'ensemble de la gestion RH,
-                  facturation et démarches d'aide.
+                  Une attention portée aux détails et à la qualité de service.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
+                <FileText className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="font-extrabold text-blue-950 text-base mb-1">
+                  Moderne
+                </h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Des outils simples pour rendre votre parcours plus fluide.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* SECTION: FAQ */}
-      <section id="faq" className="py-20 bg-white">
+      {/* FAQ */}
+      <section id="faq" className="py-20 bg-cyan-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="text-xs font-extrabold text-amber-600 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-amber-200">
-              Des réponses claires
+          <div className="text-center mb-14">
+            <span className="text-xs font-extrabold text-cyan-700 uppercase tracking-widest bg-cyan-100 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-cyan-200">
+              Réponses à vos questions
             </span>
-            <h2 className="text-3xl font-black text-blue-950 tracking-tight">
-              Foire aux questions fréquentes
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Foire Aux Questions (FAQ)
             </h2>
           </div>
 
           <div className="space-y-4">
             {[
               {
-                q: "Comment sont définies les prestations et les tarifs ?",
-                a: "Chaque prestation est définie en fonction des besoins du bénéficiaire, de la nature des services demandés et de la fréquence des interventions. Après étude de votre demande, nous vous proposons une solution adaptée accompagnée d'une estimation personnalisée.",
+                q: "Comment s'effectue la mise en place d'un infirmier ou garde malade à domicile ?",
+                a: "Après un premier contact téléphonique ou physique, nous effectuons une évaluation rapide des besoins du patient. Un soignant qualifié est affecté sous 24h à 48h selon la formule retenue.",
               },
               {
-                q: "Comment sont recrutés vos soignants et intervenants ?",
-                a: "Tous nos intervenants Malaika Care font l'objet d'un processus strict de sélection : vérification des diplômes d'État, contrôles des références, casier judiciaire et entretiens de mise en situation.",
+                q: "Puis-je commander des services depuis l'étranger pour un parent au Sénégal ?",
+                a: "Oui, tout à fait ! De nombreux clients de la diaspora font appel à Malaika Care pour assurer les soins ou le chauffeur de leurs parents restés au Sénégal. Les paiements peuvent s'effectuer à distance.",
               },
               {
-                q: "Comment se déroule une mission Malaika Consulting ?",
-                a: "Nous débutons par une phase de cadrage et de diagnostic (audit) offerte ou intégrée, suivie d'une proposition d'intervention sur-mesure avec des jalons de performance précis.",
+                q: "Quels sont les moyens de paiement acceptés au Sénégal ?",
+                a: "Nous acceptons les règlements par Wave, Orange Money, virement bancaire ou chèque bancaire local.",
               },
               {
-                q: "Puis-je modifier ou suspendre les prestations de soin ?",
-                a: "Oui, nos contrats d'accompagnement sont souples et s'adaptent à l'évolution de la santé de vos proches ou à votre planning d'entreprise.",
+                q: "Proposez-vous la garde d'enfants pour les événements (baptêmes, mariages) ?",
+                a: "Oui, notre pôle familial propose un encadrement sécurisé des enfants lors de vos cérémonies familiales (baptêmes, mariages, réceptions) par des animatrices et gardiennes expérimentées.",
               },
-            ].map((item, idx) => (
+            ].map((faq, idx) => (
               <div
                 key={idx}
-                className="border border-slate-200 rounded-2xl overflow-hidden transition-colors"
+                className="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden transition-colors"
               >
                 <button
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full text-left p-5 font-bold text-blue-950 flex justify-between items-center bg-slate-50 hover:bg-amber-50/50 transition-colors"
+                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                  className="w-full text-left p-5 font-bold text-slate-900 flex justify-between items-center text-sm sm:text-base gap-4"
                 >
-                  <span className="text-base sm:text-lg">{item.q}</span>
+                  <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-amber-600 transform transition-transform ${activeFaq === idx ? "rotate-180" : ""}`}
+                    className={`w-5 h-5 text-cyan-600 transition-transform ${activeFaq === idx ? "rotate-180" : ""}`}
                   />
                 </button>
                 {activeFaq === idx && (
-                  <div className="p-5 bg-white text-slate-600 text-sm leading-relaxed border-t border-slate-100">
-                    {item.a}
+                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-3">
+                    {faq.a}
                   </div>
                 )}
               </div>
