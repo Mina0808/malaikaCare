@@ -37,51 +37,49 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                   />
                 </div>
                 <span className="text-xl font-black tracking-tight text-white">
-                  MALAIKA CS
+                  MALAIKA
                 </span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Malaika Conseils & Services est votre réseau d'excellence pour
-                les soins infirmiers, la garde à domicile et le conseil
-                organisationnel.
+                Un accompagnement global pour votre santé et votre bien-être.
               </p>
             </div>
 
             <div>
               <h4 className="font-extrabold text-cyan-500 text-sm uppercase tracking-wider mb-4">
-                Malaika Care
+                NAVIGATION
               </h4>
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <a
-                    href="#care-section"
+                    href="#hero"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Soins infirmiers à domicile
+                    Accueil
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#care-section"
+                    href="#carousel"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Garde malade & Nursing 7j/7
+                    À Propos
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#care-section"
+                    href="#services"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Accompagnement hospitalier
+                    Services
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#care-section"
+                    href="#how-it-works"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Aide aux personnes âgées
+                    Devis
                   </a>
                 </li>
               </ul>
@@ -89,31 +87,31 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
 
             <div>
               <h4 className="font-extrabold text-cyan-500 text-sm uppercase tracking-wider mb-4">
-                Malaika Consulting
+                INFORMATIONS
               </h4>
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <a
-                    href="#consulting-section"
+                    href="#faq"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Audits performance & qualité
+                    Interventions selon disponibilité
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#consulting-section"
+                    href="#faq"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Accompagnement au changement
+                    Accompagnement non médical
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#consulting-section"
+                    href="#faq"
                     className="hover:text-cyan-400 transition-colors"
                   >
-                    Formations professionnelles
+                    Mentions légales
                   </a>
                 </li>
               </ul>
@@ -134,23 +132,17 @@ export function Footer({ isOpen }: { isOpen: boolean }) {
                 </li>
                 <li className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-cyan-500 shrink-0" />
-                  <span>Siège social : Keur Massar, Sénégal</span>
+                  <span>Keur Massar, Sénégal</span>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="pt-12 mt-12 border-t border-blue-900/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
-            <p>© 2026 Malaika Conseils & Services. Tous droits réservés.</p>
+            <p>© 2026 Malaika Care. Tous droits réservés.</p>
             <div className="flex space-x-6">
               <a href="#" className="hover:text-white transition-colors">
-                Mentions légales
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Politique de confidentialité
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Crédit d'impôt
+                Votre bien être, notre priorité
               </a>
             </div>
           </div>

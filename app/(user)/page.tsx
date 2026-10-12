@@ -6,7 +6,8 @@ import Image from "next/image";
 import logoCare from "@/images/logo_malaika_care.png";
 import MalaikaCare from "@/images/malaika_care_brochure.jpeg";
 import PackSerenite from "@/images/pack_serenite.jpeg";
-import HeroBack from "@/images/background.jpg";
+import MalaikaIllustration from "@/images/malaika_illustration.jpeg";
+import HeroBack from "@/images/background.jpeg";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, SetStateAction } from "react";
 import {
@@ -47,32 +48,44 @@ import {
   Baby,
   BookOpen,
   ChevronLeft,
+  User,
+  Blocks,
 } from "lucide-react";
 
 const SLIDES = [
   {
     id: 1,
-    title: "Soins infirmiers & Garde malade 24h/7j au Sénégal",
+    title: "Une santé plus humaine, plus simple, plus proche",
     subtitle:
-      "Des infirmiers diplômés d'État à votre chevet à Dakar et régions pour un accompagnement bienveillant.",
-    tag: "Pôle Soins Médicaux",
-    bgColor: "from-teal-900 via-cyan-900 to-slate-900",
+      "Malaïka Care est une marque de santé et de bien-être sénégalaise qui associe proximité, professionnalisme et simplicité de service.",
+    tag: "Malaika Care",
+    bgColor: "from-slate-600 via-slate-500 to-slate-400",
     accentColor: "cyan",
     icon: Stethoscope,
-    badge: "Intervention Rapide à Dakar",
+    badge: "Notre mission",
     image: MalaikaCare,
   },
   {
     id: 2,
-    title: "Service à la personne & Chauffeur privé",
-    subtitle:
-      "Ménage, livraison de repas, chauffeur avec véhicule et accompagnement sur-mesure au quotidien.",
-    tag: "Pôle Logistique & Confort",
-    bgColor: "from-rose-950 via-slate-900 to-rose-900",
+    title: "Découvrez le pack Sérénité",
+    subtitle: "Notre offre adaptée à toute la famille.",
+    tag: "Nouveauté",
+    bgColor: "from-slate-600 via-slate-500 to-slate-400",
     accentColor: "rose",
     icon: HomeIcon,
-    badge: "Véhicules Récents & Sécurisés",
+    badge: "Pack Sérénité",
     image: PackSerenite,
+  },
+  {
+    id: 3,
+    title: "Suivez-nous sur nos réseaux sociaux!",
+    subtitle: "Retrouvez-nous sur LinkedIn, Facebook, Instagram et TikTok",
+    tag: "Communication",
+    bgColor: "from-rose-950 via-slate-900 to-rose-900",
+    accentColor: "white",
+    icon: HomeIcon,
+    badge: "Réseaux Sociaux",
+    image: MalaikaIllustration,
   },
 ];
 
@@ -133,13 +146,13 @@ const SERVICES_CATEGORIES = [
       "Une première étape pour recueillir votre besoin et faciliter la préparation de votre prise en charge.",
     badge: "Malaika Conseils",
     theme: {
-      bg: "bg-slate-50/80",
-      border: "border-slate-200",
-      accent: "bg-slate-600 hover:bg-slate-700",
-      textAccent: "text-slate-700",
+      bg: "bg-blue-50/80",
+      border: "border-blue-200",
+      accent: "bg-blue-600 hover:bg-blue-700",
+      textAccent: "text-blue-700",
       cardBg: "bg-white",
-      hoverBorder: "hover:border-slate-400",
-      pill: "bg-slate-100 text-slate-800 border-slate-300",
+      hoverBorder: "hover:border-blue-400",
+      pill: "bg-blue-100 text-blue-800 border-blue-300",
     },
   },
   {
@@ -149,13 +162,13 @@ const SERVICES_CATEGORIES = [
       "Nous vous accompagnons dans l'organisation de vos rendez-vous afin de vous faire gagner du temps",
     badge: "Malaika Conseils",
     theme: {
-      bg: "bg-slate-50/80",
-      border: "border-slate-200",
-      accent: "bg-slate-600 hover:bg-slate-700",
-      textAccent: "text-slate-700",
+      bg: "bg-red-50/80",
+      border: "border-red-200",
+      accent: "bg-red-600 hover:bg-red-700",
+      textAccent: "text-red-700",
       cardBg: "bg-white",
-      hoverBorder: "hover:border-slate-400",
-      pill: "bg-slate-100 text-slate-800 border-slate-300",
+      hoverBorder: "hover:border-red-400",
+      pill: "bg-red-100 text-red-800 border-red-300",
     },
   },
 ];
@@ -623,10 +636,20 @@ export default function Home() {
           <div className="mt-12 bg-gradient-to-r from-cyan-800 via-cyan-700 to-cyan-600 rounded-3xl p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div>
               <h3 className="text-2xl font-bold mb-1">
-                Besoin d'un accompagnement en urgence ?
+                Malaika Care, bien plus qu’un service de soins.
               </h3>
               <p className="text-sm text-slate-200">
-                Nos équipes de garde Malaika Care réagissent sous 24h.
+                Nous facilitons la coordination médicale, organisons un
+                accompagnement humain et aidons les familles à faire face aux
+                imprévus avec davantage de sérénité.<br></br>
+                <br></br> Que vous soyez au Sénégal, à l’étranger ou en
+                déplacement pour vous soigner à Dakar, nous vous aidons à
+                organiser une prise en charge adaptée à vos besoins.<br></br>
+                <br></br>
+                <strong>
+                  Malaika Care — Prendre soin de vos proches, même lorsque vous
+                  êtes loin.
+                </strong>
               </p>
             </div>
             <button
@@ -644,7 +667,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
-                <ShieldCheck className="w-6 h-6" />
+                <User className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
@@ -658,7 +681,7 @@ export default function Home() {
 
             <div className="flex items-start gap-4">
               <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
-                <Award className="w-6 h-6" />
+                <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
@@ -672,7 +695,7 @@ export default function Home() {
 
             <div className="flex items-start gap-4">
               <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
-                <FileText className="w-6 h-6" />
+                <Award className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
@@ -686,7 +709,7 @@ export default function Home() {
 
             <div className="flex items-start gap-4">
               <div className="p-3 bg-blue-950 text-cyan-500 rounded-2xl shrink-0">
-                <FileText className="w-6 h-6" />
+                <Blocks className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="font-extrabold text-blue-950 text-base mb-1">
@@ -715,20 +738,32 @@ export default function Home() {
           <div className="space-y-4">
             {[
               {
-                q: "Comment s'effectue la mise en place d'un infirmier ou garde malade à domicile ?",
-                a: "Après un premier contact téléphonique ou physique, nous effectuons une évaluation rapide des besoins du patient. Un soignant qualifié est affecté sous 24h à 48h selon la formule retenue.",
+                q: "Comment Malaika Care peut-il prendre soin de mon proche si je vis à l’étranger ?",
+                a: "Vivre loin de ses parents ou d’un proche malade ne signifie pas devoir gérer seul son suivi médical. Malaika Care devient votre relais de proximité au Sénégal pour organiser les soins à domicile, faciliter les rendez-vous médicaux et coordonner les interventions nécessaires. Selon les prestations convenues, nous vous transmettons des informations et des comptes rendus sur l’accompagnement de votre proche, dans le respect de son consentement et de la confidentialité.",
               },
               {
-                q: "Puis-je commander des services depuis l'étranger pour un parent au Sénégal ?",
-                a: "Oui, tout à fait ! De nombreux clients de la diaspora font appel à Malaika Care pour assurer les soins ou le chauffeur de leurs parents restés au Sénégal. Les paiements peuvent s'effectuer à distance.",
+                q: "Comment Malaika Care organise-t-il la coordination médicale ?",
+                a: "La coordination médicale est au cœur de notre approche. Nous vous aidons à identifier les professionnels de santé adaptés, à organiser les consultations, à faciliter les orientations vers des spécialistes et à coordonner les différentes étapes du parcours de soins. Lorsque cela est nécessaire, nous pouvons également faciliter l’accompagnement physique aux rendez-vous et les échanges entre les professionnels concernés, avec l’accord du patient. Nos médecins peuvent apporter des conseils médicaux dans le cadre de leurs compétences et de leur responsabilité professionnelle. Les décisions diagnostiques et thérapeutiques restent du ressort des professionnels de santé habilités.",
               },
               {
-                q: "Quels sont les moyens de paiement acceptés au Sénégal ?",
-                a: "Nous acceptons les règlements par Wave, Orange Money, virement bancaire ou chèque bancaire local.",
+                q: "Quels services proposez-vous à domicile et pendant une hospitalisation ?",
+                a: "Malaika Care propose un accompagnement adapté à la situation de chaque personne. Selon les besoins, il peut comprendre des soins infirmiers, des consultations médicales à domicile, une aide dans les gestes du quotidien, un accompagnement aux rendez-vous ou une présence auprès du patient pendant une hospitalisation. Nous prenons en compte le niveau d’autonomie, les besoins de santé et les attentes de la famille afin d’organiser une prestation adaptée, avec des intervenants qualifiés pour les missions qui leur sont confiées.",
               },
               {
-                q: "Proposez-vous la garde d'enfants pour les événements (baptêmes, mariages) ?",
-                a: "Oui, notre pôle familial propose un encadrement sécurisé des enfants lors de vos cérémonies familiales (baptêmes, mariages, réceptions) par des animatrices et gardiennes expérimentées.",
+                q: "Que se passe-t-il si l’état de santé de mon proche se dégrade ou si une situation imprévue survient ?",
+                a: "La gestion des imprévus nécessite de la réactivité et une bonne organisation. En cas de changement de situation, Malaika Care évalue les besoins d’organisation, facilite la mise en relation avec les professionnels de santé concernés et informe la famille désignée selon les modalités convenues. En présence de signes de gravité ou d’une urgence médicale, la priorité est de contacter immédiatement les services d’urgence appropriés. Notre service de coordination ne se substitue ni aux urgences ni à une prise en charge hospitalière.",
+              },
+              {
+                q: "Je ne vis pas à Dakar et je viens au Sénégal pour me soigner. Pouvez-vous m’accompagner ?",
+                a: "Oui. Malaika Care propose un accompagnement organisationnel aux personnes venant des régions du Sénégal ou de l’étranger pour recevoir des soins à Dakar. Nous pouvons vous aider à organiser vos rendez-vous, à vous orienter vers des spécialistes, à planifier vos déplacements et à rechercher des solutions pratiques concernant l’hébergement et l’alimentation, notamment l’accès aux courses. Notre objectif est de faciliter votre séjour médical afin que vous puissiez vous concentrer sur votre santé plutôt que sur les difficultés logistiques.",
+              },
+              {
+                q: "Comment savoir si les prestations sont réellement réalisées et si mon proche est bien accompagné ?",
+                a: "La confiance repose sur une organisation claire et un suivi adapté. Dès le début de l’accompagnement, nous définissons avec vous les besoins, les prestations prévues, les modalités de communication et les informations à transmettre. Selon la formule retenue, nous pouvons organiser un suivi des interventions, des points réguliers avec la famille et des comptes rendus relatifs aux prestations réalisées. Toute transmission d’informations médicales est soumise au consentement du patient et aux règles de confidentialité applicables.",
+              },
+              {
+                q: "Comment se déroule la mise en place d’un accompagnement avec Malaika Care et combien cela coûte-t-il ?",
+                a: "Chaque situation est différente. Nous commençons par un échange pour comprendre les besoins du patient, son niveau d’autonomie, les soins nécessaires et les attentes de sa famille. Nous vous proposons ensuite une organisation adaptée précisant les prestations retenues, leur fréquence, les modalités de suivi et les tarifs correspondants. Les interventions sont mises en place après validation des conditions convenues et selon les disponibilités des professionnels.",
               },
             ].map((faq, idx) => (
               <div
