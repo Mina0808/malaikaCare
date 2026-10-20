@@ -85,9 +85,10 @@ model Professional {
   role              String
   password          String
   status            String
+  activity          Boolean?
   speciality        String? //medecin spécialité
-  diplomas          Boolean //medecin toujours true
-  assistant         Boolean //medecin toujours true
+  diplomas          Boolean? //medecin toujours true
+  assistant         Boolean? //medecin toujours true
   workAddress       String?
   address           String?
   clients           Client[]
@@ -103,9 +104,10 @@ model Intervention {
   startDate         DateTime
   endDate           DateTime
   status            String
-  professional      Professional? @relation(fields: [professionalId], references: [id], onDelete: Cascade)
-  professionalId    String?
-  patients          Client[]
+  professional      Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  professionalId    String
+  patientId         String
+  patient           Client       @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model ActionLog {

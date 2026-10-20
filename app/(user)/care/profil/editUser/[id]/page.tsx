@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getClientFromSession, getToken} from "@/lib/session";
+import { getClientFromSession, getToken } from "@/lib/session";
 import { updateUserFront } from "@/Services/ServicesFront/users";
 import { useRouter } from "next/navigation";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "@/app/(user)/loading";
 
 
@@ -66,9 +64,11 @@ export default function Page({
 
     return (
         <form className="flex gap-4">
-            <button type="button" className="flex justify-start items py-2 px-4 rounded transition-all fa-2xl"
-                onClick={() => router.back()}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+            <button
+                onClick={() => router.back()}
+                className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            >
+                ← Retour au Tableau de bord
             </button>
             <div className="space-y-6 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3 flex flex-col gap-10 border">
                 <h3 className="text-blueGray-400 text-2xl mt-3 mb-6 p-2 font-bold uppercase">Informations utilisateur</h3>

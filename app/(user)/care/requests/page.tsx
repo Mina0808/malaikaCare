@@ -1,15 +1,10 @@
 "use client"
-import { EyeIcon } from "@heroicons/react/24/solid";
-import { Badge } from "@/components/badge";
 import Pagination from "@/components/pagination";
-import { getColorByRequestStatus, translateRequestStatus, translateRequestType } from "@/Services/ServicesFront/keywords";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { translateRequestStatus, translateRequestType } from "@/Services/ServicesFront/keywords";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
 import { getRequestsByUser } from "@/Services/ServicesFront/users";
-import Link from "next/link";
 import { getUserFromSession, getToken } from "@/lib/session";
 
 export const dynamic = "force-dynamic";

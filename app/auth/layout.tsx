@@ -1,28 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { Suspense } from "react";
-import logo from "@/images/logo malaika.jpg";
-import bg from "@/images/img_malaika.png";
-import Loader from "./loading";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Lock,
-  Mail,
-  Phone,
-  Eye,
-  EyeOff,
-  ArrowRight,
   ArrowLeft,
   ShieldCheck,
-  CheckCircle2,
-  Sparkles,
-  Heart,
-  Building2,
-  HelpCircle,
-  KeyRound,
 } from "lucide-react";
 
 export default function Auth({ children }: { children: React.ReactNode }) {

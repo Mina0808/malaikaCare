@@ -65,6 +65,51 @@ export  const translateRequestStatus = (status:string)=> {
       return ""
 };
 
+export  const translateInterventionStatus = (status:string)=> {
+  
+    if (status==="PLANNED"||status==="PENDING")
+      return "A venir"
+    if (status==="IN_PROGRESS")
+      return "En cours"
+    if (status==="DONE")
+      return "Effectué"
+    else
+      return ""
+};
+
+export const translateDateFr = (date:string)=>{
+  const dates = date.split('/')
+  const month = getMonth(dates[1])
+  return `${dates[0]} ${dates[1]} ${dates[2]}`
+}
+
+const getMonth = (month:string)=>{
+  if (month=="01")
+    return "Janvier"
+  if (month=="02")
+    return "Février"
+  if (month=="03")
+    return "Mars"
+  if (month=="04")
+    return "Avril"
+  if (month=="05")
+    return "Mai"
+  if (month=="06")
+    return "Juin"
+  if (month=="07")
+    return "Juillet"
+  if (month=="08")
+    return "Août"
+  if (month=="09")
+    return "Septembre"
+  if (month=="10")
+    return "Octobre"
+  if (month=="11")
+    return "Novembre"
+  if (month=="12")
+    return "Décembre"
+}
+
 export const capitalize = (word:string) =>{
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
@@ -78,6 +123,17 @@ export const getColorByRequestStatus = (status:string)=>{
       return "green"
     else
       return "gray"
+}
+
+export const getColorByInterventionStatus = (status:string)=>{
+  if (status==="PLANNED")
+      return "#e8d544"
+    if (status==="IN_PROGRESS")
+      return "#3b82f6"
+    if (status==="DONE")
+      return "#13a147"
+    else
+      return "#adb5b0"
 }
 
 export const getButtonByRequestStatus = (status:string)=>{

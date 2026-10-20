@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { getToken, getUserFromSession } from "@/lib/session";
 import { useRouter } from "next/navigation";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "@/app/(user)/loading";
 import { PasswordInput } from "@/components/password-input";
 import { checkPassword, getPassword, updatePassword } from "@/Services/ServicesFront/users";
@@ -22,10 +20,10 @@ export default function Page({
     const router = useRouter()
     const [validForm, setValidForm] = useState(false)
     const [errors, setErrors] = useState({
-    oldPassword: "" as string,
-    password: "" as string,
-    confirmPassword: "" as string,
-  })
+        oldPassword: "" as string,
+        password: "" as string,
+        confirmPassword: "" as string,
+    })
     const [formData, setFormData] = useState({
         oldPassword: "" as string,
         password: "" as string,
@@ -49,28 +47,27 @@ export default function Page({
 
 
     const validateForm = async () => {
-    let errors = { oldPassword: "", password: "", confirmPassword: "" };
-    let valid = true
-    
-      if (!await checkPassword(oldPassword, formData.oldPassword)) {
-        valid = false
-        errors.oldPassword="Le ,mot de passe est incorrect"
-      }
+        let errors = { oldPassword: "", password: "", confirmPassword: "" };
+        let valid = true
 
-      if (formData.password.length<8 || formData.password.length>50)
-      {
-        valid=false
-        errors.password="Le mot de passe doit contenir entre 8 et 50 caractères"
-      }
+        if (!await checkPassword(oldPassword, formData.oldPassword)) {
+            valid = false
+            errors.oldPassword = "Le ,mot de passe est incorrect"
+        }
 
-      if (formData.password != formData.passwordConfirmation) {
-        valid = false
-        errors.confirmPassword="Les mots de passe ne correspondent pas"
-      }
+        if (formData.password.length < 8 || formData.password.length > 50) {
+            valid = false
+            errors.password = "Le mot de passe doit contenir entre 8 et 50 caractères"
+        }
 
-    setErrors(errors);
-    return valid
-  };
+        if (formData.password != formData.passwordConfirmation) {
+            valid = false
+            errors.confirmPassword = "Les mots de passe ne correspondent pas"
+        }
+
+        setErrors(errors);
+        return valid
+    };
 
     const handleChange = async (event: React.ChangeEvent<{ name: string; value: string }>) => {
         const { name, value } = event.target;
@@ -79,9 +76,10 @@ export default function Page({
     }
 
     async function handleSubmit() {
-        if (await validateForm())
-        {await updatePassword(user?.id, formData.password, "INDIVIDUAL")
-        router.push(`/care/profil`)}
+        if (await validateForm()) {
+            await updatePassword(user?.id, formData.password, "INDIVIDUAL")
+            router.push(`/care/profil`)
+        }
     }
 
     if (loading)
@@ -90,9 +88,11 @@ export default function Page({
 
     return (
         <form className="flex gap-4">
-            <button type="button" className="flex justify-start items py-2 px-4 rounded transition-all fa-2xl"
-                onClick={() => router.back()}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+            <button
+                onClick={() => router.back()}
+                className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            >
+                ← Retour au Tableau de bord
             </button>
             <div className="space-y-6 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3 flex flex-col gap-10 border">
                 <h3 className="text-blueGray-400 text-2xl mt-3 mb-6 p-2 font-bold uppercase">Réinitialiser le mot de passe</h3>
@@ -143,7 +143,7 @@ export default function Page({
                     <button
                         onClick={handleSubmit}
                         type="button"
-                        disabled={!formData.oldPassword||!formData.password||!formData.passwordConfirmation}
+                        disabled={!formData.oldPassword || !formData.password || !formData.passwordConfirmation}
                         className="flex w-full disabled:bg-gray-500 justify-center rounded-md bg-gunmetal px-3 py-1.5 text-xl font-semibold leading-6 text-white shadow-sm hover:bg-gunmetal-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                     >
                         Réinitialiser le mot de passe

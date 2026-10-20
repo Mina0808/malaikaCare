@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Loader from "../../../loading";
 import { getUserById, getRequestById, getDocumentsByRequest } from "@/Services/ServicesFront/users";
-import { faCircleChevronLeft, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { translateRequestStatus, translateRequestType } from '@/Services/ServicesFront/keywords';
 import { Badge } from '@/components/badge';
@@ -24,7 +24,7 @@ export default function Page({
     async function fetchData(id: number) {
         const req = await getRequestById(id)
         setRequest(req)
-        if (req) {
+        if (req?.clientId) {
             const user = await getUserById(req?.clientId, "INDIVIDUAL")
             setUser(user)
         }
@@ -34,16 +34,16 @@ export default function Page({
     }
 
     function newDocuments(newDocs: FileList) {
-    const docs = JSON.parse(JSON.stringify(documents));
-    for (let i = 0; i < newDocs?.length; i++) {
-      const extension = newDocs.item(i)?.name.split(".").pop()
-      if (extension) {
-        docs.push({ name: newDocs.item(i)?.name, type: getFileType(extension), file: newDocs.item(i) })
-      }
+        const docs = JSON.parse(JSON.stringify(documents));
+        for (let i = 0; i < newDocs?.length; i++) {
+            const extension = newDocs.item(i)?.name.split(".").pop()
+            if (extension) {
+                docs.push({ name: newDocs.item(i)?.name, type: getFileType(extension), file: newDocs.item(i) })
+            }
+        }
+        console.log("new", newDocs)
+        setDocuments(docs)
     }
-    console.log("new", newDocs)
-    setDocuments(docs)
-  }
 
     useEffect(() => {
         console.log("fetch ", params)
@@ -57,9 +57,11 @@ export default function Page({
 
     return (
         <div>
-            <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-                onClick={() => router.back()}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+            <button
+                onClick={() => router.back()}
+                className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            >
+                ← Retour au Tableau de bord
             </button>
             <div className="m-4 grid grid-cols-1 border">
                 <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">
@@ -110,18 +112,18 @@ export default function Page({
                         <h3 className="text-2xl font-bold mb-2">Détail de la requête</h3>
                         <div className="flex flex-col">
                             <div className='grid grid-cols-1 md:grid-cols-2'>
-                            <div className='flex flex-col mb-3'>
-                                <h1 className="text-lg font-bold mb-2">Type de requête</h1>
-                                <div className='text-lg'>
-                                    {translateRequestType(request.type)}
+                                <div className='flex flex-col mb-3'>
+                                    <h1 className="text-lg font-bold mb-2">Type de requête</h1>
+                                    <div className='text-lg'>
+                                        {translateRequestType(request.type)}
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='flex flex-col mb-3'>
-                                <h1 className="text-lg font-bold mb-2">État de la requête</h1>
-                                <div className='text-lg'>
-                                    <Badge text={translateRequestStatus(request.status)} color='blue' size="medium" />
+                                <div className='flex flex-col mb-3'>
+                                    <h1 className="text-lg font-bold mb-2">État de la requête</h1>
+                                    <div className='text-lg'>
+                                        <Badge text={translateRequestStatus(request.status)} color='blue' size="medium" />
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <div className='flex flex-col mb-3'>
                                 <h1 className="text-lg font-bold mb-2">Objet de la demande</h1>
@@ -131,14 +133,14 @@ export default function Page({
                             </div>
                             <div className='flex flex-col mb-3'>
                                 <h1 className="text-lg font-bold mb-2">Documents complémentaires</h1>
-                                {documents.map((doc,index)=>(
+                                {documents.map((doc, index) => (
                                     <div key={index} className='flex flex-row'>
                                         <div className='text-lg font-bold'>
                                             {doc.name}
                                         </div>
                                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                                    {/*{nom du document + bouton de visualisation}*/}
-                                </div>
+                                        {/*{nom du document + bouton de visualisation}*/}
+                                    </div>
                                 ))}
                                 <FileUploader title="Ajouter un document" onFileSelect={(file) => { newDocuments(file) }} type="pdf" />
                                 {/* <button type='button' className='bg-blue-400 hover:bg-blue-600 w-1/4 text-xl text-black py-1 m-3 shadow-xl rounded-lg flex justify-center items-center' >

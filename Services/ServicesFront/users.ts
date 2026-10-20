@@ -1,5 +1,5 @@
 import { addDocuments } from "../ServicesBack/documents";
-import { findBackofficeUsers, findDocumentsByRequest, findRequestById, findUserByMail, emailValid, createRequest, listClients, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbSubmittedQuotes, findPassword, updatePwd, updateProfessional, updateClient, createProfessional, createClient, findClientByRequest, listClientsByProfessionals, findProfessionals } from "../ServicesBack/users"
+import { findBackofficeUsers, findDocumentsByRequest, findRequestById, findUserByMail, emailValid, createRequest, listClients, findUserById, findRequestsByUser, findRequests, findUsersByRequests, updateRequest, nbClient, nbFinishedInfos, nbFinishedQuotes, nbInfos, nbQuotes, nbSubmittedQuotes, findPassword, updatePwd, updateProfessional, updateClient, createProfessional, createClient, findClientByRequest, listClientsByProfessionals, findProfessionals, findInterventions, createIntervention } from "../ServicesBack/users"
 import bcrypt from "bcryptjs";
 import { uploadAllFiles } from "./documents";
 import { capitalize } from "./keywords";
@@ -37,6 +37,34 @@ export async function updatePassword(id: string, pwd: string, role: string) {
   return await updatePwd(id, password, role)
 }
 
+export async function createInterventionFront(payload:any){
+  let startHour=""+payload.startHour
+  if (payload.startHour<10)
+    startHour="0"+payload.startHour
+  let startMinutes=""+payload.startMinutes
+  if (payload.startMinutes<10)
+    startMinutes="0"+payload.startMinutes
+  let endHour=""+payload.endHour
+  if (payload.endHour<10)
+    endHour="0"+payload.endHour
+  let endMinutes=""+payload.endMinutes
+  if (payload.endMinutes<10)
+    endMinutes="0"+payload.endMinutes
+
+  const startDate = new Date(payload.date + "T" + startHour + ":" + startMinutes + ":00") //revoir le format de la date: yyyy-mm-jj hh:mm:ss.msmsms
+  const endDate = new Date(payload.date + "T" + endHour + ":" + endMinutes + ":00")
+  console.log(payload)
+  return await createIntervention({
+    service:payload.service,
+    address:payload.address,
+    status:"PLANNED",
+    startDate,
+    endDate,
+    patient: { connect: { id: payload.clientId } },
+    professional: { connect: { id: payload.professionalId } }
+  })
+}
+
 export async function createUserFront(payload: any, role: string) {
   const pwd = '123456789'
   const password = await bcrypt.hash(pwd, 10)
@@ -60,7 +88,13 @@ export async function createUserFront(payload: any, role: string) {
     lastName: capitalize(payload.lastName),
     phone: payload.phone,
     email: payload.email,
-    role,
+    role:payload.role,
+    diplomas:payload.diplomas,
+    speciality:payload.speciality,
+    assistant:payload.assistant,
+    address:payload.address,
+    workAddress:payload.workAddress,
+    //activity:payload.activity
     status: "ACTIF",
     password,
   })
@@ -212,6 +246,11 @@ export async function getClientsByProfessionals(id: string, page: number = 1, fi
 export async function listRequests(page: number = 1, filter?: string) {
   const requests = await findRequests(page, filter)
   return requests
+}
+
+export async function listInterventions(page: number = 1, filter?: string) {
+  const interventions = await findInterventions(page, filter)
+  return interventions
 }
 
 export async function getListClients() {

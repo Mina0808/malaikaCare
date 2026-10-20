@@ -2,8 +2,6 @@
 export const dynamic = "force-dynamic";
 
 import { getToken, getClientFromSession } from "@/lib/session";
-import { faCircleChevronLeft, faFloppyDisk, faWarning } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../loading";
@@ -25,20 +23,20 @@ export default function Profil() {
   });
 
   // Show Toast helper
-  const showToast = (msg:any) => {
+  const showToast = (msg: any) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 4000);
   };
 
-  const handleProfileSave =async (e:any) => {
+  const handleProfileSave = async (e: any) => {
     e.preventDefault();
     await updateUserFront(user.id, user, "INDIVIDUAL")
     showToast("Modifications du profil enregistrées avec succès !");
   };
 
-  const handlePasswordChange = async(e:any) => {
+  const handlePasswordChange = async (e: any) => {
     e.preventDefault();
     if (user.newPassword !== user.confirmPassword) {
       showToast("Erreur : Les mots de passe ne correspondent pas.");
@@ -73,9 +71,11 @@ export default function Profil() {
 
   return (
     <div className="flex flex-col gap-4">
-      <button className="flex justify-start items py-2 px-4 rounded transition-all fa-2xl"
-        onClick={() => router.back()}>
-        <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+      <button
+        onClick={() => router.back()}
+        className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+      >
+        ← Retour au Tableau de bord
       </button>
       <div className="grid grid-cols-1 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3 border">
         <h1 className="text-3xl font-bold mb-4">Page de profil</h1>
@@ -85,11 +85,10 @@ export default function Profil() {
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto">
         <button
           onClick={() => setProfileSubTab("general")}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
-            profileSubTab === "general"
+          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${profileSubTab === "general"
               ? "bg-blue-950 text-white shadow-md"
               : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
-          }`}
+            }`}
         >
           <User className="w-4 h-4 text-amber-500" />
           <span>Informations Générales</span>
@@ -97,11 +96,10 @@ export default function Profil() {
 
         <button
           onClick={() => setProfileSubTab("password")}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
-            profileSubTab === "password"
+          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${profileSubTab === "password"
               ? "bg-blue-950 text-white shadow-md"
               : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
-          }`}
+            }`}
         >
           <KeyRound className="w-4 h-4 text-amber-500" />
           <span>Mot de passe</span>
@@ -160,7 +158,7 @@ export default function Profil() {
 
             <div>
               <label className="block font-bold text-slate-700 mb-1">
-                Adresse Email 
+                Adresse Email
               </label>
               <input
                 type="email"
@@ -185,7 +183,7 @@ export default function Profil() {
 
             <div>
               <label className="block font-bold text-slate-700 mb-1">
-                Adresse postale (Sénégal) 
+                Adresse postale (Sénégal)
               </label>
               <input
                 type="text"
@@ -209,71 +207,71 @@ export default function Profil() {
             </div>
 
           </div>
-            <div className="pt-4 border-t border-slate-100">
-              <h3 className="font-extrabold text-xs uppercase tracking-wider text-blue-950 mb-3">
-                Contact en cas d'Urgence
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Prénom du Contact
-                  </label>
-                  <input
-                    type="text"
-                    value={user?.contactFirstName || ""}
-                    onChange={(e) =>
-                      setUser({ ...user, contactFirstName: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Nom du Contact
-                  </label>
-                  <input
-                    type="text"
-                    value={user?.contactLastName || ""}
-                    onChange={(e) =>
-                      setUser({ ...user, contactLastName: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Email d'urgence
-                  </label>
-                  <input
-                    type="text"
-                    value={user?.contactEmail || ""}
-                    onChange={(e) =>
-                      setUser({
-                        ...user,
-                        contactEmail: e.target.value,
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Téléphone d'urgence
-                  </label>
-                  <input
-                    type="text"
-                    value={user?.contactPhone || ""}
-                    onChange={(e) =>
-                      setUser({
-                        ...user,
-                        contactPhone: e.target.value,
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold font-mono"
-                  />
-                </div>
+          <div className="pt-4 border-t border-slate-100">
+            <h3 className="font-extrabold text-xs uppercase tracking-wider text-blue-950 mb-3">
+              Contact en cas d'Urgence
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Prénom du Contact
+                </label>
+                <input
+                  type="text"
+                  value={user?.contactFirstName || ""}
+                  onChange={(e) =>
+                    setUser({ ...user, contactFirstName: e.target.value })
+                  }
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold"
+                />
+              </div>
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Nom du Contact
+                </label>
+                <input
+                  type="text"
+                  value={user?.contactLastName || ""}
+                  onChange={(e) =>
+                    setUser({ ...user, contactLastName: e.target.value })
+                  }
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold"
+                />
+              </div>
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Email d'urgence
+                </label>
+                <input
+                  type="text"
+                  value={user?.contactEmail || ""}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      contactEmail: e.target.value,
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold font-mono"
+                />
+              </div>
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Téléphone d'urgence
+                </label>
+                <input
+                  type="text"
+                  value={user?.contactPhone || ""}
+                  onChange={(e) =>
+                    setUser({
+                      ...user,
+                      contactPhone: e.target.value,
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold font-mono"
+                />
               </div>
             </div>
+          </div>
           {/* <div className="flex justify-end pt-2">
             <button
               type="submit"

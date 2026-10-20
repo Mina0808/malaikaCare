@@ -2,11 +2,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { getDocumentsByPageFront, updateSlides } from "@/Services/ServicesFront/documents";
+import { getDocumentsByPageFront } from "@/Services/ServicesFront/documents";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 // import FileUploader, { getFileType } from "@/components/fileField";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileUploader from "@/components/fileField";
 
 export default function EditSlide() {
@@ -103,9 +101,11 @@ export default function EditSlide() {
                         Modifier les slides
                     </label>
                     <div className="flex flex-col justify-center items-center flex flex-col">
-                        <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-                            onClick={() => router.back()}>
-                            <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+                        <button
+                            onClick={() => router.back()}
+                            className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+                        >
+                            ← Retour au Tableau de bord
                         </button>
                         <table className="bg-white border border-black-2">
                             <tr>

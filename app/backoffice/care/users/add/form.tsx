@@ -1,6 +1,6 @@
 "use client";
 
-import { faCircleChevronLeft, faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
@@ -166,13 +166,18 @@ export default function Form() {
     return (
 
         <form className=" rounded-lg bg-white mt-15 border border-gray-400 shadow-2xl">
-            <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-                onClick={(e) => { handleCancel(e) }}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
-            </button>
-            <h6 className="text-blueGray-400 text-md xl:text-3xl px-4 pt-4 font-bold uppercase mb-3">
-                Nouvel utilisateur
-            </h6>
+
+            <div className="flex justify-between">
+                <h6 className="text-blueGray-400 text-lg xl:text-3xl px-4 pt-4 font-bold uppercase mb-3">
+                    Nouvel utilisateur
+                </h6>
+                <button
+                    onClick={() => router.back()}
+                    className="text-xs mr-3 font-bold text-amber-600 hover:underline flex items-center gap-1"
+                >
+                    ← Retour au Tableau de bord
+                </button>
+            </div>
             <div className="flex flex-col">
                 <div>
                     <h2 className="text-xs pt-4 pl-4 font-black uppercase text-slate-400 tracking-wider mb-4 flex items-center gap-2">

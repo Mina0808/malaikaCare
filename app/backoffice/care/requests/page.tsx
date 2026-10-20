@@ -1,16 +1,9 @@
 "use client";
-import { EyeIcon } from "@heroicons/react/24/solid";
-import { Badge } from "@/components/badge";
 import Pagination from "@/components/pagination";
 import {
-  getColorByRequestStatus,
-  getColorByUserStatus,
-  translateRequest,
   translateRequestStatus,
   translateRequestType,
 } from "@/Services/ServicesFront/keywords";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
@@ -18,7 +11,6 @@ import {
   getUserByRequest,
   listRequests,
 } from "@/Services/ServicesFront/users";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +33,10 @@ export default function Page({
     requestC.current = request;
     const userRequest = new Map()
     request.forEach(async (req)=>{
+      if (req.clientId){
       const client = await getUserByRequest(req.clientId)
       userRequest.set(req.id, client)
+      }
     })
     setUserRequests(userRequest)
     setPages(totalPages);

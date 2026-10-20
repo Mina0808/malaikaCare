@@ -193,6 +193,10 @@ export async function createRequest(data: Prisma.RequestCreateInput) {
   return await prisma.request.create({ data });
 }
 
+export async function createIntervention(data: Prisma.InterventionCreateInput) {
+  return await prisma.intervention.create({ data });
+}
+
 export async function nbClient() {
   return prisma.$transaction(async (prisma) => {
 
@@ -348,6 +352,27 @@ export async function findRequests(page: number = 1, filter?:string) {
 
     return {
       request,
+      totalPages,
+    };
+  });
+}
+
+export async function findInterventions(page: number = 1, filter?:string) {
+  return prisma.$transaction(async (prisma) => {
+    const intervention = await prisma.intervention.findMany({
+      where:{status:filter},
+      orderBy: { startDate: "asc" },
+      skip: (page - 1) * 10,
+      take: 10,
+    });
+
+    const totalCount = await prisma.request.count({
+      where:{status:filter},
+    });
+    const totalPages = Math.ceil(totalCount / 10);
+
+    return {
+      intervention,
       totalPages,
     };
   });

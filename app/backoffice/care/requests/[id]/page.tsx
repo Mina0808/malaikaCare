@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Loader from "../../../loading";
 import { getUserById, updateRequestFront, updateUserStatus, getRequestById, getDocumentsByRequest } from "@/Services/ServicesFront/users";
-import { faCircleChevronLeft, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getButtonByRequestStatus, getButtonByUserStatus, translateRequestStatus, translateRequestType } from '@/Services/ServicesFront/keywords';
 import { Badge } from '@/components/badge';
@@ -32,7 +32,7 @@ export default function Page({
         setUser(user)
         const req = await getRequestById(id)
         setRequest(req)
-        if (req) {
+        if (req?.clientId) {
             const client = await getUserById(req?.clientId, "INDIVIDUAL")
             setClient(client)
         }
@@ -137,9 +137,11 @@ export default function Page({
 
     return (
         <div>
-            <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-                onClick={() => router.back()}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+            <button
+                onClick={() => router.back()}
+                className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            >
+                ← Retour au Tableau de bord
             </button>
             <div className="m-4 grid grid-cols-1 border">
                 <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">

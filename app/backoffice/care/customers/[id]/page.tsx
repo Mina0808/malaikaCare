@@ -3,8 +3,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Loader from "../../../loading";
 import { getRequestsByUser, getUserById, updateUserStatus } from "@/Services/ServicesFront/users";
-import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getButtonByUserStatus, translateRequestStatus, translateRequestType } from '@/Services/ServicesFront/keywords';
 import { Badge } from '@/components/badge';
 import Swal from 'sweetalert2';
@@ -72,9 +70,11 @@ export default function Page({
 
     return (
         <div>
-            <button className="items-center py-2 px-4 rounded transition-all fa-2xl"
-                onClick={() => router.back()}>
-                <FontAwesomeIcon icon={faCircleChevronLeft} className="mr-2" />
+            <button
+                onClick={() => router.back()}
+                className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            >
+                ← Retour au Tableau de bord
             </button>
             <div className="m-4 grid grid-cols-1 border">
                 <section className="flex flex-col mt-5 bg-white border border-gray-400 shadow-2xl rounded-lg container mx-auto overflow-y-auto py-3">
@@ -142,20 +142,20 @@ export default function Page({
                         {user.contactLastName ?
                             <div className="flex flex-col lg:flex-row gap-6">
                                 <div className="flex flex-col w-full space-y-4">
-                                <div className="w-full mb-3 flex flex-row">
-                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactFirstName}</label>
-                                </div>
-                                <div className="w-full mb-3 flex flex-row">
-                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactEmail}</label>
-                                </div>
+                                    <div className="w-full mb-3 flex flex-row">
+                                        <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactFirstName}</label>
+                                    </div>
+                                    <div className="w-full mb-3 flex flex-row">
+                                        <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactEmail}</label>
+                                    </div>
                                 </div>
                                 <div className="flex flex-col w-full space-y-4">
-                                <div className="w-full mb-3 flex flex-row">
-                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactLastName}</label>
-                                </div>
-                                <div className="w-full mb-3 flex flex-row">
-                                    <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactPhone}</label>
-                                </div>
+                                    <div className="w-full mb-3 flex flex-row">
+                                        <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactLastName}</label>
+                                    </div>
+                                    <div className="w-full mb-3 flex flex-row">
+                                        <label className="border-5 px-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-lg rounded-lg focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-14">{user?.contactPhone}</label>
+                                    </div>
                                 </div>
                             </div>
                             :

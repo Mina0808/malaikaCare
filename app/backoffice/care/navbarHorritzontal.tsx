@@ -231,11 +231,20 @@ export default function NavBar({
             </Link>
 
             <Link
-              href="/backoffice/care/requests"
+              href="/backoffice/care/interventions?page=1"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-blue-900/60 hover:text-white transition-all"
+            >
+              Planning des interventions
+            </Link>
+
+            <Link
+              href="/backoffice/care/requests?page=1"
               className="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-blue-950 hover:bg-amber-400 transition-all shadow-md"
             >
               Liste des demandes
             </Link>
+
+            
           </div>
 
           {/* USER AUTH & ACTIONS */}

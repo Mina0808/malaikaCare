@@ -44,7 +44,7 @@ export default function Navbar({
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const toggleDropdown = (menuName:any) => {
+  const toggleDropdown = (menuName: any) => {
     setActiveDropdown((prev) => (prev === menuName ? null : menuName));
   };
   const pathname = usePathname();
@@ -222,9 +222,9 @@ export default function Navbar({
                           <TriangleAlert className="w-5 h-5 fill-red/20" />
                         </>
                       )}
-                       
+
                     </button>
-                   <button
+                    <button
                       onClick={handleLogout}
                       className="p-1.5 rounded-xl hover:bg-red-500/20 transition-colors"
                       title="Déconnexion"
@@ -234,33 +234,35 @@ export default function Navbar({
                   </div>
                 ) : (
                   <>
-                    <button
-                      onClick={() => toggleDropdown("auth2")}
-                      // onClick={() =>
-                      //   router.push(
-                      //     `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`,
-                      //   )
-                      // }
-                      className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                    >
-                      <span>Accéder à mon espace</span>
-                    </button>
-                    {activeDropdown === "auth2" && (
-                      <div className="absolute right-0 top-20 w-56 bg-white rounded-lg shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
-                        <Link
-                          href={`/auth/client/login?redirect=${encodeURIComponent(window.location.pathname)}`}
-                          className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
-                        >
-                          Je suis client
-                        </Link>
-                        <Link
-                          href={`/auth/backoffice/login?redirect=${encodeURIComponent(window.location.pathname)}`}
-                          className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
-                        >
-                          Je suis un intervenant
-                        </Link>
-                      </div>
-                    )}
+                    <div className={`relative inline-block ${activeDropdown?'top-10':""}`}>
+                      <button
+                        onClick={() => toggleDropdown("auth2")}
+                        // onClick={() =>
+                        //   router.push(
+                        //     `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`,
+                        //   )
+                        // }
+                        className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-amber-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                      >
+                        <span>Accéder à mon espace</span>
+                      </button>
+                      {activeDropdown === "auth2" && (
+                        <div className="w-56 bg-white rounded-lg shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
+                          <Link
+                            href={`/auth/client/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+                            className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                          >
+                            Je suis client
+                          </Link>
+                          <Link
+                            href={`/auth/backoffice/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+                            className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                          >
+                            Je suis un intervenant
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </>
                 )
               ) : isConsulting ? (
