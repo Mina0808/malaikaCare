@@ -217,7 +217,7 @@ export default function Home() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
 
-  const scrollToSection = (id:string) => {
+  const scrollToSection = (id: string) => {
     setMobileMenu(false);
     const element = document.getElementById(id);
     if (element) {
@@ -225,7 +225,7 @@ export default function Home() {
     }
   };
 
-  const handleOpenQuote = (serviceName:SetStateAction<string>) => {
+  const handleOpenQuote = (serviceName: SetStateAction<string>) => {
     if (serviceName) setSelectedService(serviceName);
     setFormSubmitted(false);
     setQuoteModalOpen(true);
@@ -517,74 +517,79 @@ export default function Home() {
         </div>
       </section>
       {/* SERVICES */}
-      <section id="services" className="py-20 bg-white">
+      <section
+        id="services"
+        className="py-20 bg-slate-900 border-t border-slate-800"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-extrabold text-emerald-700 uppercase tracking-widest bg-emerald-100 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-emerald-200">
+            <span className="text-xs font-extrabold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-emerald-500/30">
               Offre Complète & Intégrée
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
               Nos Pôles de Services au Sénégal
             </h2>
-            <p className="text-slate-600 text-base sm:text-lg mt-4">
+            <p className="text-slate-400 text-base sm:text-lg mt-4">
               Malaika Care combine expertise médicale et accompagnement
               logistique quotidien pour garantir le bien-être de votre famille.
             </p>
           </div>
 
-          <div className="space-y-12">
+          {/* Categories Row (3 columns on lg screen) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             {SERVICES_CATEGORIES.map((category) => (
               <div
                 key={category.id}
-                className={`${category.theme.bg} rounded-3xl p-6 sm:p-10 border ${category.theme.border} shadow-sm transition-all`}
+                className={`${category.theme.bg} rounded-3xl p-6 border ${category.theme.border} shadow-lg backdrop-blur-md flex flex-col justify-between hover:border-slate-600 transition-all`}
               >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200/80">
-                  <div>
+                <div>
+                  {/* Category Header */}
+                  <div className="mb-6 pb-5 border-b border-slate-700/60">
                     <span
-                      className={`text-xs font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border ${category.theme.pill} inline-block mb-2`}
+                      className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border ${category.theme.pill} inline-block mb-2`}
                     >
                       {category.badge}
                     </span>
-                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
+                    <h3 className="text-xl sm:text-2xl font-black text-white">
                       {category.title}
                     </h3>
-                    <p className="text-slate-600 text-sm sm:text-base mt-1">
+                    <p className="text-slate-400 text-xs sm:text-sm mt-1">
                       {category.subtitle}
                     </p>
                   </div>
-                </div>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {category.items.map((item, idx) => {
-                    const ItemIcon = item.icon;
-                    return (
-                      <div
-                        key={idx}
-                        className={`${category.theme.cardBg} rounded-2xl p-6 border border-slate-200 ${category.theme.hoverBorder} shadow-xs hover:shadow-md transition-all flex flex-col justify-between group`}
-                      >
-                        <div>
-                          <div className="flex items-center justify-between mb-4">
+                  {/* List of items */}
+                  <div className="space-y-3">
+                    {category.items.map((item, idx) => {
+                      const ItemIcon = item.icon;
+                      return (
+                        <div
+                          key={idx}
+                          className="group flex items-center justify-between p-3 rounded-2xl bg-slate-950/60 border border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer"
+                        >
+                          <div className="flex items-center gap-3">
                             <div
-                              className={`p-3 rounded-xl text-white ${category.theme.accent} shadow-sm group-hover:scale-110 transition-transform`}
+                              className={`p-2 rounded-xl ${category.theme.accent} shrink-0`}
                             >
-                              <ItemIcon className="w-6 h-6" />
+                              <ItemIcon className="w-4 h-4" />
                             </div>
-                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-                              {item.highlight}
+                            <span className="font-bold text-sm text-slate-200 group-hover:text-emerald-400 transition-colors">
+                              {item.name}
                             </span>
                           </div>
 
-                          <h4 className="font-extrabold text-lg text-slate-900 mb-2 group-hover:text-emerald-700 transition-colors">
-                            {item.name}
-                          </h4>
-
-                          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-                            {item.desc}
-                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenQuote(item.name)}
+                            className={`px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-all ${category.theme.btnHover}`}
+                          >
+                            <span>Consulter</span>
+                            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                          </button>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             ))}
@@ -666,11 +671,15 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="text-sm text-slate-600 leading-relaxed mb-6 italic bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                « Notre mission est d’apporter aux familles vivant au Sénégal et
-                à la diaspora un service fiable, professionnel et profondément
-                humain pour prendre soin de leurs proches restés au pays. »
-              </p>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111750.93354640932!2d-17.548399060868174!3d14.71117587894521!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xec172f5b3c5bb71%3A0xb17c17d92d5db21f!2sDakar%2C%20Senegal!5e1!3m2!1sen!2sfr!4v1791196011740!5m2!1sen!2sfr"
+                width="512"
+                height="300"
+                style={{ border: 0 }}
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+              ></iframe>
 
               <div className="border-t border-slate-100 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="text-center sm:text-left">

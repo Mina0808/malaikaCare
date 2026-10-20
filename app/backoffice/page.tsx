@@ -72,11 +72,10 @@ export default function Home() {
                 )}
                 {item.type === "pdf" && (
                   <iframe
-                    src={`/file/CV_Aminata_Sylla_.pdf`}
+                    src={item.name}
                     className="w-full h-[80vh]"
                     title="document pdf"
                   />
-                  // <PDFViewer url={`/file/bilan ent.pdf`}/>
                 )}
               </div>
             </SwiperSlide>

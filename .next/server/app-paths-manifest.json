@@ -1,7 +1,0 @@
-{
-  "/backoffice/care/requests/page": "app/backoffice/care/requests/page.js",
-  "/backoffice/care/customers/add/page": "app/backoffice/care/customers/add/page.js",
-  "/backoffice/care/interventions/page": "app/backoffice/care/interventions/page.js",
-  "/backoffice/care/interventions/add/page": "app/backoffice/care/interventions/add/page.js",
-  "/(user)/care/page": "app/(user)/care/page.js"
-}
