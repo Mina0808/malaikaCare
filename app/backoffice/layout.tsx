@@ -3,7 +3,7 @@ import NextTopLoader from "nextjs-toploader";
 import React, { useEffect, useState } from "react";
 import { Footer } from "@/components/footer";
 import NavBar from "./care/navbarHorritzontal";
-import { getToken, requireUser } from "@/lib/session";
+import { getToken, requireProfessional } from "@/lib/session";
 import Loader from "./loading";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -17,7 +17,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, []);
   async function fetchData() {
     console.log("layout");
-    const user = await requireUser(await getToken());
+    const user = await requireProfessional(await getToken());
     setUser(user);
     setLoading(false);
   }

@@ -2,7 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import { homePage } from "@/lib/authorization";
-import { findUserBy } from "@/lib/db/users";
+import { findClientBy, findProfessionalBy } from "@/lib/db/users";
 import { authenticate } from "@/lib/session";
 import { z } from "@/lib/zod-fr";
 
@@ -15,7 +15,8 @@ export async function login(prevState: any, formData: FormData) {
   let redirectTo: string | null = "/";
   try {
     const payload = loginSchema.parse(Object.fromEntries(formData));
-    const user = await findUserBy({ email: payload.email.toLowerCase() });
+    //const user = await findProfessionalBy({ email: payload.email.toLowerCase() });
+    const user = await findClientBy({ email: payload.email.toLowerCase() });
 
     if (!user || !user.password || user.status!=="ACTIF") {
       throw new Error("User not found");

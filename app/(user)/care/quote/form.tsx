@@ -189,7 +189,7 @@ export default function Form() {
     if (!isClient && !formData.clientPhone) {
       // errors.phone = 'Merci de rentrer un téléphone';
       valid = false;
-    } else if (!/\+\d{1,3}\s?\d{5,14}/.test(formData.clientPhone)) {
+    } else if (formData.clientPhone && !/\+\d{1,3}\s?\d{5,14}/.test(formData.clientPhone)) {
       errors.clientPhone =
         "Merci de rentrer un numéro valide avec l'indicatif du pays";
       valid = false;
@@ -198,7 +198,7 @@ export default function Form() {
     if (!isClient && !formData.clientEmail) {
       // errors.mail = 'Email is required.';
       valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.clientEmail)) {
+    } else if (formData.clientEmail && !/\S+@\S+\.\S+/.test(formData.clientEmail)) {
       errors.clientMail = "L'adresse mail n'est pas valide";
       valid = false;
     }
@@ -412,7 +412,7 @@ export default function Form() {
                 htmlFor="colisFragile"
                 className="font-bold text-slate-900 text-sm"
               >
-                Êtes-vous la personne concernée ? <span className="text-red-500">*</span>
+                Êtes-vous la personne concernée par la demande ? <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center space-x-6">
                 <label

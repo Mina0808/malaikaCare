@@ -76,8 +76,8 @@ export const getProfessionalFromSession = async (token: RequestCookie | undefine
 };
 
 
-export const requireUser = async (token: RequestCookie | undefined) => {
-  const user = await getUserFromSession(token);
+export const requireProfessional = async (token: RequestCookie | undefined) => {
+  const user = await getProfessionalFromSession(token);
   //console.log(user)
   if (!user) {
     redirect("/auth/login");

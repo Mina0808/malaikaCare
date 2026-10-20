@@ -41,8 +41,8 @@ model Request {
   date                DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
   documents           Documents[]
-  clientId            String
-  client              Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId            String?
+  client              Client?       @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
 
 model Client {
@@ -85,6 +85,11 @@ model Professional {
   role              String
   password          String
   status            String
+  speciality        String? //medecin spécialité
+  diplomas          Boolean //medecin toujours true
+  assistant         Boolean //medecin toujours true
+  workAddress       String?
+  address           String?
   clients           Client[]
   interventions     Intervention[]
 }

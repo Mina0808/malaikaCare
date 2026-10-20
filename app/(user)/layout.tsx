@@ -1,9 +1,7 @@
 "use client";
-import { useState } from "react";
 import Header from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { getToken, getClientFromSession } from "@/lib/session";
-import React from "react";
+import { getClientFromSession, getToken } from "@/lib/session";
+import React, { useState, useEffect } from "react";
 
 export default function Care({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);

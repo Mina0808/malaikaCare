@@ -10,7 +10,7 @@ import { clearSession } from "@/lib/session";
 import { useRouter } from 'next/navigation';
 //import { faUsers, faClipboardQuestion, faPeopleGroup, faBoxesPacking, faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 import TooltipComponent from "@/components/tooltip";
-import Dropdown from "@/components/dropdown";
+import { ChevronDown, LogOut, Menu, User } from "lucide-react";
 
 const navigation: {
   path: string;
@@ -29,7 +29,10 @@ export default function NavBar({
   setUrl: Function;
 }) {
   const [state, setState] = useState(false);
-  const [dropdownState, setDropdownState] = useState<{ open: boolean, type: string }>({ open: false, type: "" });
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const toggleDropdown = (menuName:any) => {
+    setActiveDropdown((prev) => (prev === menuName ? null : menuName));
+  };
   const router = useRouter();
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,137 +46,205 @@ export default function NavBar({
   }
 
   return (
-    <div className="relative z-20">
-      <nav className={`fixed w-full bg-white border-b border-gray-300 h-24`}>
-        <div className="items-center mx-8 px-4 sm:px-0 lg:flex">
-          <div className="flex flex-shrink items-center justify-between py-0 lg:pb-4 lg:pt-0 mt-3 lg:block">
-            <Link href={"/care"} className="flex gap-4 items-center">
-              <Image src={logo} alt="Logo" className="w-auto h-20" />
-            </Link>
-            <div className="lg:hidden">
-              <button
-                className="text-gray-700 rounded-md focus:border-gray-400 focus:border"
-                onClick={() => setState(!state)}
-              >
-                {state ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 8h16M4 16h16"
-                    />
-                  </svg>
-                )}
-              </button>
+    <div className="relative z-50">
+      <nav className="fixed top-0 left-0 w-full bg-blue-950 text-white border-b border-blue-900/80 shadow-lg h-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+          {/* LOGO & BRAND */}
+          <Link href="/care" className="flex items-center gap-3">
+            <Image
+              src={logo}
+              alt="Malaika Logo"
+              className="w-auto h-12 object-contain"
+            />
+            <div className="hidden sm:flex flex-col">
+              <span className="font-black text-white text-base tracking-wider">
+                MALAIKA
+              </span>
+              <span className="text-[9px] text-amber-300 font-bold uppercase tracking-widest">
+                Care & Conseil
+              </span>
             </div>
+          </Link>
+
+          {/* DESKTOP MENU ITEMS */}
+          <div className="hidden lg:flex items-center space-x-2">
+            {/* DROPDOWN 1: MALAIKA CARE & CONSEIL */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("care")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeDropdown === "care"
+                    ? "bg-blue-900 text-amber-400"
+                    : "text-slate-200 hover:bg-blue-900/60"
+                }`}
+              >
+                <span>Malaika Care & Conseil</span>
+                <ChevronDown className="w-3 h-3 text-amber-400" />
+              </button>
+
+              {activeDropdown === "care" && (
+                <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
+                  <Link
+                    href="/qui-sommes-nous"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Qui sommes nous?
+                  </Link>
+                  <Link
+                    href="/nos-agences"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Nos agences
+                  </Link>
+                  <Link
+                    href="/blogs"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Blogs et articles
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* DROPDOWN 2: NOS SERVICES */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("services")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeDropdown === "services"
+                    ? "bg-blue-900 text-amber-400"
+                    : "text-slate-200 hover:bg-blue-900/60"
+                }`}
+              >
+                <span>Nos services</span>
+                <ChevronDown className="w-3 h-3 text-amber-400" />
+              </button>
+
+              {activeDropdown === "services" && (
+                <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
+                  <Link
+                    href="/services/soins-medicaux"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Soins médicaux
+                  </Link>
+                  <Link
+                    href="/services/aide-a-domicile"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Services à la personne
+                  </Link>
+                  <Link
+                    href="/services/coordination"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Coordination des soins
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* DROPDOWN 3: INFORMATIONS UTILES */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown("info")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  activeDropdown === "info"
+                    ? "bg-blue-900 text-amber-400"
+                    : "text-slate-200 hover:bg-blue-900/60"
+                }`}
+              >
+                <span>Informations utiles</span>
+                <ChevronDown className="w-3 h-3 text-amber-400" />
+              </button>
+
+              {activeDropdown === "info" && (
+                <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 text-slate-800 z-50">
+                  <Link
+                    href="/comment-ca-marche"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Comment ça marche?
+                  </Link>
+                  <Link
+                    href="/tarifs"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Tarifs
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="block px-4 py-2 text-xs font-semibold hover:bg-amber-50 hover:text-amber-900"
+                  >
+                    Nous contacter
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* DIRECT LINKS: CLIENTS & REQUESTS */}
+            <Link
+              href="/backoffice/care/customers?page=1"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-blue-900/60 hover:text-white transition-all"
+            >
+              Liste des clients
+            </Link>
+
+            <Link
+              href="/backoffice/care/requests"
+              className="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-blue-950 hover:bg-amber-400 transition-all shadow-md"
+            >
+              Liste des demandes
+            </Link>
           </div>
 
-          <div
-            className={`flex-1 h-full flex-row-reverse lg:overflow-visible lg:flex lg:pb-0 lg:pr-0 lg:h-auto ${state ? "h-auto pb-20 overflow-auto bg-white opacity-100" : "hidden"
-              }`}
-          >
-            <div className="flex justify-center">
-
-              {/* <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-
-              </ul> */}
-
-              <ul className="flex flex-col space-x-0 lg:space-x-16 lg:flex-row">
-                <div className="flex justify-center px-10">
-
-                  <li>
-                    <Dropdown tooltipMsg={"Les différents services proposés"} state={dropdownState} setState={setDropdownState} menuName={"Nos services"} itemList={[{ name: "Soins médicaux", href: "" }, { name: "Services à la personne", href: "" }, { name: "Coordination des soins", href: "" }]}></Dropdown>
-                  </li>
-                  {user && (
-                    <li className="">
-                      <TooltipComponent msg="Mes demandes">
-                        <Link href={"/care/requests"} onClick={() => { handleChange("") }} className={`flex hover:border-b hover:border-5 hover:border-yellow-600 items-center p-5 text-gray-700`}>
-                          <span className={``}>Voir mes demandes</span>
-                        </Link>
-                      </TooltipComponent>
-                    </li>
-                  )}
-                  <li className="">
-                    <TooltipComponent msg="Nous contacter">
-                      <Link href={"/care/contact"} onClick={() => { handleChange("") }} className={`flex hover:border-b hover:border-5 hover:border-yellow-600 items-center p-5 text-gray-700`}>
-                        <span className={``}>Nous contacter</span>
-                      </Link>
-                    </TooltipComponent>
-                  </li>
-                  <li className="">
-                    <TooltipComponent msg="Faire une demande de devis">
-                      <Link href={"/care/quote"} onClick={() => { handleChange("") }} className={`flex hover:border-b hover:border-5 hover:border-yellow-600 items-center p-5 text-gray-700`}>
-                        <span className={``}>Demander un devis</span>
-                      </Link>
-                    </TooltipComponent>
-                  </li>
-
-                </div>
-
-                <li className="">
-                  {user ?
-                    <div className="flex flex-row py-1">
-                      <Link href={user?.role !== "INDIVIDUAL" ? "/backoffice/care/profil" : "/care/profil"} onClick={() => { handleChange(`${user?.role !== "INDIVIDUAL" ? "/backoffice/profil" : "/profil"}`) }} className={`flex items-center p-5 text-gray-700 hover:bg-sky-300 rounded ${(url === '/backoffice/profil' || url === '/profil') ? 'bg-sky-300' : ''}`}>
-                        <span className={`flex gap-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 hover:rounded-lg hover:border-gray-200 hover:shadow-xl hover:border hover:p-1`}>
-                          <FontAwesomeIcon icon={faUser} className="w-6 h-6" />
-                          {user?.firstName} {user?.lastName}
-                        </span>
-                      </Link>
-                      {!user?.isEmergencyContact && (
-                        <TooltipComponent msg="Ajouter un contact d'urgence">
-                          <FontAwesomeIcon icon={faWarning} color="red" className=" px-1 mt-4 w-6 h-6" />
-                        </TooltipComponent>
-                      )}
-                    </div>
-                    :
-                    <Link href={`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`} className={`flex items-center p-5 text-gray-700 hover:bg-sky-300 rounded ${(url === '/backoffice/profil' || url === '/profil') ? 'bg-sky-300' : ''}`}>
-                      <span className={`flex gap-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 hover:rounded-lg hover:border-gray-200 hover:shadow-xl hover:border hover:p-1 py-1`}>
-                        <FontAwesomeIcon icon={faUser} className="w-6 h-6" />
-                        Connexion
-                      </span>
-                    </Link>
+          {/* USER AUTH & ACTIONS */}
+          <div className="hidden lg:flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-2 bg-blue-900/60 p-1.5 rounded-2xl border border-blue-800">
+                <Link
+                  href={
+                    user?.role !== "INDIVIDUAL"
+                      ? "/backoffice/care/profil"
+                      : "/care/profil"
                   }
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-amber-500 text-blue-950 font-black text-xs flex items-center justify-center">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-white pr-2">
+                    {user?.firstName} {user?.lastName}
+                  </span>
+                </Link>
 
-                </li>
+                <button
+                  onClick={handleLogout}
+                  className="p-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors"
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href={`/auth/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname : "")}`}
+                className="bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-2"
+              >
+                <User className="w-3 h-3" />
+                Connexion
+              </Link>
+            )}
+          </div>
 
-
-                <li className="p-2">
-                  {user &&
-                    <button
-                      type="button"
-                      className="flex gap-3 text-gray-600 hover:text-gray-800 border border-red-600 rounded-full p-5 hover:bg-red-50"
-                      aria-current="page"
-                      onClick={handleLogout}
-                    >
-                      <FontAwesomeIcon icon={faUserXmark} className="w-6 h-6" />
-                      Déconnexion
-                    </button>
-                  }
-                </li>
-
-
-              </ul>
-            </div>
+          {/* MOBILE TOGGLE */}
+          <div className="lg:hidden">
+            <button
+              onClick={() => setState(!state)}
+              className="p-2.5 rounded-xl bg-blue-900 text-white border border-blue-800"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </nav>

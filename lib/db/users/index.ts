@@ -15,19 +15,19 @@ export async function findProfessionalBy(filter: Prisma.ProfessionalWhereUniqueI
   });
 }
 
-export const  findProfessionalById = cache(async (id: string) => {
+export const findProfessionalById = cache(async (id: string) => {
   const user = await findProfessionalBy({ id });
   return user;
 });
 
-export const  findClientById = cache(async (id: string) => {
+export const findClientById = cache(async (id: string) => {
   const user = await findClientBy({ id });
   return user;
 });
 
-export const  findUserById = cache(async (id: string) => {
-  let user:Client|Professional = await findClientBy({ id });
-  if (user==null)
+export const findUserById = cache(async (id: string) => {
+  let user: Client | Professional = await findClientBy({ id });
+  if (user == null)
     user = await findProfessionalBy({ id });
   return user;
 });
