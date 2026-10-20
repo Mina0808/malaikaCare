@@ -1,4 +1,5 @@
 "use client";
+import { Footer } from "@/components/footer";
 import Header from "@/components/navbar";
 import { getClientFromSession, getToken } from "@/lib/session";
 import React, { useState, useEffect } from "react";

@@ -581,7 +581,7 @@ export default function Home() {
                           <button
                             type="button"
                             onClick={() => handleOpenQuote(item.name)}
-                            className={`px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-all ${category.theme.btnHover}`}
+                            className={`px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-all ${category.theme.hoverBorder}`}
                           >
                             <span>Consulter</span>
                             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -676,9 +676,9 @@ export default function Home() {
                 width="512"
                 height="300"
                 style={{ border: 0 }}
-                allowfullscreen=""
+                allowFullScreen={true}
                 loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"
+                referrerPolicy="strict-origin-when-cross-origin"
               ></iframe>
 
               <div className="border-t border-slate-100 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
