@@ -15,7 +15,6 @@ import { useState, useEffect, useRef } from "react";
 import Loader from "../../loading";
 import { useRouter } from "next/navigation";
 import {
-  getBeneficiaryByRequest,
   getUserByRequest,
   listRequests,
 } from "@/Services/ServicesFront/users";
@@ -30,7 +29,6 @@ export default function Page({
 }) {
   let requestC = useRef<any>([]);
   const [statut, setStatut] = useState("");
-  const [requests, setRequests] = useState<any[]>([]);
   const [pages, setPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [userRequests, setUserRequests] = useState<Map<number, any>>(new Map());
@@ -40,21 +38,13 @@ export default function Page({
     setLoading(true);
     const { request, totalPages } = await listRequests(page, filter);
     console.log(request);
-    const requestBeneficiaries = new Map();
-    for (let i = 0; i < request.length; i++) {
-      const req = request[i];
-      if (req.benefactorId) {
-        const beneficiary = await getBeneficiaryByRequest(req.benefactorId);
-        requestBeneficiaries.set(req.id, beneficiary);
-      } else {
-        const user = await getUserByRequest(req.userId);
-        requestBeneficiaries.set(req.id, user);
-      }
-    }
     requestC.current = request;
-    setRequests(request);
-    setUserRequests(requestBeneficiaries);
-    //setUsers(users)
+    const userRequest = new Map()
+    request.forEach(async (req)=>{
+      const client = await getUserByRequest(req.clientId)
+      userRequest.set(req.id, client)
+    })
+    setUserRequests(userRequest)
     setPages(totalPages);
     setLoading(false);
   }
@@ -123,19 +113,6 @@ export default function Page({
               Soumise
             </button>
             <button
-              value="RECEIVED"
-              onClick={(e) =>
-                filterRequest((e.currentTarget as HTMLButtonElement).value)
-              }
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                statut === "RECEIVED"
-                  ? "bg-blue-950 text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              Validée
-            </button>
-            <button
               value="FINISHED"
               onClick={(e) =>
                 filterRequest((e.currentTarget as HTMLButtonElement).value)
@@ -164,7 +141,9 @@ export default function Page({
           </thead>
           <tbody className="divide-y divide-slate-100">
             {requestC.current.map((request: any, index: any) => (
-              <tr key={index} className="hover:bg-slate-50">
+              <>
+              {request.type=="QUOTE"?
+                <tr key={index} className="hover:bg-slate-50">
                 <td className="py-3 font-extrabold text-slate-900">
                   {userRequests.get(request.id)?.firstName}{" "}
                   {userRequests.get(request.id)?.lastName}
@@ -196,6 +175,41 @@ export default function Page({
                   </button>
                 </td>
               </tr>
+              :
+              <tr key={index} className="hover:bg-slate-50">
+                <td className="py-3 font-extrabold text-slate-900">
+                  {request.contactFirstName}{" "}
+                  {request.contactLastName}
+                </td>
+                <td className="py-3 font-extrabold text-slate-900">
+                  {request.contactEmail}
+                </td>
+                <td className="py-3 text-slate-700">
+                  {request.contactPhone}
+                </td>
+                <td className="py-3 font-bold text-blue-950">
+                  {translateRequestType(request.type)}
+                </td>
+                <td className="py-3">
+                  <span className="font-bold text-slate-600">
+                    {request.status !== null
+                      ? translateRequestStatus(request.status)
+                      : "Indéfini"}
+                  </span>
+                </td>
+                <td className="py-3 text-right">
+                  <button
+                    onClick={() =>
+                      router.push(`/backoffice/care/requests/${request.id}`)
+                    }
+                    className="bg-amber-500 text-blue-950 font-bold px-3 py-1 rounded-lg text-xs"
+                  >
+                    Détails / Traiter
+                  </button>
+                </td>
+              </tr>
+              }
+              </>
             ))}
           </tbody>
         </table>

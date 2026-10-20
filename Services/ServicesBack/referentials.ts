@@ -4,12 +4,12 @@ import { CustomError, z } from "@/lib/zod-fr";
 import { parseWithZod } from "@conform-to/zod";
 import { City } from 'country-state-city'
 
-export async function listReferentials(type: string) {
-  return await prisma.referentiel.findMany({
-    where: { category: type },
-    orderBy: { name: "asc" },
-  });
-}
+// export async function listReferentials(type: string) {
+//   return await prisma.referentiel.findMany({
+//     where: { category: type },
+//     orderBy: { name: "asc" },
+//   });
+// }
 
 // export async function mapReferentials(type:string){
 //   const listRef = await listReferentials(type)

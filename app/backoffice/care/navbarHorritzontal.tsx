@@ -4,13 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import logo from "@/images/logo malaika.jpg";
 import Link from "next/link";
-import { faUser, faUserXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { clearSession } from "@/lib/session";
 import { useRouter } from "next/navigation";
 //import { faUsers, faClipboardQuestion, faPeopleGroup, faBoxesPacking, faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
-import TooltipComponent from "@/components/tooltip";
-import Dropdown from "@/components/dropdown";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -67,14 +63,9 @@ export default function NavBar({
 }) {
   const [state, setState] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const toggleDropdown = (menuName) => {
+  const toggleDropdown = (menuName:any) => {
     setActiveDropdown((prev) => (prev === menuName ? null : menuName));
   };
-
-  const [dropdownState, setDropdownState] = useState<{
-    open: boolean;
-    type: string;
-  }>({ open: false, type: "" });
   const router = useRouter();
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -109,7 +100,7 @@ export default function NavBar({
           {/* DESKTOP MENU ITEMS */}
           <div className="hidden lg:flex items-center space-x-2">
             {/* DROPDOWN 1: MALAIKA CARE & CONSEIL */}
-            <div className="relative">
+            {/* <div className="relative">
               <button
                 onClick={() => toggleDropdown("care")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
@@ -144,10 +135,10 @@ export default function NavBar({
                   </Link>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* DROPDOWN 2: NOS SERVICES */}
-            <div className="relative">
+            {/* <div className="relative">
               <button
                 onClick={() => toggleDropdown("services")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
@@ -182,10 +173,10 @@ export default function NavBar({
                   </Link>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* DROPDOWN 3: INFORMATIONS UTILES */}
-            <div className="relative">
+            {/* <div className="relative">
               <button
                 onClick={() => toggleDropdown("info")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
@@ -220,9 +211,18 @@ export default function NavBar({
                   </Link>
                 </div>
               )}
-            </div>
+            </div> */}
 
-            {/* DIRECT LINKS: CLIENTS & REQUESTS */}
+            {/* DIRECT LINKS: CLIENTS, REQUESTS & USERS */}
+            {user.role=="ADMIN"&&(
+              <Link
+              href="/backoffice/care/users?page=1"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-blue-900/60 hover:text-white transition-all"
+            >
+              Liste des intervenants
+            </Link>
+            )}
+
             <Link
               href="/backoffice/care/customers?page=1"
               className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:bg-blue-900/60 hover:text-white transition-all"
@@ -234,7 +234,7 @@ export default function NavBar({
               href="/backoffice/care/requests"
               className="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-500 text-blue-950 hover:bg-amber-400 transition-all shadow-md"
             >
-              Liste des requêtes
+              Liste des demandes
             </Link>
           </div>
 

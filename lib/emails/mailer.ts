@@ -2,6 +2,7 @@
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import path from "path";
+import { Resend } from 'resend';
 
 const logoPath = path.resolve("images/logo malaika.jpg");
 const travelPath = path.resolve("images/Sans titre2.jpg");
@@ -21,230 +22,243 @@ oauth2Client.setCredentials({
 });
 
 // Fonction pour envoyer l'email
-export const sendEmail = async (to: any, subject: string, html: string, verificationToken?: any,) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  try {
-    const accessToken = await oauth2Client.getAccessToken();
+export const sendEmail = async (mail: string, subject: string, text: string, docs?: any) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const attachments = await Promise.all(
+    docs.map(async (file:{name:string, type:string, file:File}) => {
+      const buffer = Buffer.from(await file.file.arrayBuffer());
 
-    // Configurer le transporteur Nodemailer avec OAuth2
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        type: 'OAuth2',
-        user: process.env.GMAIL_EMAIL, // Adresse Gmail
-        clientId: process.env.GMAIL_CLIENT_ID,
-        clientSecret: process.env.GMAIL_CLIENT_SECRET,
-        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-        accessToken: accessToken.token, // Token d'accès pour l'authentification
-      },
-    } as nodemailer.TransportOptions);
+      return {
+        filename: file.name,
+        content: buffer.toString('base64'),
+      };
+    })
+  );
+  console.log("sending")
 
-    // Paramètres de l'email
-    if (verificationToken){
-      const mailOptions = {
-      from: to.email, 
-      to:`${process.env.GMAIL_EMAIL}`, 
-      subject : subject, 
-      verificationToken, 
-      html: html,
-      attachments: [
-        {
-          filename: "logo malaika.jpg",
-          path: logoPath, // Chemin de l'image locale
-          cid: "logoImage", // Content ID utilisé dans l'email
-        },
-      ],
-    };
+  return resend.emails.send({
+    from: "MyTest <onboarding@resend.dev>",
+    to: ['minabp00@gmail.com'],
+    replyTo: 'minabp00@gmail.com',
+    subject: subject,
+    text: `${text}`,
+    attachments:attachments
+  });
+  // const response = await fetch('/api/send', {
+  //   method:'POST',
+  //   headers:{'Content-Type':'application/json'},
+  //   body: JSON.stringify({
+  //     name:name,
+  //     email:mail,
+  //     message:text,
+  //   })
+  // })
+  // if(response.ok){
+  //   console.log("sent")
+  //   alert("Message envoyé!")
+  // } else{
+  //   alert("Une erreur est survenue.")
+  // }
+  // const name = `${to.lastName} ${to.firstName}`;
+  // try {
+  //   const accessToken = await oauth2Client.getAccessToken();
 
-    // Envoyer l'email
-    const result = await transporter.sendMail(mailOptions);
-    console.log("Email envoyé :", result);
-  }
-  else{
-    const mailOptions = {
-      from: to.email, 
-      to:`${process.env.GMAIL_EMAIL}`, 
-      subject : subject,
-      html: html,
-      attachments: [
-        {
-          filename: "logo malaika.jpg",
-          path: logoPath, // Chemin de l'image locale
-          cid: "logoImage", // Content ID utilisé dans l'email
-        },
-      ],
-    };
+  //   // Configurer le transporteur Nodemailer avec OAuth2
+  //   const transporter = nodemailer.createTransport({
+  //     host: 'smtp.gmail.com',
+  //     port: 465,
+  //     secure: true,
+  //     auth: {
+  //       type: 'OAuth2',
+  //       user: process.env.GMAIL_EMAIL, // Adresse Gmail
+  //       clientId: process.env.GMAIL_CLIENT_ID,
+  //       clientSecret: process.env.GMAIL_CLIENT_SECRET,
+  //       refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+  //       accessToken: accessToken.token, // Token d'accès pour l'authentification
+  //     },
+  //   } as nodemailer.TransportOptions);
 
-    // Envoyer l'email
-    const result = await transporter.sendMail(mailOptions);
-    console.log("Email envoyé :", result);
-  }
-  } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email :", error);
-  }
+  //   // Paramètres de l'email
+  //   if (verificationToken){
+  //     const mailOptions = {
+  //     from: to.email, 
+  //     to:`${process.env.GMAIL_EMAIL}`, 
+  //     subject : subject, 
+  //     verificationToken, 
+  //     html: html,
+  //     attachments: [
+  //       {
+  //         filename: "logo malaika.jpg",
+  //         path: logoPath, // Chemin de l'image locale
+  //         cid: "logoImage", // Content ID utilisé dans l'email
+  //       },
+  //     ],
+  //   };
+
+  //   // Envoyer l'email
+  //   const result = await transporter.sendMail(mailOptions);
+  //   console.log("Email envoyé :", result);
+  // }
+  // else{
+  //   const mailOptions = {
+  //     from: to.email, 
+  //     to:`${process.env.GMAIL_EMAIL}`, 
+  //     subject : subject,
+  //     html: html,
+  //     attachments: [
+  //       {
+  //         filename: "logo malaika.jpg",
+  //         path: logoPath, // Chemin de l'image locale
+  //         cid: "logoImage", // Content ID utilisé dans l'email
+  //       },
+  //     ],
+  //   };
+
+  //   // Envoyer l'email
+  //   const result = await transporter.sendMail(mailOptions);
+  //   console.log("Email envoyé :", result);
+  // }
+  // } catch (error) {
+  //   console.error("Erreur lors de l'envoi de l'email :", error);
+  // }
 };
 
-export const sendEmailRegister = async (to: any, verificationToken: any) => {
+// export const sendEmailRegister = async (to: any, verificationToken: any) => {
+//   const name = `${to.lastName} ${to.firstName}`;
+//   sendEmail(to, 'Bienvenue chez Inditekk!!', `
+//     <div>
+//     <img
+//       src="cid:logoImage"
+//       alt="logo"
+//     />
+//     <img
+//       src="cid:travelImage"
+//       alt="travel"
+//     />
+//     </div>
+//     <h3>Bonjour ${name},</h3>
+//     <p>Merci d'avoir rejoint Inditekk!. Vous pourrez bientôt envoyer tous vos colis de Paris vers Dakar! Il ne reste plus qu'une seule étape!.<br />
+//     Pour activer votre compte, cliquez sur le lien ci-dessous</p>
+//     <a href="${process.env.BASE_URL}/auth/verify/${verificationToken.token}"><button style="background-color:DodgerBlue; border-radius: 8px; padding: 5px; border: 2px solid DodgerBlue; ">Confirmer mon compte</button></a>
+//     <p>Cordialement</p>`, verificationToken)
+// };
+
+export const sendEmailQuote = async (to: any, docs: any) => {
+  const contactMail = "contact@malaika-cs.com"
   const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, 'Bienvenue chez Inditekk!!', `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>Merci d'avoir rejoint Inditekk!. Vous pourrez bientôt envoyer tous vos colis de Paris vers Dakar! Il ne reste plus qu'une seule étape!.<br />
-    Pour activer votre compte, cliquez sur le lien ci-dessous</p>
-    <a href="${process.env.BASE_URL}/auth/verify/${verificationToken.token}"><button style="background-color:DodgerBlue; border-radius: 8px; padding: 5px; border: 2px solid DodgerBlue; ">Confirmer mon compte</button></a>
-    <p>Cordialement</p>`, verificationToken)
+  const subject = `Demande de devis  - [${name}]`
+  let message = ""
+  if (to.clientLastName) {
+    message = `${to.text}
+    
+    contact:
+    ${name}
+    ${to.email}
+    ${to.phone}
+    
+    bénéficiaire de la demande:
+    ${to.clientLastName} ${to.clientFirstName}
+    ${to.clientEmail}
+    ${to.clientPhone}`
+  } else {
+    message = `${to.text}
+    
+    contact:
+    ${name}
+    ${to.email}
+    ${to.phone}`
+  }
+  await sendEmail(`${to.email}`, `${subject}`, `${message}`, docs)
+  await sendEmail(`${to.email}`, `${subject}`, `Bonjour ${name},
+Votre demande de devis a bien été prise en compte. 
+Nous reviendrons très vite vers vous pour répondre à votre demande.
+
+Cordialement,
+Malaika Care
+${contactMail}`)
 };
 
-export const sendEmailQuote = async (to: any) => {
+export const sendEmailContact = async (to: any, docs:any) => {
+  const contactMail = "contact@malaika-cs.com"
   const name = `${to.lastName} - ${to.firstName}`;
-  sendEmail(to, `[${name} - Demande de devis]`, `${to.text}`)
+  const subject = `Demande de renseignement  - [${name}]`
+  let message = ""
+  message = `${to.text}
+    
+    contact:
+    ${name}
+    ${to.email}
+    ${to.phone}`
+  await sendEmail(`${to.email}`, `${subject}`, `${message}`, docs)
+  await sendEmail(`${to.email}`, `${subject}`, `Bonjour ${name},
+Votre demande de renseignement a bien été prise en compte. 
+Nous reviendrons très vite vers vous pour répondre à votre demande.
+
+Cordialement,
+Malaika Care
+${contactMail}`)
 };
 
-export const sendEmailReceived = async (to: any, idPkg:number) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, `Votre colis #${idPkg} a été réceptionné!`, `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    <p><b>Votre colis a été reçu</b></p>
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>Merci d'avoir choisi Inditekk!. Votre commande ${idPkg} a été reçue et sera expédiée sous peu!</p>
-    <a href="/order/${idPkg}"><button>Voir ma commande</button></a>
-    <p>Cordialement</p>`)
+export const sendEmailUserReactivated = async (lastName: string, firstName: string, email: string) => {
+  const contactMail = "contact@malaika-cs.com"
+  const name = `${lastName} - ${firstName}`;
+  const subject = "Compte activé"
+  const message = `Bonjour ${name},
+Votre compte utilisateur a été activé. Vous pouvez de nouveau vous connecter en utilisant vos identifiants.
+Pour tout problème n'hésitez pas à nous écrire à ${contactMail}
+
+Cordialement,
+Malaika Care
+${contactMail}
+`
+  await sendEmail(`${email}`, `${subject}`, `${message}`)
 };
 
-export const sendEmailCorrection = async (to: any, idPkg:number, correction:string, type:string) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  if (type==="Renvoyer"){
-    sendEmail(to, `Mise à jour de votre signalisation #${idPkg}`, `
-      <div>
-      <img
-        src="cid:logoImage"
-        alt="logo"
-      />
-      <img
-        src="cid:travelImage"
-        alt="travel"
-      />
-      </div>
-      <h3>Bonjour ${name},</h3>
-      <p>Malheureusement, il y a un problème avec l'enregistrement de votre colis! Votre signalisation a été renvoyée pour le motif suivant ${correction}. Veuillez corriger les informations en cliquant ci-dessous</p>
-      <a href="/order/${idPkg}"><button>Corriger ma signalisation</button></a>
-      <p>Cordialement</p>`)
-  }
-  else{
-    sendEmail(to, `Mise à jour de votre colis #${idPkg}`, `
-      <div>
-      <img
-        src="cid:logoImage"
-        alt="logo"
-      />
-      <img
-        src="cid:travelImage"
-        alt="travel"
-      />
-      </div>
-      <h3>Bonjour ${name},</h3>
-      <p>Malheureusement, il y a un problème avec votre colis! L'envoi de votre colis a été annulé pour le motif suivant ${correction}. Nous espérons vous revoir bientôt! Vous pouvez voir les détails en cliquant ce-dessous</p>
-      <a href="/order/${idPkg}"><button>Voir la liste de mes colis</button></a>
-      <p>Cordialement</p>`)
-  }
+export const sendEmailUserDesactivated = async (lastName: string, firstName: string, email: string) => {
+  const contactMail = "contact@malaika-cs.com"
+  const name = `${lastName} - ${firstName}`;
+  const subject = "Compte désactivé"
+  const message = `Bonjour ${name},
+Votre compte utilisateur a été désactivé. Vous ne pouvez plus vous connecter.
+Pour toute réclamation, n'hésitez pas à nous écrire à ${contactMail}
+
+Cordialement,
+Malaika Care
+${contactMail}
+`
+  await sendEmail(`${email}`, `${subject}`, `${message}`)
 };
 
-export const sendEmailValidation = async (to: any, idPkg:number) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, `Mise à jour de votre signalisation #${idPkg}`, `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    <p><b>Votre colis est à Dakar</b></p>
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>Félicitations! Votre enregistrement est colis. Nous attendons la réception de votre colis avec impatience! Dès que vous recevez votre numéro de suivi, veuillez nous fournir votre numéro de suivi pour qu'on puisse valider la réception.</p>
-    <a href="/order/${idPkg}"><button>Voir ma commande</button></a>
-    <p>Cordialement</p>`)
-};
+export const sendEmailQuoteValidated = async (lastName: string, firstName: string, email: string) => {
+  const contactMail = "contact@malaika-cs.com"
+  const name = `${lastName} - ${firstName}`;
+  const subject = "Devis validé"
+  const message = `Bonjour ${name},
+Votre demande de devis a bien été validée. Vous pouvez désormais vous connecter avec les identifiants suivants:
+id: mail
+mot de passe temporaire: 123456789
 
-export const sendEmailDakar = async (to: any, idPkg:number) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, `Votre colis #${idPkg} est arrivé à Dakar`, `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    <p><b>Votre colis est à Dakar</b></p>
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>C'est pour bientôt! Votre colis arrive bientôt à votre porte! Il nous manque juste une information: comment voulez-vous recevoir votre colis ? Veuillez sélectionner votre mode de livraison en cliquant ci-dessous</p>
-    <a href="/order/${idPkg}"><button>Sélectionner le mode de livraison</button></a>
-    <p>Cordialement</p>`)
+Cordialement,
+Malaika Care
+${contactMail}`
+  await sendEmail(`${email}`, `${subject}`, `${message}`)
 };
-
-export const sendEmailDelivered = async (to: any) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, `Livraison confirmée`, `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    <p><b>Votre colis a été livré</b></p>
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>Votre colis a bien été livré! Merci d'avoir choisi Inditekk pour le transfert de votre colis. Nous espérons vous revoir très vite chez Inditekk!</p>
-    <a href="/order"><button>Enregistrer un nouveau colis</button></a>
-    <p>Cordialement</p>`)
-};
-
 // Fonction pour envoyer l'email
-export const sendEmailReset = async (to: any, passwordResetToken: any, ) => {
-  const name = `${to.lastName} ${to.firstName}`;
-  sendEmail(to, 'Réinitialisation du mot de passe', `
-    <div>
-    <img
-      src="cid:logoImage"
-      alt="logo"
-    />
-    <img
-      src="cid:travelImage"
-      alt="travel"
-    />
-    </div>
-    <h3>Bonjour ${name},</h3>
-    <p>Bienvenue sur Inditekk! Vous avez oublié votre mot de passe ? Vous pouvez modifier votre mot de passe en cliquant ci-dessous. </p>
-    <a href="${process.env.BASE_URL}/auth/reset/${passwordResetToken.token}"><button>Modifier mon mot de passe</button></a>
-    <p>Cordialement</p>`, passwordResetToken)
-};
+// export const sendEmailReset = async (to: any, passwordResetToken: any, ) => {
+//   const name = `${to.lastName} ${to.firstName}`;
+//   sendEmail(to, 'Réinitialisation du mot de passe', `
+//     <div>
+//     <img
+//       src="cid:logoImage"
+//       alt="logo"
+//     />
+//     <img
+//       src="cid:travelImage"
+//       alt="travel"
+//     />
+//     </div>
+//     <h3>Bonjour ${name},</h3>
+//     <p>Bienvenue sur Inditekk! Vous avez oublié votre mot de passe ? Vous pouvez modifier votre mot de passe en cliquant ci-dessous. </p>
+//     <a href="${process.env.BASE_URL}/auth/reset/${passwordResetToken.token}"><button>Modifier mon mot de passe</button></a>
+//     <p>Cordialement</p>`, passwordResetToken)
+// };

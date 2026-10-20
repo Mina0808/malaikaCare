@@ -315,7 +315,7 @@ export default function Home() {
                   <tbody className="divide-y divide-slate-100 font-medium">
                     <tr>
                       <td
-                        colSpan="6"
+                        colSpan={6}
                         className="text-center py-8 text-slate-400"
                       >
                         Aucune demande correspondant aux critères.

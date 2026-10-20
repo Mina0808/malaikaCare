@@ -19,7 +19,7 @@
 
 export function homePage(role: string) {
 
-  if ( role === "ADMIN" ) {
+  if ( role !== "INDIVIDUAL" ) {
     return "/backoffice";
   }
 

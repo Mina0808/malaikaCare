@@ -24,6 +24,8 @@ export const getColorByUserStatus = (status:string)=>{
 export  const translateRole = (role:string)=> {
   if(role==='INDIVIDUAL') return 'Client'
   if(role==='ADMIN') return 'Admin'
+  if(role==='DOCTOR') return 'Docteur'
+  if(role==='NURSE') return 'Infirmier'
 };
 export  const translateRequest = (request:string, status:string)=> {
   if(request==='QUOTE') {
@@ -80,8 +82,6 @@ export const getColorByRequestStatus = (status:string)=>{
 
 export const getButtonByRequestStatus = (status:string)=>{
   if (status==="SUBMITTED")
-      return "Valider la demande"
-    if (status==="RECEIVED")
       return "Fermer la demande"
 }
 

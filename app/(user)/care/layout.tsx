@@ -2,9 +2,9 @@
 import NextTopLoader from "nextjs-toploader";
 import React, { useEffect, useState } from "react";
 import { Footer } from "@/components/footer";
-import NavBar from "./navbarHorritzontal";
-import { getToken, getUserFromSession } from "@/lib/session";
+import { getToken, getClientFromSession } from "@/lib/session";
 import Loader from "../loading";
+import NavBar from "./navbarHorritzontal";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     fetchData();
   }, []);
   async function fetchData() {
-    const user = await getUserFromSession(getToken());
+    const user = await getClientFromSession(await getToken());
     setUser(user);
     setLoading(false);
   }
@@ -40,7 +40,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       /> */}
 
       <main>
-        {/*<NavBar user={user} setUser={setUser} setUrl={setUrl} url={url} />*/}
+        {/* <NavBar user={user} setUser={setUser} setUrl={setUrl} url={url} /> */}
 
         <div>{children}</div>
         <Footer isOpen={isOpen} />

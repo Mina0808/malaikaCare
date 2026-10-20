@@ -1,15 +1,15 @@
 "use server";
-import {  User } from "@prisma/client";
+import {  Client, Professional } from "@prisma/client";
 import * as jose from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { findUserById } from "./db/users";
+import { findClientById, findProfessionalById, findUserById } from "./db/users";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 const KEY = new TextEncoder().encode(process.env.JWT_SECRET);
 const USER_SESSION_KEY = "_USER_SESSION";
 
-export const getToken = () => cookies().get(USER_SESSION_KEY); // TODO: Remove this function
+export const getToken = async() => cookies().get(USER_SESSION_KEY); // TODO: Remove this function
 
 export const getSession = async (_token: RequestCookie | undefined) => {
   const cookiesStore = cookies();
@@ -23,7 +23,7 @@ export const getSession = async (_token: RequestCookie | undefined) => {
   }
 };
 
-export const authenticate = async (user: User) => {
+export const authenticate = async (user: Client|Professional) => {
   const payload = {
     userId: user.id,
     role: user.role,
@@ -63,9 +63,21 @@ export const getUserFromSession = async (token: RequestCookie | undefined) => {
   return findUserById(session.userId as string);
 };
 
+export const getClientFromSession = async (token: RequestCookie | undefined) => {
+  const session = await getSession(token);
+  if (!session) return null;
+  return findClientById(session.userId as string);
+};
 
-export const requireUser = async (token: RequestCookie | undefined) => {
-  const user = await getUserFromSession(token);
+export const getProfessionalFromSession = async (token: RequestCookie | undefined) => {
+  const session = await getSession(token);
+  if (!session) return null;
+  return findProfessionalById(session.userId as string);
+};
+
+
+export const requireProfessional = async (token: RequestCookie | undefined) => {
+  const user = await getProfessionalFromSession(token);
   //console.log(user)
   if (!user) {
     redirect("/auth/login");
